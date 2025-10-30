@@ -1,0 +1,56 @@
+CREATE DATABASE IF NOT EXISTS metricdb;
+USE metricdb;
+
+
+CREATE TABLE products (
+id int  AUTO_INCREMENT PRIMARY key 
+name VARCHAR(255) NOT NULL,
+price decimal(10,2) NOT NULL,
+stock INT default 0,
+description TEXT,
+image VARCHAR(255) DEFAULT NULL,
+category_id INT,    
+FOREIGN Key (category_id) REFERENCES categories(id) ON Delete SET NULL 
+
+);
+
+CREATE TABLE reviews (
+id int AUTO_INCREMENT PRIMARY key,
+users_id INT NOT NULL,
+product_id INT NOT NULL,
+rating TINYINT  NOT NULL CHECK (rating BETWEEN 1 AND 5),
+comment TEXT,
+FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE,
+FOREIGN Key (product_id) REFERENCES products(id) ON Delete CASCADE
+);
+
+CREATE TABLE categories (
+id int AUTO_INCREMENT PRIMARY key,
+name VARCHAR(255),
+slug VARCHAR(100) NOT NULL UNIQUE,
+);
+
+CREATE TABLE favourites (
+id int AUTO_INCREMENT PRIMARY Key,
+users_id INT NOT NULL,
+product_id INT NOT NULL,
+FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE,
+FOREIGN Key (product_id) REFERENCES products(id) ON Delete CASCADE,
+UNIQUE Key unique_favourite (user_id, product_id)
+
+);
+
+CREATE TABLE coupons (
+id int AUTO_INCREMENT PRIMARY Key,
+CODE VARCHAR(25) NOT NULL UNIQUE,
+description VARCHAR(255),
+discount_type ENUM('percentage', 'fixed') NOT NULL,
+discount_value DECIMAL(10,2),
+min_order_value DECIMAL (10,2) DEFAULT 0.00,
+usage_limit INT DEFAULT NULL,
+times_used INT DEFAULT 0,
+is_active TINYINT(1) DEFAULT 1,
+)
+
+
+
