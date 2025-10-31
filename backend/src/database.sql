@@ -52,5 +52,34 @@ times_used INT DEFAULT 0,
 is_active TINYINT(1) DEFAULT 1,
 )
 
+CREATE TABLE basket (
+    id int AUTO_INCREMENT PRIMARY key,
+    user_id INT NOT NULL,
+    product_id INT NOT NULL,
+    quantity INT NOT NULL DEFAULT 1,
+    FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE,
+    FOREIGN Key (product_id) REFERENCES products(id) ON Delete CASCADE,
+    UNIQUE KEY unique_basket_item (user_id, product_id)
+)
 
+CREATE TABLE addresses (
+    id int AUTO_INCREMENT PRIMARY key,
+    user_id INT NOT NULL,
+    line1 VARCHAR(255) NOT NULL,
+    line2 VARCHAR(255),
+    city VARCHAR(100) NOT NULL,
+    postcode VARCHAR(20) NOT NULL,
+    countryVARCHAR(100) NOT NULL,
+    is_default TINYINT(1) DEFAULT 0,
+    FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE
+)
 
+CREATE TABLE shipping (
+    id int AUTO_INCREMENT PRIMARY key,
+    order_id INT NOT NULL,
+    tracking_number VARCHAR(100),
+    courier VARCHAR(100),
+    status ENUM('pending', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
+    estimated_delivery DATE,
+    FOREIGN Key (order_id) REFERENCES orders(id) ON Delete CASCADE
+)
