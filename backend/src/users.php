@@ -141,6 +141,5 @@ if ($method === 'DELETE') {
     }
 
 } catch (PDOException $e) {
-    // In production, log error and return generic message
     respond(['error' => 'Database error', 'details' => $e->getMessage()], 500);
 }
