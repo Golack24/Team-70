@@ -33,7 +33,7 @@ try {
 
     if ($action == 'register') {
         if(empty($data['email']) || empty($data['password'])) {
-            respond(['error' => 'Email and password required'],422)
+            respond(['error' => 'Email and password required'],422);
         }
         $stmt = $pdo->prepare("SELECT id FROM users WHERE email=?");
         $stmt ->execute([$data['email']]);
@@ -130,10 +130,10 @@ if ($method === 'PUT') {
 
     //delete user
 if ($method === 'DELETE') {
-    if(!$id) respond(['error' => 'Missing user id'],422)
+    if(!$id) respond(['error' => 'Missing user id'],422);
     $current = authUserID();
     $isAdmin = ($_SESSION['role']?? '') === 'admin';
-    if (!$curent || ($current !== $id && !$isAdmin)) respond(['error' => 'Unauthorised'], 403)
+    if (!$curent || ($current !== $id && !$isAdmin)) respond(['error' => 'Unauthorised'], 403);
 
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
     $stmt ->execute(['id']);
