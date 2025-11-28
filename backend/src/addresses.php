@@ -7,10 +7,11 @@ function addAddress($db, $user_id, $line1, $line2, $city, $postcode, $country, $
 
     $stmt = $db->prepare("
         INSERT INTO addresses (user_id, line1, line2, city, postcode, country, is_default) 
-        VALUES (?, ?, ?, ?, ?, ?, ?)
-    ");
+        VALUES (?, ?, ?, ?, ?, ?, ?)");
     $stmt->execute([$user_id, $line1, $line2, $city, $postcode, $country, $is_default]);
 }
+
+
 function getAddresses($db, $user_id) {
     $stmt = $db->prepare("SELECT id, line1, line2, city, postcode, country, is_default FROM addresses WHERE user_id = ?");
     $stmt->execute([$user_id]);
