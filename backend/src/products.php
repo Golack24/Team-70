@@ -139,7 +139,7 @@ try {
 
         foreach ($allowed as $f) {
             if (array_key_exists($f, $data)) {
-                // type casting
+                //type casting
                 if ($f === 'price') $params[":$f"] = floatval($data[$f]);
                 elseif ($f === 'stock') $params[":$f"] = (int)$data[$f];
                 elseif ($f === 'category_id') $params[":$f"] = $data[$f] === null ? null : (int)$data[$f];
@@ -171,7 +171,7 @@ try {
         requireAdmin();
         if (!$id) respond(['error' => 'Missing product id'], 422);
 
-        //optionally check if a product exists first
+        //checks if a product exists first
         $check = $pdo->prepare("SELECT id FROM products WHERE id = ?");
         $check->execute([$id]);
         if (!$check->fetch()) respond(['error' => 'Product not found'], 404);
