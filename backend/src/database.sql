@@ -88,10 +88,10 @@ CREATE TABLE addresses (
     id int AUTO_INCREMENT PRIMARY key,
     user_id INT NOT NULL,
     line1 VARCHAR(255) NOT NULL,
-    line2 VARCHAR(25VARCHAR(255) DEFAULT NULL,
+    line2 VARCHAR(VARCHAR(255) DEFAULT NULL,
     city VARCHAR(100) NOT NULL,
     postcode VARCHAR(20) NOT NULL,
-    countryVARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
     is_default TINYINT(1) DEFAULT 0,
     FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE
 );
