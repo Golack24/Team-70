@@ -15,7 +15,7 @@ CREATE TABLE users (
 CREATE TABLE categories (
     id int AUTO_INCREMENT PRIMARY key,
     name VARCHAR(255),
-    slug VARCHAR(100) NOT NULL UNIQUE,
+    slug VARCHAR(100) NOT NULL UNIQUE
 );
 
 CREATE TABLE products (
@@ -29,6 +29,13 @@ CREATE TABLE products (
     FOREIGN Key (category_id) REFERENCES categories(id) ON Delete SET NULL 
 
 );
+
+CREATE TABLE tags {
+    id int AUTO_INCREMENT PRIMARY key,
+    name VARCHAR(100) NOT NULL UNIQUE,
+    slug VARCHAR(100) NOT NULL UNIQUE
+
+};
 
 CREATE TABLE reviews (
     id int AUTO_INCREMENT PRIMARY key,
@@ -61,7 +68,7 @@ CREATE TABLE coupons (
     min_order_value DECIMAL (10,2) DEFAULT 0.00,
     usage_limit INT DEFAULT NULL,
     times_used INT DEFAULT 0,
-    is_active TINYINT(1) DEFAULT 1,
+    is_active TINYINT(1) DEFAULT 1
 );
 
 
@@ -88,10 +95,10 @@ CREATE TABLE addresses (
     id int AUTO_INCREMENT PRIMARY key,
     user_id INT NOT NULL,
     line1 VARCHAR(255) NOT NULL,
-    line2 VARCHAR(VARCHAR(255) DEFAULT NULL,
+    line2 VARCHAR(25VARCHAR(255) DEFAULT NULL,
     city VARCHAR(100) NOT NULL,
     postcode VARCHAR(20) NOT NULL,
-    country VARCHAR(100) NOT NULL,
+    countryVARCHAR(100) NOT NULL,
     is_default TINYINT(1) DEFAULT 0,
     FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE
 );
