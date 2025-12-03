@@ -1,0 +1,116 @@
+.contact-page {
+  min-height: auto;
+  background: #0a0a0a;
+  padding: 300px 24px 140px;
+  display: flex;
+  justify-content: center;
+}
+
+.contact-card {
+  width: 100%;
+  max-width: 820px;
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 18px;
+  padding: 28px;
+  box-shadow: 0 18px 36px rgba(0, 0, 0, 0.4);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.contact-header {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  text-align: center;
+}
+
+.contact-heading {
+  font-family: "BebasKai", sans-serif;
+  font-size: 2.6rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d7fa00;
+  margin: 0;
+}
+
+.contact-subheading {
+  margin: 0;
+  color: #dcdcdc;
+  font-size: 1.15rem;
+}
+
+.contact-form {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 14px 16px;
+}
+
+.form-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  color: #f5f5f5;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+}
+
+.form-field span {
+  font-weight: 700;
+  color: #d7fa00;
+  font-size: 1rem;
+}
+
+.form-field input,
+.form-field textarea {
+  background: #1a1a1a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 12px;
+  padding: 14px 16px;
+  color: #f5f5f5;
+  font-size: 1.05rem;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+.form-field input:focus,
+.form-field textarea:focus {
+  outline: none;
+  border-color: #d7fa00;
+  box-shadow: 0 0 0 3px rgba(215, 250, 0, 0.15);
+}
+
+.form-field textarea {
+  resize: vertical;
+  min-height: 180px;
+}
+
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.contact-submit {
+  padding: 14px 28px;
+  border-radius: 12px;
+  border: none;
+  background: #d7fa00;
+  color: #000;
+  font-weight: 900;
+  letter-spacing: 0.04em;
+  font-size: 1.05rem;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.contact-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
+}
