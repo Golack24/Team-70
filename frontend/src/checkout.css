@@ -1,0 +1,145 @@
+.checkout-page {
+  min-height: calc(100vh - 320px);
+  background: #000;
+  padding: 320px 60px 140px;
+  display: flex;
+  justify-content: center;
+}
+
+.checkout-container {
+  display: grid;
+  grid-template-columns: 450px 1fr;
+  gap: 40px;
+  max-width: 1200px;
+  width: 100%;
+}
+
+.checkout-image {
+  width: 100%;
+  height: 600px;
+  background: center/cover no-repeat;
+  border-radius: 18px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.4);
+}
+
+.checkout-info {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  color: #f5f5f5;
+}
+
+.checkout-title {
+  font-family: "BebasKai", sans-serif;
+  font-size: 3rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #d7fa00;
+  margin: 0;
+}
+
+.checkout-price {
+  font-size: 1.4rem;
+  font-weight: 800;
+  color: #d7fa00;
+  margin: 0;
+}
+
+.checkout-label {
+  font-size: 1.05rem;
+  color: #dcdcdc;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 4px;
+}
+
+.checkout-select {
+  background: #111;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5f5f5;
+  padding: 12px;
+  border-radius: 10px;
+  font-size: 1rem;
+}
+
+.quantity-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.quantity-btn {
+  background: #111;
+  border: 1px solid #333;
+  width: 38px;
+  height: 38px;
+  color: #fff;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 1.3rem;
+  text-align: center;
+  transition: 0.2s ease;
+}
+
+.quantity-btn:hover {
+  border-color: #d7fa00;
+  color: #d7fa00;
+}
+
+.quantity-display {
+  font-size: 1.2rem;
+  font-weight: 700;
+  width: 40px;
+  text-align: center;
+}
+
+.add-to-basket-btn {
+  margin-top: 12px;
+  padding: 16px 22px;
+  border-radius: 12px;
+  border: none;
+  background: #d7fa00;
+  color: #000;
+  font-weight: 900;
+  font-size: 1.2rem;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.add-to-basket-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.35);
+}
+
+.checkout-description {
+  margin-top: 16px;
+  color: #dcdcdc;
+  line-height: 1.5;
+  font-size: 1.05rem;
+}
+
+@media (max-width: 1024px) {
+  .checkout-page {
+    padding: 220px 24px 120px;
+  }
+
+  .checkout-container {
+    grid-template-columns: 1fr;
+  }
+
+  .checkout-image {
+    height: 420px;
+  }
+}
+
+@media (max-width: 640px) {
+  .checkout-page {
+    padding: 200px 18px 110px;
+  }
+
+  .checkout-image {
+    height: 340px;
+  }
+}
