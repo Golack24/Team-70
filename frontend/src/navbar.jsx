@@ -74,7 +74,12 @@ export default function Navbar({ onNavigate }) {
             </li>
           ))}
           <li>
-            <a href="#" aria-label="Cart" className="nav-icon-link">
+            <a
+              href="#"
+              aria-label="Cart"
+              className="nav-icon-link"
+              onClick={handleNav("checkout")}
+            >
               <img src={cartIcon} alt="Cart" className="nav-icon-img" />
             </a>
           </li>
@@ -97,7 +102,11 @@ export default function Navbar({ onNavigate }) {
               {item.label}
             </button>
           ))}
-          <button className="nav-mobile-link icon-link" type="button">
+          <button
+            className="nav-mobile-link icon-link"
+            type="button"
+            onClick={handleNav("checkout")}
+          >
             <img src={cartIcon} alt="Cart" className="nav-icon-img" />
             <span>Cart</span>
           </button>
