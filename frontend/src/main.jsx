@@ -10,6 +10,7 @@ import MenPage from "./men";
 import WomenPage from "./women";
 import AccessoriesPage from "./accessories";
 import SignupPage from "./signup";
+import Checkout from "./checkout";
 
 const PromoBar = () => (
   <div className="top-promo-bar">
@@ -43,6 +44,14 @@ function App() {
       </StrictMode>
     );
   }
+
+  if (page === "checkout") {
+    return (
+      <StrictMode>
+        <Checkout onNavigate={setPage} />
+      </StrictMode>
+    );
+ }
 
   if (page === "accessories") {
     return (
