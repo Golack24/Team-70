@@ -1,12 +1,12 @@
-.signup-page {
-  min-height: auto;
+.login-page {
+  min-height: calc(100vh - 278px);
   background: #0a0a0a;
   padding: 300px 24px 140px;
   display: flex;
   justify-content: center;
 }
 
-.signup-card {
+.login-card {
   width: 100%;
   max-width: 820px;
   background: #111;
@@ -19,14 +19,14 @@
   gap: 20px;
 }
 
-.signup-header {
+.login-header {
   display: flex;
   flex-direction: column;
   gap: 8px;
   text-align: center;
 }
 
-.signup-heading {
+.login-heading {
   font-family: "BebasKai", sans-serif;
   font-size: 2.6rem;
   letter-spacing: 0.08em;
@@ -35,22 +35,16 @@
   margin: 0;
 }
 
-.signup-subheading {
+.login-subheading {
   margin: 0;
   color: #dcdcdc;
   font-size: 1.15rem;
 }
 
-.signup-form {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 16px;
-}
-
-.form-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 14px 16px;
 }
 
 .form-field {
@@ -68,8 +62,7 @@
   font-size: 1rem;
 }
 
-.form-field input,
-.form-field textarea {
+.form-field input {
   background: #1a1a1a;
   border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 12px;
@@ -79,15 +72,14 @@
   transition: border-color 0.2s ease, box-shadow 0.2s ease;
 }
 
-.form-field input:focus,
-.form-field textarea:focus {
+.form-field input:focus {
   outline: none;
   border-color: #d7fa00;
   box-shadow: 0 0 0 3px rgba(215, 250, 0, 0.15);
 }
 
 .form-field-full {
-  grid-column: 1 / -1;
+  width: 100%;
 }
 
 .form-field-checkbox {
@@ -132,7 +124,7 @@
   justify-content: flex-end;
 }
 
-.signup-submit {
+.login-submit {
   padding: 14px 28px;
   border-radius: 12px;
   border: none;
@@ -146,24 +138,25 @@
   transition: transform 0.2s ease, box-shadow 0.2s ease;
 }
 
-.signup-submit:hover {
+.login-submit:hover {
   transform: translateY(-2px);
   box-shadow: 0 12px 24px rgba(0, 0, 0, 0.35);
 }
 
-.login-link-container {
+.signup-link-container {
   text-align: center;
   border-top: 1px solid rgba(255, 255, 255, 0.08);
   padding-top: 16px;
+  margin-bottom: 12px;
 }
 
-.login-prompt {
+.signup-prompt {
   color: #999;
   font-size: 0.95rem;
   margin: 0 0 8px 0;
 }
 
-.login-link {
+.signup-link {
   background: none;
   border: none;
   color: #d7fa00;
@@ -175,60 +168,72 @@
   padding: 0;
 }
 
-.login-link:hover {
+.signup-link:hover {
   color: #fff;
 }
 
+.forgot-password {
+  text-align: center;
+}
+
+.forgot-link {
+  background: none;
+  border: none;
+  color: #999;
+  font-size: 0.9rem;
+  cursor: pointer;
+  text-decoration: underline;
+  transition: color 0.2s ease;
+  padding: 0;
+}
+
+.forgot-link:hover {
+  color: #d7fa00;
+}
+
 @media (max-width: 1024px) {
-  .signup-page {
-    padding: 220px 24px 120px;
+  .login-page {
+    padding: 300px 24px 140px;
   }
 
-  .signup-card {
-    padding: 24px;
+  .login-card {
+    padding: 28px;
   }
 
-  .signup-heading {
-    font-size: 2.2rem;
+  .login-heading {
+    font-size: 2.6rem;
   }
 
-  .signup-subheading {
-    font-size: 1rem;
+  .login-subheading {
+    font-size: 1.15rem;
   }
 }
 
 @media (max-width: 640px) {
-  .signup-page {
-    padding: 200px 16px 100px;
+  .login-page {
+    padding: 300px 24px 140px;
   }
 
-  .signup-card {
-    padding: 20px;
-    gap: 16px;
+  .login-card {
+    padding: 28px;
+    gap: 20px;
   }
 
-  .signup-heading {
-    font-size: 1.8rem;
+  .login-heading {
+    font-size: 2.6rem;
   }
 
-  .signup-subheading {
-    font-size: 0.9rem;
+  .login-subheading {
+    font-size: 1.15rem;
   }
 
-  .form-grid {
-    grid-template-columns: 1fr;
-    gap: 14px;
+  .form-field input {
+    font-size: 1.05rem;
+    padding: 14px 16px;
   }
 
-  .form-field input,
-  .form-field textarea {
-    font-size: 1rem;
-    padding: 12px 14px;
-  }
-
-  .signup-submit {
-    width: 100%;
-    padding: 12px 20px;
-    font-size: 0.95rem;
+  .login-submit {
+    padding: 14px 28px;
+    font-size: 1.05rem;
   }
 }
