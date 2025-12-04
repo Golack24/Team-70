@@ -1,4 +1,7 @@
 :root {
+  --promo-height: 38px;
+  --nav-height: 120px;
+
   font-family: "BebasKai", "Pervitina", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
