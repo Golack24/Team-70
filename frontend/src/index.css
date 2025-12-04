@@ -1,4 +1,11 @@
 :root {
+  --promo-height: 32px;
+  --nav-height: clamp(94px, 9.5vw, 148px);
+  --nav-height-mobile: clamp(104px, 16vw, 152px);
+  --navbar-offset: calc(var(--promo-height) + var(--nav-height));
+  --page-top-padding: calc(var(--navbar-offset) + clamp(32px, 7vw, 108px));
+  --page-side-padding: clamp(16px, 5vw, 60px);
+  --page-bottom-padding: clamp(120px, 10vw, 180px);
   font-family: "BebasKai", "Pervitina", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
