@@ -1,25 +1,85 @@
+import { useEffect, useState } from "react";
 import "./checkout.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
 export default function Checkout({ onNavigate }) {
-  // Static mock cart items for MVP
-  const cartItems = [
-    {
-      name: "Oversized Performance Tee",
-      type: "TEE",
-      color: "Black",
-      size: "L",
-      price: "£32",
-    },
-    {
-      name: "Performance Joggers",
-      type: "JOGGERS",
-      color: "Charcoal",
-      size: "M",
-      price: "£48",
-    },
-  ];
+  const [items, setItems] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [discountCode, setDiscountCode] = useState("");
+  const [discountAmount, setDiscountAmount] = useState(0);
+
+  // Fetch basket + product details
+  useEffect(() => {
+    async function loadBasket() {
+      try {
+        const basketRes = await fetch("https://cs2410-web01pvm.aston.ac.uk/~cs2team70/api/index.php?resource=basket", {
+          credentials: "include",
+        });
+        const basket = await basketRes.json();
+
+        // Fetch product info for each basket item
+        const detailed = await Promise.all(
+          basket.map(async (b) => {
+            const productRes = await fetch(
+              `https://cs2410-web01pvm.aston.ac.uk/~cs2team70/api/index.php?resource=products&id=${b.product_id}`
+            );
+            const product = await productRes.json();
+            return { ...b, product };
+          })
+        );
+
+        setItems(detailed);
+      } catch (err) {
+        console.error(err);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    loadBasket();
+  }, []);
+
+  // Update quantity
+  async function updateQty(id, qty) {
+    if (qty < 1) return;
+
+    await fetch(
+      `https://cs2410-web01pvm.aston.ac.uk/~cs2team70/api/index.php?resource=basket&id=${id}`,
+      {
+        method: "PUT",
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ quantity: qty }),
+      }
+    );
+
+    setItems((prev) =>
+      prev.map((i) => (i.id === id ? { ...i, quantity: qty } : i))
+    );
+  }
+
+  // Delete item
+  async function removeItem(id) {
+    await fetch(
+      `https://cs2410-web01pvm.aston.ac.uk/~cs2team70/api/index.php?resource=basket&id=${id}`,
+      {
+        method: "DELETE",
+        credentials: "include",
+      }
+    );
+
+    setItems((prev) => prev.filter((i) => i.id !== id));
+  }
+
+  // Prices
+  const subtotal = items.reduce(
+    (sum, item) => sum + item.quantity * parseFloat(item.product.price),
+    0
+  );
+  const total = subtotal - discountAmount;
+
+  if (loading) return <div className="checkout-loading">Loading checkout…</div>;
 
   return (
     <>
@@ -28,111 +88,77 @@ export default function Checkout({ onNavigate }) {
       </div>
 
       <Navbar onNavigate={onNavigate} />
+
       <main className="checkout-page">
-        <h1 className="checkout-title">Checkout</h1>
-        <p className="checkout-subtitle">
-          Secure your essentials in under a minute.
-        </p>
+        <section className="checkout-left">
+          <h1 className="checkout-title">Checkout</h1>
+          <p className="checkout-subtitle">Secure your essentials in under a minute.</p>
 
-        <div className="checkout-layout">
-          {/* LEFT: CART ITEMS */}
-          <section className="checkout-cart">
-            {cartItems.map((item) => (
-              <div className="cart-card" key={item.name}>
-                <div className="cart-type">{item.type}</div>
-                <div className="cart-info">
-                  <p className="cart-name">{item.name}</p>
-                  <p className="cart-details">
-                    {item.color} • Size {item.size}
-                  </p>
-                  <button className="cart-remove">Remove</button>
-                </div>
+          {items.length === 0 && (
+            <p className="empty-cart">Your cart is empty.</p>
+          )}
 
-                <div className="cart-controls">
-                  <button className="qty-btn">-</button>
-                  <span className="qty-number">1</span>
-                  <button className="qty-btn">+</button>
-                </div>
-
-                <div className="cart-price">{item.price}</div>
-              </div>
-            ))}
-          </section>
-
-          {/* RIGHT: ORDER + SHIPPING FORM */}
-          <section className="checkout-summary">
-            <h2 className="summary-heading">Order Summary</h2>
-
-            <div className="summary-row">
-              <span>Subtotal</span>
-              <span>£80</span>
-            </div>
-
-            <div className="summary-row">
-              <span>Shipping</span>
-              <span>Free</span>
-            </div>
-
-            <div className="summary-total-row">
-              <span>Total</span>
-              <span>£80</span>
-            </div>
-
-            <h3 className="section-label">Shipping Address</h3>
-
-            <form className="checkout-form">
-              <label>
-                Full Name
-                <input type="text" placeholder="Aisha Khan" />
-              </label>
-
-              <label>
-                Email
-                <input type="email" placeholder="you@example.com" />
-              </label>
-
-              <label>
-                Street Address
-                <input type="text" placeholder="123 Metric Lane" />
-              </label>
-
-              <div className="form-row">
-                <label>
-                  House / Apt
-                  <input type="text" placeholder="16B" />
-                </label>
-
-                <label>
-                  City
-                  <input type="text" placeholder="London" />
-                </label>
+          {items.map((item) => (
+            <div key={item.id} className="checkout-item">
+              <div className="item-info">
+                <h3 className="item-name">{item.product.name}</h3>
+                <p className="item-color">£{item.product.price}</p>
+                <button className="remove-btn" onClick={() => removeItem(item.id)}>
+                  Remove
+                </button>
               </div>
 
-              <h3 className="section-label">Payment Details</h3>
-
-              <label>
-                Card Number
-                <input type="text" placeholder="1234 5678 9012 3456" />
-              </label>
-
-              <div className="form-row">
-                <label>
-                  Expiry
-                  <input type="text" placeholder="MM/YY" />
-                </label>
-
-                <label>
-                  CVC
-                  <input type="text" placeholder="000" />
-                </label>
+              {/* Quantity selector */}
+              <div className="qty-box">
+                <button onClick={() => updateQty(item.id, item.quantity - 1)}>-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => updateQty(item.id, item.quantity + 1)}>+</button>
               </div>
+            </div>
+          ))}
+        </section>
 
-              <button type="button" className="checkout-button">
-                Place Order
-              </button>
-            </form>
-          </section>
-        </div>
+        {/* RIGHT SIDE — ORDER SUMMARY */}
+        <aside className="checkout-right">
+          <h2 className="summary-title">Order Summary</h2>
+
+          <div className="summary-line">
+            <span>Subtotal</span>
+            <span>£{subtotal.toFixed(2)}</span>
+          </div>
+
+          <div className="summary-line">
+            <span>Shipping</span>
+            <span>FREE</span>
+          </div>
+
+          <div className="discount-section">
+            <label>Discount Code</label>
+            <input
+              type="text"
+              value={discountCode}
+              placeholder="Enter code"
+              onChange={(e) => setDiscountCode(e.target.value)}
+            />
+            <button className="apply-btn">Apply</button>
+          </div>
+
+          {discountAmount > 0 && (
+            <div className="summary-line">
+              <span>Discount</span>
+              <span>-£{discountAmount.toFixed(2)}</span>
+            </div>
+          )}
+
+          <hr />
+
+          <div className="summary-total">
+            <span>Total</span>
+            <span>£{total.toFixed(2)}</span>
+          </div>
+
+          <button className="checkout-btn">Place Order</button>
+        </aside>
       </main>
 
       <Footer />
