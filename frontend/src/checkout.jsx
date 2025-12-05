@@ -2,44 +2,14 @@ import "./checkout.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
-// Checkout content temporarily disabled. Navbar/Footer kept; archived implementation below.
-export default function CheckoutPage({ onNavigate }) {
-  return (
-    <>
-      <div className="top-promo-bar">
-        <span className="top-promo-text">Free shipping on all orders today</span>
-      </div>
-      <Navbar onNavigate={onNavigate} />
-      <main className="checkout-page" />
-      <Footer />
-    </>
-  );
-}
+const formatPrice = (value) => {
+  if (value === undefined || value === null || Number.isNaN(Number(value))) return "£--";
+  const num = Number(value);
+  return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
+};
 
-/*
------ Archived checkout implementation (for later restore) -----
-
-const sampleItems = [
-  {
-    id: 1,
-    name: "Oversized Performance Tee",
-    color: "Black",
-    size: "L",
-    price: 32,
-    image: "https://dummyimage.com/260x320/111/fff&text=TEE",
-  },
-  {
-    id: 2,
-    name: "Performance Joggers",
-    color: "Charcoal",
-    size: "M",
-    price: 48,
-    image: "https://dummyimage.com/260x320/0c0c0c/d7fa00&text=JOGGERS",
-  },
-];
-
-export default function CheckoutPage({ onNavigate }) {
-  const subtotal = sampleItems.reduce((sum, item) => sum + item.price, 0);
+export default function CheckoutPage({ onNavigate, cart = [], onUpdateQty, onRemove }) {
+  const subtotal = cart.reduce((sum, item) => sum + (item.price || 0) * (item.quantity || 1), 0);
   const shipping = 0;
   const total = subtotal + shipping;
 
@@ -57,40 +27,59 @@ export default function CheckoutPage({ onNavigate }) {
               <h1>Checkout</h1>
               <p className="lede">Secure your essentials in under a minute.</p>
             </div>
-            <button
-              className="ghost-link"
-              type="button"
-              onClick={() => onNavigate?.("home")}
-            >
-              Continue shopping ->
+            <button className="ghost-link" type="button" onClick={() => onNavigate?.("home")}>
+              Continue shopping →
             </button>
           </div>
 
           <div className="checkout-grid">
             <div className="cart-panel">
-              {sampleItems.map((item) => (
-                <article className="cart-item" key={item.id}>
+              {cart.length === 0 && (
+                <div className="cart-empty">
+                  <p>Your cart is empty.</p>
+                  <button type="button" className="primary-btn" onClick={() => onNavigate?.("men")}>
+                    Start shopping
+                  </button>
+                </div>
+              )}
+
+              {cart.map((item) => (
+                <article className="cart-item" key={`${item.id}-${item.variant || "base"}`}>
                   <div
                     className="cart-thumb"
-                    style={{ backgroundImage: `url(${item.image})` }}
+                    style={{ backgroundImage: `url(${item.image || ""})` }}
                     aria-hidden="true"
                   />
                   <div className="cart-meta">
                     <div className="cart-line">
                       <h3>{item.name}</h3>
-                      <span className="price">£{item.price}</span>
+                      <span className="price">
+                        {formatPrice((item.price || 0) * (item.quantity || 1))}
+                      </span>
                     </div>
                     <p className="muted">
-                      {item.color} · Size {item.size}
+                      {item.category_name || "Gymwear"} {item.size ? ` · Size ${item.size}` : ""}
                     </p>
                     <div className="cart-actions">
-                      <button type="button" className="pill">
+                      <button type="button" className="pill" onClick={() => onRemove?.(item.id)}>
                         Remove
                       </button>
                       <div className="qty">
-                        <button type="button">-</button>
-                        <span>1</span>
-                        <button type="button">+</button>
+                        <button
+                          type="button"
+                          onClick={() => onUpdateQty?.(item.id, (item.quantity || 1) - 1)}
+                          aria-label="Decrease quantity"
+                        >
+                          -
+                        </button>
+                        <span>{item.quantity || 1}</span>
+                        <button
+                          type="button"
+                          onClick={() => onUpdateQty?.(item.id, (item.quantity || 1) + 1)}
+                          aria-label="Increase quantity"
+                        >
+                          +
+                        </button>
                       </div>
                     </div>
                   </div>
@@ -103,15 +92,15 @@ export default function CheckoutPage({ onNavigate }) {
               <div className="summary-rows">
                 <div className="row">
                   <span>Subtotal</span>
-                  <span>£{subtotal}</span>
+                  <span>{formatPrice(subtotal)}</span>
                 </div>
                 <div className="row">
                   <span>Shipping</span>
-                  <span>{shipping === 0 ? "Free" : `£${shipping}`}</span>
+                  <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
                 </div>
                 <div className="row total">
                   <span>Total</span>
-                  <span>£{total}</span>
+                  <span>{formatPrice(total)}</span>
                 </div>
               </div>
 
@@ -213,6 +202,3 @@ export default function CheckoutPage({ onNavigate }) {
     </>
   );
 }
-
----------------------------------------------------------------
-*/

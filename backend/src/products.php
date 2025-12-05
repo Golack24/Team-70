@@ -25,6 +25,8 @@ $page   = isset($_GET['page']) ? max(1, (int)$_GET['page']) : 1;
 $limit  = isset($_GET['limit']) ? max(1, min(100, (int)$_GET['limit'])) : 20;
 $offset = ($page - 1) * $limit;
 $q      = isset($_GET['q']) ? trim($_GET['q']) : null; //search term
+$tag    = isset($_GET['tag']) ? trim($_GET['tag']) : null;
+$tagSlug = $tag ? strtolower(preg_replace('/\s+/', '-', $tag)) : null;
 
 try {
     //GET list or a single product
@@ -42,40 +44,52 @@ try {
             respond($product);
         }
 
-        //build list query with optional search
+        //build list query with optional search and tag filter
+        $joins = " LEFT JOIN categories c ON c.id = p.category_id ";
+        $conditions = [];
+        $params = [];
+
         if ($q) {
-            //search by name or description
-            $sql = " SELECT p.id, p.name, p.price, p.stock, p.image, p.category_id, c.name AS category_name FROM products pLEFT JOIN categories c ON c.id = p.category_id
-                WHERE p.name LIKE :q OR p.description LIKE :q
-                ORDER BY p.id DESC
-                LIMIT :limit OFFSET :offset
-            ";
-            $stmt = $pdo->prepare($sql);
-            $like = '%' . $q . '%';
-            $stmt->bindValue(':q', $like, PDO::PARAM_STR);
-            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-            $stmt->execute();
-            $rows = $stmt->fetchAll();
-        } else {
-            $sql = " SELECT p.id, p.name, p.price, p.stock, p.image, p.category_id, c.name AS category_name FROM products p
-                LEFT JOIN categories c ON c.id = p.category_id
-                ORDER BY p.id DESC
-                LIMIT :limit OFFSET :offset
-            ";
-            $stmt = $pdo->prepare($sql);
-            $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
-            $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
-            $stmt->execute();
-            $rows = $stmt->fetchAll();
+          $conditions[] = "(p.name LIKE :q OR p.description LIKE :q)";
+          $params[':q'] = '%' . $q . '%';
         }
 
-        $countSql = $q
-            ? "SELECT COUNT(*) FROM products WHERE name LIKE :q OR description LIKE :q"
-            : "SELECT COUNT(*) FROM products";
+        if ($tagSlug) {
+          $joins .= " JOIN product_tags pt ON pt.product_id = p.id JOIN tags t ON t.id = pt.tag_id ";
+          $conditions[] = "t.slug = :tag";
+          $params[':tag'] = $tagSlug;
+        }
+
+        $where = $conditions ? (" WHERE " . implode(' AND ', $conditions)) : '';
+        $sql = "
+            SELECT p.id, p.name, p.price, p.stock, p.image, p.category_id, c.name AS category_name
+            FROM products p
+            {$joins}
+            {$where}
+            ORDER BY p.id DESC
+            LIMIT :limit OFFSET :offset
+        ";
+        $stmt = $pdo->prepare($sql);
+        foreach ($params as $key => $val) {
+            if ($key === ':q') $stmt->bindValue($key, $val, PDO::PARAM_STR);
+            else $stmt->bindValue($key, $val, PDO::PARAM_STR);
+        }
+        $stmt->bindValue(':limit', (int)$limit, PDO::PARAM_INT);
+        $stmt->bindValue(':offset', (int)$offset, PDO::PARAM_INT);
+        $stmt->execute();
+        $rows = $stmt->fetchAll();
+
+        $countSql = "
+            SELECT COUNT(*) FROM products p
+            {$joins}
+            {$where}
+        ";
         $countStmt = $pdo->prepare($countSql);
-        if ($q) $countStmt->execute([$like]);
-        else $countStmt->execute();
+        foreach ($params as $key => $val) {
+            if ($key === ':q') $countStmt->bindValue($key, $val, PDO::PARAM_STR);
+            else $countStmt->bindValue($key, $val, PDO::PARAM_STR);
+        }
+        $countStmt->execute();
         $total = (int)$countStmt->fetchColumn();
 
         respond([

@@ -1,0 +1,93 @@
+import { useState } from "react";
+import "./signup.css";
+import Navbar from "./navbar";
+import Footer from "./footer";
+import { loginUser } from "./api";
+
+export default function LoginPage({ onNavigate, onAuth }) {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
+  };
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setLoading(true);
+    try {
+      const resp = await loginUser(form);
+      onAuth?.(resp?.user || resp);
+    } catch (err) {
+      setError(err?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  return (
+    <>
+      <div className="top-promo-bar">
+        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
+      </div>
+      <Navbar onNavigate={onNavigate} />
+      <main className="auth-page">
+        <section className="auth-card">
+          <header className="auth-header">
+            <h1 className="auth-heading">Log In</h1>
+            <p className="auth-subheading">
+              Welcome back. Enter your credentials to access your account.
+            </p>
+          </header>
+
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <label className="form-field">
+                <span>Email*</span>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="you@example.com"
+                />
+              </label>
+              <label className="form-field">
+                <span>Password*</span>
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                  placeholder="••••••••"
+                  minLength={6}
+                />
+              </label>
+            </div>
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <div className="form-actions">
+              <button type="submit" className="auth-submit" disabled={loading}>
+                {loading ? "Logging in..." : "Log In"}
+              </button>
+            </div>
+          </form>
+
+          <p className="auth-footer">
+            New here?{" "}
+            <button type="button" className="auth-link" onClick={() => onNavigate?.("signup")}>
+              Create an account
+            </button>
+          </p>
+        </section>
+      </main>
+      <Footer />
+    </>
+  );
+}
