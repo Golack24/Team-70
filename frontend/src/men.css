@@ -1,0 +1,207 @@
+.men-page {
+  min-height: calc(100vh - 320px);
+  background: #000;
+  padding: 320px 60px 140px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.men-layout {
+  display: grid;
+  grid-template-columns: 260px 1fr;
+  gap: 28px;
+}
+
+.men-header {
+  text-align: center;
+  color: #f5f5f5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.men-title {
+  font-family: "BebasKai", sans-serif;
+  font-size: 3.2rem;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: #d7fa00;
+  margin: 0;
+}
+
+.men-subtitle {
+  margin: 0;
+  color: #dcdcdc;
+  font-size: 1.1rem;
+}
+
+.men-filters {
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  border-radius: 14px;
+  padding: 18px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  height: fit-content;
+  position: sticky;
+  top: 140px;
+}
+
+.men-filters-toggle {
+  display: none;
+  width: fit-content;
+  align-self: flex-start;
+  padding: 10px 16px;
+  border-radius: 10px;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0a0a0a;
+  color: #f5f5f5;
+  font-size: 0.95rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  cursor: pointer;
+}
+
+.filters-title {
+  margin: 0;
+  font-family: "BebasKai", sans-serif;
+  font-size: 1.4rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: #d7fa00;
+}
+
+.filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.filter-heading {
+  margin: 0;
+  color: #f5f5f5;
+  font-size: 1rem;
+  letter-spacing: 0.02em;
+  text-transform: uppercase;
+}
+
+.filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.filter-chip {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5f5f5;
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-size: 0.95rem;
+  cursor: pointer;
+  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+}
+
+.filter-chip:hover {
+  border-color: #d7fa00;
+  color: #d7fa00;
+  background: rgba(215, 250, 0, 0.08);
+}
+
+.men-content {
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.men-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.men-card {
+  background: #0a0a0a;
+  border-radius: 18px;
+  padding: 16px 16px 20px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
+}
+
+.men-image {
+  background: center/cover no-repeat;
+  border-radius: 14px;
+  width: 100%;
+  aspect-ratio: 3 / 4;
+  margin-bottom: 14px;
+  filter: brightness(0.92);
+}
+
+.men-info {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  color: #f5f5f5;
+}
+
+.men-name {
+  margin: 0;
+  font-family: "BebasKai", sans-serif;
+  font-size: 1.3rem;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.men-color {
+  margin: 0;
+  color: #bfbfbf;
+  font-size: 0.95rem;
+}
+
+.men-price {
+  margin: 4px 0 0;
+  color: #d7fa00;
+  font-weight: 800;
+  font-size: 1rem;
+}
+
+@media (max-width: 1024px) {
+  .men-page {
+    padding: 220px 24px 120px;
+    min-height: calc(100vh - 240px);
+    gap: 24px;
+  }
+
+  .men-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .men-filters {
+    position: static;
+    top: auto;
+    display: none;
+  }
+
+  .men-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 20px;
+  }
+
+  .men-filters-toggle {
+    display: inline-flex;
+  }
+
+  .men-filters.open {
+    display: flex;
+  }
+}
+
+@media (max-width: 768px) {
+  .men-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
