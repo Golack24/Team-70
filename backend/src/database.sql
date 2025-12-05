@@ -1,5 +1,5 @@
-CREATE DATABASE IF NOT EXISTS metricdb;
-USE metricdb;
+CREATE DATABASE IF NOT EXISTS cs2team70_db;
+USE c2steam70_db;
 
 CREATE TABLE users (
     id int AUTO_INCREMENT PRIMARY key,
