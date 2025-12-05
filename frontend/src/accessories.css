@@ -2,6 +2,10 @@
   min-height: calc(100vh - 320px);
   background: #000;
   padding: 320px 60px 140px;
+  min-height: calc(100vh - var(--navbar-offset, 140px));
+  background: #000;
+  padding: var(--page-top-padding) var(--page-side-padding)
+    var(--page-bottom-padding);
   display: flex;
   flex-direction: column;
   gap: 24px;

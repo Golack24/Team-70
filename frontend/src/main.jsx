@@ -83,6 +83,11 @@ function App() {
       <Navbar onNavigate={setPage} />
       {/* ALL content must be wrapped inside this div */}
       <div style={{ marginTop: "clamp(170px, 24vw, 278px)" }}>
+      <div
+        style={{
+          marginTop: "calc(var(--navbar-offset, 140px) + clamp(16px, 6vw, 54px))",
+        }}
+      >
         <Hero />
       </div>
       <Footer />
