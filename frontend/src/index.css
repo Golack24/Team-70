@@ -5,13 +5,31 @@
   font-family: "BebasKai", "Pervitina", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
+
+  --primary-dark: #000000;
+  --primary-light: #ffffff;
+  --accent: #d7fa00;
+  --secondary: #737373;
+  --muted: rgba(255,255,255,0.8);
+
+  color-scheme: dark light;
+  color: var(--primary-light);
+  background-color: var(--primary-dark);
+
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
   background-color: #000;
   color: #fff;
 }
+a:hover { color: #b9d500; }
 
 body {
   margin: 0;
@@ -31,3 +49,5 @@ body {
   min-height: 60vh;
   background: #000;
 }
+.center { text-align:center; }
+.muted { color: var(--secondary); font-size: .95rem; }
