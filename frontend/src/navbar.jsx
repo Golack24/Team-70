@@ -73,6 +73,13 @@ export default function Navbar({ onNavigate }) {
               </a>
             </li>
           ))}
+          
+          <li>
+            <a href="#" aria-label="Cart" className="nav-icon-link"onClick={handleNav("checkout")}>
+              <img src={cartIcon} alt="Cart" className="nav-icon-img" />
+            </a>
+          </li>
+
           <li>
             <a href="#" aria-label="Cart" className="nav-icon-link">
               <img src={cartIcon} alt="Cart" className="nav-icon-img" />

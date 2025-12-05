@@ -1,4 +1,7 @@
 .signup-page {
+  min-height: calc(100vh - 320px);
+  background: #000;
+  padding: 320px 60px 140px;
   min-height: calc(100vh - var(--navbar-offset, 140px));
   background: #000;
   padding: var(--page-top-padding) var(--page-side-padding)
@@ -13,6 +16,8 @@
 
 @media (max-width: 1024px) {
   .signup-page {
+    padding: 220px 24px 120px;
+    min-height: calc(100vh - 240px);
     padding: calc(var(--navbar-offset, 140px) + clamp(20px, 6vw, 64px))
       clamp(14px, 5vw, 36px)
       clamp(110px, 12vw, 150px);
@@ -21,6 +26,7 @@
 
 @media (max-width: 640px) {
   .signup-page {
+    padding: 200px 18px 110px;
     padding: calc(var(--navbar-offset, 140px) + clamp(16px, 7vw, 44px))
       clamp(12px, 5vw, 28px)
       clamp(100px, 12vw, 140px);

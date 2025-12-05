@@ -10,6 +10,7 @@ import MenPage from "./men";
 import WomenPage from "./women";
 import AccessoriesPage from "./accessories";
 import SignupPage from "./signup";
+import Checkout from "./checkout";
 
 const PromoBar = () => (
   <div className="top-promo-bar">
@@ -44,6 +45,14 @@ function App() {
     );
   }
 
+  if (page === "checkout") {
+    return (
+      <StrictMode>
+        <Checkout onNavigate={setPage} />
+      </StrictMode>
+    );
+ }
+
   if (page === "accessories") {
     return (
       <StrictMode>
@@ -73,6 +82,7 @@ function App() {
       <PromoBar />
       <Navbar onNavigate={setPage} />
       {/* ALL content must be wrapped inside this div */}
+      <div style={{ marginTop: "clamp(170px, 24vw, 278px)" }}>
       <div
         style={{
           marginTop: "calc(var(--navbar-offset, 140px) + clamp(16px, 6vw, 54px))",
