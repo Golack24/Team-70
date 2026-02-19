@@ -14,7 +14,7 @@ export default function Signup({ onNavigate }) {
 
     try {
       const response = await fetch(
-        "http://localhost/metric/public/?resource=users",
+        "http://localhost/TEAM-70/backend/public/?resource=users&action=register",
         {
           method: "POST",
           headers: {
