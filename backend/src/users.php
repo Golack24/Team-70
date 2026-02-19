@@ -1,8 +1,4 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-
-
-
 function jsonInput() { //reads json body
     $body = file_get_contents('php://input');
     return $body ? json_decode($body, true) : [];

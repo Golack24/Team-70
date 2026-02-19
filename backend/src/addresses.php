@@ -1,14 +1,4 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-session_start();
-require_once '../dbh.inc.php';
-
-function jsonInput(){ return json_decode(file_get_contents("php://input"), true) ?? []; }
-function respond($d,$s=200){ http_response_code($s); echo json_encode($d); exit;}
-function authUserID(){ return $_SESSION['user_id'] ?? null; }
-
-$method = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
 try {
 
@@ -58,8 +48,7 @@ try {
             $row = $stmt->fetch();
             if (!$row) respond(['error'=>'Not found'], 404);
             respond($row);
-        }
-
+        }   
         $stmt = $pdo->prepare("SELECT * FROM addresses WHERE user_id=? ORDER BY id DESC");
         $stmt->execute([$user]);
         respond($stmt->fetchAll());
