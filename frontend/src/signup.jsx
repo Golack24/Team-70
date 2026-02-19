@@ -1,16 +1,15 @@
+import { useState } from "react";
 import "./signup.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
 
 export default function Signup({ onNavigate }) {
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
 
-    const [email, setEmail] = useState("");
-    const [password, setPassword] = useState("");
-    const [username, setUsername] = useState("");
-
-    const handleSubmit = async (e) => {
-      e.preventDefault();
-    }
+  const handleSubmit = async (e) => {
+    e.preventDefault();
 
     try {
       const response = await fetch(
@@ -25,22 +24,54 @@ export default function Signup({ onNavigate }) {
             email,
             password,
           }),
-        }
+        },
       );
 
-      const data = await.response.json();
+      const data = await response.json();
       console.log(data);
-      
-  
+    } catch (error) {
+      console.error("Signup failed:", error);
+    }
+  };
+
   return (
     <>
       <div className="top-promo-bar">
         <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
       </div>
+
       <Navbar onNavigate={onNavigate} />
+
       <main className="signup-page">
-        <div className="signup-space" />
+        <form className="signup-form" onSubmit={handleSubmit}>
+          <input
+            type="text"
+            placeholder="Username"
+            value={username}
+            onChange={(e) => setUsername(e.target.value)}
+            required
+          />
+
+          <input
+            type="email"
+            placeholder="Email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+          />
+
+          <input
+            type="password"
+            placeholder="Password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+          />
+
+          <button type="submit">Create Account</button>
+        </form>
       </main>
+
       <Footer />
     </>
   );
