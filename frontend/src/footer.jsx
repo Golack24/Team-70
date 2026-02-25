@@ -17,7 +17,13 @@ const footerColumns = [
   },
   {
     heading: "Help",
-    links: ["FAQ’s", "Live Chat", "Contact", "Shipping and Return", "Terms and Conditions"],
+    links: [
+      "FAQ’s",
+      "Live Chat",
+      "Contact",
+      "Shipping and Return",
+      "Terms and Conditions",
+    ],
   },
 ];
 
@@ -50,7 +56,6 @@ export default function Footer() {
             </ul>
           </div>
         ))}
-
       </div>
 
       <div className="footer-bottom">
