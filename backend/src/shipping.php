@@ -1,15 +1,4 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-session_start();
-require_once '../dbh.inc.php';
-
-function jsonInput(){ return json_decode(file_get_contents("php://input"), true) ?? []; }
-function respond($d,$s=200){ http_response_code($s); echo json_encode($d); exit;}
-function authRole(){ return $_SESSION['role'] ?? null; }
-
-$method = $_SERVER['REQUEST_METHOD'];
-$id = isset($_GET['id']) ? (int)$_GET['id'] : null;
-
 try {
 
     // Create shipping entry

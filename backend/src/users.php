@@ -1,8 +1,4 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-
-
-
 function jsonInput() { //reads json body
     $body = file_get_contents('php://input');
     return $body ? json_decode($body, true) : [];
@@ -56,7 +52,7 @@ try {
     }
 
     if($action == 'login') {
-        if (empty('data'['email']) || empty($data['password'])) {
+        if (empty($data['email']) || empty($data['password'])) {
             respond(['error' => 'Email and password required'], 422);
         }
         $stmt = $pdo->prepare("SELECT id, password_hash, email, username, role FROM users WHERE email = ?");
@@ -104,7 +100,7 @@ if ($method === 'PUT') {
         $isAdmin = ($_SESSION['role'] ?? '') === 'admin';
         if (!$current || ($current !== $id && !$isAdmin)) respond(['error' => 'Unauthorized'], 403);
 
-        $data = inputJson();
+        $data = jsonInput();
         // allow change of specific fields only
         $fields = ['username','first_name','last_name','phone','role'];
         $sets = []; $params = [];
@@ -133,7 +129,7 @@ if ($method === 'DELETE') {
     if(!$id) respond(['error' => 'Missing user id'],422);
     $current = authUserID();
     $isAdmin = ($_SESSION['role']?? '') === 'admin';
-    if (!$curent || ($current !== $id && !$isAdmin)) respond(['error' => 'Unauthorised'], 403);
+    if (!$current || ($current !== $id && !$isAdmin)) respond(['error' => 'Unauthorised'], 403);
 
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
     $stmt ->execute(['id']);

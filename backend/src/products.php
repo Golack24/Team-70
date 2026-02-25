@@ -1,6 +1,4 @@
 <?php
-header('Content-Type: application/json; charset=utf-8');
-
 
 function inputJson() {
     $b = file_get_contents('php://input');
