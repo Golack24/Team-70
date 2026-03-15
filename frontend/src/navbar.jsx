@@ -24,6 +24,7 @@ export default function Navbar({ onNavigate }) {
     { label: "About Us", page: "about" },
     { label: "Contact Us", page: "contact" },
     { label: "Sign Up", page: "signup" },
+    { label: "Log In", page: "login" },
   ];
 
   const mobileLinks = [...leftLinks, ...rightLinks];
@@ -80,11 +81,6 @@ export default function Navbar({ onNavigate }) {
             </a>
           </li>
 
-          <li>
-            <a href="#" aria-label="Cart" className="nav-icon-link">
-              <img src={cartIcon} alt="Cart" className="nav-icon-img" />
-            </a>
-          </li>
           <li className="nav-icon-search">
             <a href="#" aria-label="Search" className="nav-icon-link">
               <img src={searchIcon} alt="Search" className="nav-icon-img" />
