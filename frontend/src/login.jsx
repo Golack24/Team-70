@@ -21,7 +21,7 @@ export default function Login({ onNavigate }) {
     }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
