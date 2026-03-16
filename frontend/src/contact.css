@@ -2,6 +2,10 @@
   min-height: auto;
   background: #0a0a0a;
   padding: 300px 24px 140px;
+  min-height: calc(100vh - var(--navbar-offset, 140px));
+  background: #0a0a0a;
+  padding: var(--page-top-padding) var(--page-side-padding)
+    var(--page-bottom-padding);
   display: flex;
   justify-content: center;
 }
