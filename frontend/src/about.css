@@ -1,37 +1,49 @@
 .about-page {
   min-height: calc(100vh - 320px);
-  background: #000;
-  padding: 320px 24px 180px;
-  min-height: calc(100vh - var(--navbar-offset, 140px));
-  background: #000;
-  padding: var(--page-top-padding) var(--page-side-padding)
-    var(--page-bottom-padding);
+  background: var(--bg);
+  color: var(--text);
+  padding: 48px 24px 140px;
   display: flex;
   align-items: center;
   justify-content: center;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .about-container {
+  width: 100%;
   max-width: 900px;
-  color: #f5f5f5;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 36px 28px;
   display: flex;
   flex-direction: column;
   gap: 16px;
   text-align: center;
+  box-shadow: 0 16px 30px var(--shadow);
 }
 
 .about-heading {
-  font-family: "BebasKai", sans-serif;
-  font-size: 3rem;
+  margin: 0 0 8px;
+  font-size: clamp(2.2rem, 5vw, 3rem);
   letter-spacing: 0.1em;
   text-transform: uppercase;
-  color: #d7fa00;
-  margin: 0 0 8px;
+  color: var(--accent);
 }
 
 .about-container p {
   margin: 0;
-  line-height: 1.6;
-  color: #e0e0e0;
-  font-size: 1.15rem;
+  line-height: 1.7;
+  color: var(--muted-text);
+  font-size: 1.05rem;
+}
+
+@media (max-width: 768px) {
+  .about-page {
+    padding: 32px 16px 100px;
+  }
+
+  .about-container {
+    padding: 24px 18px;
+  }
 }

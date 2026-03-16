@@ -1,4 +1,4 @@
-import { StrictMode, useState } from "react";
+import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
 import Navbar from "./navbar";
@@ -14,80 +14,132 @@ import Login from "./login";
 
 const PromoBar = () => (
   <div className="top-promo-bar">
-    <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
+    <div className="top-promo-text">10% OFF WITH CODE "METRIC"</div>
   </div>
 );
 
 function App() {
   const [page, setPage] = useState("home");
+  const [theme, setTheme] = useState(() => {
+    const savedTheme = localStorage.getItem("theme");
+    if (savedTheme === "light" || savedTheme === "dark") {
+      return savedTheme;
+    }
+
+    const prefersDark =
+      window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: dark)").matches;
+
+    return prefersDark ? "dark" : "light";
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.remove("light", "dark");
+    document.documentElement.classList.add(theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
+
+  const toggleTheme = () => {
+    setTheme((currentTheme) =>
+      currentTheme === "dark" ? "light" : "dark"
+    );
+  };
+
+  const sharedNavbarProps = {
+    onNavigate: setPage,
+    theme,
+    onToggleTheme: toggleTheme,
+  };
 
   if (page === "about") {
     return (
-      <StrictMode>
-        <AboutPage onNavigate={setPage} />
-      </StrictMode>
+      <>
+        <PromoBar />
+        <Navbar {...sharedNavbarProps} />
+        <AboutPage />
+        <Footer />
+      </>
     );
   }
 
   if (page === "contact") {
     return (
-      <StrictMode>
-        <ContactPage onNavigate={setPage} />
-      </StrictMode>
+      <>
+        <PromoBar />
+        <Navbar {...sharedNavbarProps} />
+        <ContactPage />
+        <Footer />
+      </>
     );
   }
 
   if (page === "signup") {
     return (
-      <StrictMode>
+      <>
+        <PromoBar />
+        <Navbar {...sharedNavbarProps} />
         <SignupPage onNavigate={setPage} />
-      </StrictMode>
+        <Footer />
+      </>
     );
   }
 
   if (page === "login") {
     return (
-      <StrictMode>
+      <>
+        <PromoBar />
+        <Navbar {...sharedNavbarProps} />
         <Login onNavigate={setPage} />
-      </StrictMode>
+        <Footer />
+      </>
     );
   }
 
   if (page === "accessories") {
     return (
-      <StrictMode>
-        <AccessoriesPage onNavigate={setPage} />
-      </StrictMode>
+      <>
+        <PromoBar />
+        <Navbar {...sharedNavbarProps} />
+        <AccessoriesPage />
+        <Footer />
+      </>
     );
   }
 
   if (page === "women") {
     return (
-      <StrictMode>
-        <WomenPage onNavigate={setPage} />
-      </StrictMode>
+      <>
+        <PromoBar />
+        <Navbar {...sharedNavbarProps} />
+        <WomenPage />
+        <Footer />
+      </>
     );
   }
 
   if (page === "men") {
     return (
-      <StrictMode>
-        <MenPage onNavigate={setPage} />
-      </StrictMode>
+      <>
+        <PromoBar />
+        <Navbar {...sharedNavbarProps} />
+        <MenPage />
+        <Footer />
+      </>
     );
   }
 
   return (
-    <StrictMode>
+    <>
       <PromoBar />
-      <Navbar onNavigate={setPage} />
-      {/* ALL content must be wrapped inside this div */}
-      <div style={{ marginTop: "clamp(170px, 24vw, 278px)" }}>
-        <Hero />
-      </div>
+      <Navbar {...sharedNavbarProps} />
+      <Hero />
       <Footer />
-    </StrictMode>
+    </>
   );
 }
 
-createRoot(document.getElementById("root")).render(<App />);
+createRoot(document.getElementById("root")).render(
+  <StrictMode>
+    <App />
+  </StrictMode>
+);

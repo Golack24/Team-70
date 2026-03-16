@@ -1,79 +1,66 @@
 .women-page {
   min-height: calc(100vh - 320px);
-  background: #000;
-  padding: 320px 60px 140px;
-  min-height: calc(100vh - var(--navbar-offset, 140px));
-  background: #000;
-  padding: var(--page-top-padding) var(--page-side-padding)
-    var(--page-bottom-padding);
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-}
-
-.women-layout {
-  display: grid;
-  grid-template-columns: 260px 1fr;
-  gap: 28px;
+  background: var(--bg);
+  color: var(--text);
+  padding: 40px 32px 120px;
+  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .women-header {
   text-align: center;
-  color: #f5f5f5;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 28px;
 }
 
 .women-title {
-  font-family: "BebasKai", sans-serif;
-  font-size: 3.2rem;
+  margin: 0 0 10px;
+  font-size: clamp(2.5rem, 6vw, 4rem);
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: #d7fa00;
-  margin: 0;
+  color: var(--accent);
 }
 
 .women-subtitle {
-  margin: 0;
-  color: #dcdcdc;
-  font-size: 1.1rem;
+  margin: 0 auto;
+  max-width: 760px;
+  color: var(--muted-text);
 }
 
+.women-layout {
+  display: grid;
+  grid-template-columns: 280px 1fr;
+  gap: 28px;
+}
+
+/* FILTER SIDEBAR */
+
 .women-filters {
-  background: #0a0a0a;
-  border: 1px solid rgba(255, 255, 255, 0.12);
-  border-radius: 14px;
-  padding: 18px;
-  display: flex;
-  flex-direction: column;
-  gap: 14px;
-  height: fit-content;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 18px;
+  padding: 22px;
   position: sticky;
   top: 140px;
+  box-shadow: 0 12px 26px var(--shadow);
 }
 
 .filters-title {
-  margin: 0;
-  font-family: "BebasKai", sans-serif;
-  font-size: 1.4rem;
+  margin: 0 0 18px;
+  font-size: 2rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: #d7fa00;
+  color: var(--accent);
 }
 
 .filter-group {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
+  margin-bottom: 22px;
 }
 
 .filter-heading {
-  margin: 0;
-  color: #f5f5f5;
+  margin: 0 0 12px;
   font-size: 1rem;
-  letter-spacing: 0.02em;
+  letter-spacing: 0.05em;
   text-transform: uppercase;
+  color: var(--text);
 }
 
 .filter-options {
@@ -83,129 +70,89 @@
 }
 
 .filter-chip {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  color: #f5f5f5;
-  border-radius: 10px;
-  padding: 8px 12px;
-  font-size: 0.95rem;
+  padding: 10px 14px;
+  border-radius: 12px;
+  border: 1px solid var(--border);
+  background: var(--surface-2);
+  color: var(--text);
   cursor: pointer;
-  transition: border-color 0.2s ease, color 0.2s ease, background 0.2s ease;
+  transition: all 0.2s ease;
 }
 
 .filter-chip:hover {
-  border-color: #d7fa00;
-  color: #d7fa00;
-  background: rgba(215, 250, 0, 0.08);
+  border-color: var(--accent);
+  color: var(--accent);
 }
 
-.women-content {
-  display: flex;
-  flex-direction: column;
-  gap: 0;
-}
+/* PRODUCT GRID */
 
 .women-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
-  gap: 24px;
+  gap: 26px;
 }
 
 .women-card {
-  background: #0a0a0a;
-  border-radius: 18px;
-  padding: 16px 16px 20px;
-  display: flex;
-  flex-direction: column;
-  height: 100%;
-  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
+  background: var(--surface);
+  border-radius: 20px;
+  padding: 18px;
+  box-shadow: 0 12px 28px var(--shadow);
 }
 
 .women-image {
-  background: center/cover no-repeat;
-  border-radius: 14px;
   width: 100%;
   aspect-ratio: 3 / 4;
+  border-radius: 16px;
+  background-size: cover;
+  background-position: center;
   margin-bottom: 14px;
-  filter: brightness(0.92);
-}
-
-.women-info {
-  display: flex;
-  flex-direction: column;
-  gap: 4px;
-  color: #f5f5f5;
+  background-color: var(--surface-2);
 }
 
 .women-name {
-  margin: 0;
-  font-family: "BebasKai", sans-serif;
-  font-size: 1.3rem;
-  letter-spacing: 0.08em;
+  margin: 0 0 8px;
+  font-size: 1.15rem;
   text-transform: uppercase;
+  letter-spacing: 0.05em;
 }
 
 .women-color {
-  margin: 0;
-  color: #bfbfbf;
-  font-size: 0.95rem;
+  margin: 0 0 8px;
+  color: var(--muted-text);
 }
 
 .women-price {
-  margin: 4px 0 0;
-  color: #d7fa00;
-  font-weight: 800;
-  font-size: 1rem;
+  margin: 0;
+  font-weight: 700;
+  color: var(--accent);
 }
 
-.women-filters-toggle {
-  display: none;
-  width: fit-content;
-  align-self: flex-start;
-  padding: 10px 16px;
-  border-radius: 10px;
-  border: 1px solid rgba(255, 255, 255, 0.2);
-  background: #0a0a0a;
-  color: #f5f5f5;
-  font-size: 0.95rem;
-  letter-spacing: 0.04em;
-  text-transform: uppercase;
-  cursor: pointer;
-}
+/* RESPONSIVE */
 
-@media (max-width: 1024px) {
-  .women-page {
-    padding: 220px 24px 120px;
-    min-height: calc(100vh - 240px);
-    gap: 24px;
+@media (max-width: 1200px) {
+  .women-grid {
+    grid-template-columns: repeat(4, 1fr);
   }
+}
 
+@media (max-width: 900px) {
   .women-layout {
     grid-template-columns: 1fr;
   }
 
-  .women-filters {
-    position: static;
-    top: auto;
-    display: none;
-  }
-
   .women-grid {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 20px;
-  }
-
-  .women-filters-toggle {
-    display: inline-flex;
-  }
-
-  .women-filters.open {
-    display: flex;
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
-@media (max-width: 768px) {
+@media (max-width: 700px) {
   .women-grid {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .women-grid {
+    grid-template-columns: 1fr;
   }
 }

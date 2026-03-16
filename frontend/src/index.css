@@ -1,42 +1,62 @@
 :root {
   --promo-height: 38px;
   --nav-height: 120px;
+  --nav-height-mobile: 120px;
 
   font-family: "BebasKai", "Pervitina", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
-
-  --primary-dark: #000000;
-  --primary-light: #ffffff;
-  --accent: #d7fa00;
-  --secondary: #737373;
-  --muted: rgba(255,255,255,0.8);
-
-  color-scheme: dark light;
-  color: var(--primary-light);
-  background-color: var(--primary-dark);
-
   font-synthesis: none;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-a {
-  font-weight: 600;
-  color: var(--accent);
-  text-decoration: none;
-  background-color: #000;
-  color: #fff;
+:root.dark {
+  --bg: #000000;
+  --surface: #111111;
+  --surface-2: #1a1a1a;
+  --text: #ffffff;
+  --muted-text: #b5b5b5;
+  --border: rgba(255, 255, 255, 0.14);
+  --accent: #d7fa00;
+  --accent-hover: #b9d500;
+  --shadow: rgba(0, 0, 0, 0.28);
 }
-a:hover { color: #b9d500; }
+
+:root.light {
+  --bg: #f7f7f7;
+  --surface: #ffffff;
+  --surface-2: #efefef;
+  --text: #111111;
+  --muted-text: #5a5a5a;
+  --border: rgba(0, 0, 0, 0.12);
+  --accent: #8ea800;
+  --accent-hover: #738800;
+  --shadow: rgba(0, 0, 0, 0.10);
+}
+
+html,
+body {
+  background: var(--bg);
+  color: var(--text);
+  transition: background-color 0.25s ease, color 0.25s ease;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
-  background: #000;
-  color: #fff;
   display: block;
   overflow-x: hidden;
 }
@@ -45,9 +65,60 @@ body {
   width: 100%;
 }
 
+a {
+  font-weight: 600;
+  color: var(--text);
+  text-decoration: none;
+  background-color: transparent;
+  transition: color 0.2s ease;
+}
+
+a:hover {
+  color: var(--accent);
+}
+
+button,
+input,
+textarea,
+select {
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
 .page-blank {
   min-height: 60vh;
-  background: #000;
+  background: var(--bg);
 }
-.center { text-align:center; }
-.muted { color: var(--secondary); font-size: .95rem; }
+
+.center {
+  text-align: center;
+}
+
+.muted {
+  color: var(--muted-text);
+  font-size: 0.95rem;
+}
+
+.top-promo-bar {
+  width: 100%;
+  min-height: var(--promo-height);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--accent);
+  color: #000000;
+  text-align: center;
+  padding: 8px 16px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  font-weight: 700;
+}
+
+.top-promo-text {
+  font-size: 0.95rem;
+  line-height: 1.2;
+}

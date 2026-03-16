@@ -1,9 +1,7 @@
 import { useState } from "react";
 import "./signup.css";
-import Navbar from "./navbar";
-import Footer from "./footer";
 
-export default function Signup({ onNavigate }) {
+export default function SignupPage({ onNavigate }) {
   const [formData, setFormData] = useState({
     firstName: "",
     lastName: "",
@@ -16,20 +14,19 @@ export default function Signup({ onNavigate }) {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
+  const handleChange = (event) => {
+    const { name, value, type, checked } = event.target;
     setFormData((prev) => ({
       ...prev,
       [name]: type === "checkbox" ? checked : value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
     setError("");
     setSuccess("");
 
-    // Validation
     if (
       !formData.firstName ||
       !formData.lastName ||
@@ -37,27 +34,26 @@ export default function Signup({ onNavigate }) {
       !formData.password ||
       !formData.confirmPassword
     ) {
-      setError("All fields are required");
+      setError("All fields are required.");
       return;
     }
 
     if (formData.password !== formData.confirmPassword) {
-      setError("Passwords do not match");
+      setError("Passwords do not match.");
       return;
     }
 
     if (formData.password.length < 6) {
-      setError("Password must be at least 6 characters");
+      setError("Password must be at least 6 characters.");
       return;
     }
 
     if (!formData.agreeToTerms) {
-      setError("You must agree to the terms and conditions");
+      setError("You must agree to the terms and conditions.");
       return;
     }
 
-    // Success message
-    setSuccess("Account created successfully!");
+    setSuccess("Account created successfully.");
     setFormData({
       firstName: "",
       lastName: "",
@@ -69,54 +65,45 @@ export default function Signup({ onNavigate }) {
 
     setTimeout(() => {
       if (onNavigate) onNavigate("home");
-    }, 1500);
+    }, 1200);
   };
 
   return (
-    <>
-      <div className="top-promo-bar">
-        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
-      </div>
-      <Navbar onNavigate={onNavigate} />
-      <main className="signup-page">
-        <section className="signup-card">
-          <header className="signup-header">
-            <h1 className="signup-heading">Create Account</h1>
-            <p className="signup-subheading">
-              Join us and start shopping today
-            </p>
-          </header>
+    <main className="signup-page">
+      <section className="signup-card">
+        <header className="signup-header">
+          <h1 className="signup-heading">Create Account</h1>
+          <p className="signup-subheading">Join us and start shopping today</p>
+        </header>
 
-          {error && <div className="error-message">{error}</div>}
-          {success && <div className="success-message">{success}</div>}
+        {error ? <div className="signup-message error">{error}</div> : null}
+        {success ? <div className="signup-message success">{success}</div> : null}
 
-          <form onSubmit={handleSubmit} className="signup-form">
-            <div className="form-grid">
-              <label className="form-field">
-                <span>First Name*</span>
-                <input
-                  type="text"
-                  name="firstName"
-                  value={formData.firstName}
-                  onChange={handleChange}
-                  required
-                  placeholder="John"
-                />
-              </label>
-              <label className="form-field">
-                <span>Last Name*</span>
-                <input
-                  type="text"
-                  name="lastName"
-                  value={formData.lastName}
-                  onChange={handleChange}
-                  required
-                  placeholder="Doe"
-                />
-              </label>
-            </div>
+        <form className="signup-form" onSubmit={handleSubmit}>
+          <div className="signup-grid">
+            <label className="signup-field">
+              <span>First Name*</span>
+              <input
+                type="text"
+                name="firstName"
+                value={formData.firstName}
+                onChange={handleChange}
+                required
+              />
+            </label>
 
-            <label className="form-field form-field-full">
+            <label className="signup-field">
+              <span>Last Name*</span>
+              <input
+                type="text"
+                name="lastName"
+                value={formData.lastName}
+                onChange={handleChange}
+                required
+              />
+            </label>
+
+            <label className="signup-field signup-field-full">
               <span>Email*</span>
               <input
                 type="email"
@@ -124,11 +111,10 @@ export default function Signup({ onNavigate }) {
                 value={formData.email}
                 onChange={handleChange}
                 required
-                placeholder="you@example.com"
               />
             </label>
 
-            <label className="form-field form-field-full">
+            <label className="signup-field">
               <span>Password*</span>
               <input
                 type="password"
@@ -136,11 +122,10 @@ export default function Signup({ onNavigate }) {
                 value={formData.password}
                 onChange={handleChange}
                 required
-                placeholder="••••••••"
               />
             </label>
 
-            <label className="form-field form-field-full">
+            <label className="signup-field">
               <span>Confirm Password*</span>
               <input
                 type="password"
@@ -148,39 +133,36 @@ export default function Signup({ onNavigate }) {
                 value={formData.confirmPassword}
                 onChange={handleChange}
                 required
-                placeholder="••••••••"
               />
             </label>
+          </div>
 
-            <label className="form-field-checkbox">
-              <input
-                type="checkbox"
-                name="agreeToTerms"
-                checked={formData.agreeToTerms}
-                onChange={handleChange}
-              />
-              <span>I agree to the Terms and Conditions</span>
-            </label>
+          <label className="signup-checkbox">
+            <input
+              type="checkbox"
+              name="agreeToTerms"
+              checked={formData.agreeToTerms}
+              onChange={handleChange}
+            />
+            <span>I agree to the Terms and Conditions</span>
+          </label>
 
-            <div className="form-actions">
-              <button type="submit" className="signup-submit">
-                Create Account
-              </button>
-            </div>
-          </form>
+          <button type="submit" className="signup-submit">
+            Create Account
+          </button>
 
-          <div className="login-link-container">
-            <p className="login-prompt">Already have an account?</p>
+          <p className="signup-switch">
+            Already have an account?{" "}
             <button
-              className="login-link"
+              type="button"
+              className="signup-link-button"
               onClick={() => onNavigate && onNavigate("login")}
             >
               Log In
             </button>
-          </div>
-        </section>
-      </main>
-      <Footer />
-    </>
+          </p>
+        </form>
+      </section>
+    </main>
   );
 }

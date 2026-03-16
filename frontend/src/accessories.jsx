@@ -1,10 +1,8 @@
 import { useState } from "react";
 import "./accessories.css";
-import Navbar from "./navbar";
-import Footer from "./footer";
 import accessoryImage from "./assets/accessory.png";
 
-export default function AccessoriesPage({ onNavigate }) {
+export default function AccessoriesPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
 
   const products = [
@@ -26,84 +24,69 @@ export default function AccessoriesPage({ onNavigate }) {
   ];
 
   const filterGroups = [
-    {
-      title: "Category",
-      options: ["Bags", "Supports", "Hydration", "Headwear", "Training"],
-    },
-    {
-      title: "Colour",
-      options: ["Black", "Grey", "White"],
-    },
-    {
-      title: "Price",
-      options: ["Under £15", "£15 - £30", "£30+"],
-    },
-    {
-      title: "Material",
-      options: ["Cotton", "Poly Blend", "Neoprene", "Leather"],
-    },
+    { title: "Category", options: ["Bags", "Supports", "Hydration", "Headwear", "Training"] },
+    { title: "Colour", options: ["Black", "Grey", "White"] },
+    { title: "Price", options: ["Under £15", "£15 - £30", "£30+"] },
+    { title: "Material", options: ["Cotton", "Poly Blend", "Neoprene", "Leather"] },
   ];
 
   return (
-    <>
-      <div className="top-promo-bar">
-        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
-      </div>
-      <Navbar onNavigate={onNavigate} />
-      <main className="accessories-page">
-        <section className="accessories-header">
-          <h1 className="accessories-title">Accessories</h1>
-          <p className="accessories-subtitle">
-            Training essentials to support every session. Durable, functional, and ready for daily use.
-          </p>
-        </section>
+    <main className="accessories-page">
+      <header className="accessories-header">
+        <h1 className="accessories-title">Accessories</h1>
+        <p className="accessories-subtitle">
+          Training essentials to support every session. Durable, functional, and
+          ready for daily use.
+        </p>
+      </header>
 
-        <button
-          className="accessories-filters-toggle"
-          type="button"
-          onClick={() => setMobileFiltersOpen((v) => !v)}
+      <button
+        className="accessories-filters-toggle"
+        type="button"
+        onClick={() => setMobileFiltersOpen((v) => !v)}
+      >
+        {mobileFiltersOpen ? "Hide Filters" : "Show Filters"}
+      </button>
+
+      <div className="accessories-layout">
+        <aside
+          className={`accessories-filters ${mobileFiltersOpen ? "open" : ""}`}
         >
-          {mobileFiltersOpen ? "Hide Filters" : "Show Filters"}
-        </button>
+          <h2 className="filters-title">Filter</h2>
 
-        <div className="accessories-layout">
-          <aside className={`accessories-filters ${mobileFiltersOpen ? "open" : ""}`}>
-            <h2 className="filters-title">Filter</h2>
-            {filterGroups.map((group) => (
-              <div className="filter-group" key={group.title}>
-                <h3 className="filter-heading">{group.title}</h3>
-                <div className="filter-options">
-                  {group.options.map((opt) => (
-                    <button key={opt} className="filter-chip" type="button">
-                      {opt}
-                    </button>
-                  ))}
-                </div>
+          {filterGroups.map((group) => (
+            <section className="filter-group" key={group.title}>
+              <h3 className="filter-heading">{group.title}</h3>
+              <div className="filter-options">
+                {group.options.map((opt) => (
+                  <button className="filter-chip" type="button" key={opt}>
+                    {opt}
+                  </button>
+                ))}
               </div>
-            ))}
-          </aside>
-
-          <div className="accessories-content">
-            <section className="accessories-grid">
-              {products.map((product) => (
-                <article className="accessories-card" key={product.name}>
-                  <div
-                    className="accessories-image"
-                    style={{ backgroundImage: `url(${accessoryImage})` }}
-                    aria-hidden="true"
-                  />
-                  <div className="accessories-info">
-                    <h3 className="accessories-name">{product.name}</h3>
-                    <p className="accessories-color">{product.color}</p>
-                    <p className="accessories-price">{product.price}</p>
-                  </div>
-                </article>
-              ))}
             </section>
+          ))}
+        </aside>
+
+        <section className="accessories-content">
+          <div className="accessories-grid">
+            {products.map((product) => (
+              <article className="accessories-card" key={product.name}>
+                <div
+                  className="accessories-image"
+                  style={{ backgroundImage: `url(${accessoryImage})` }}
+                  aria-label={product.name}
+                />
+                <div className="accessories-info">
+                  <h3 className="accessories-name">{product.name}</h3>
+                  <p className="accessories-color">{product.color}</p>
+                  <p className="accessories-price">{product.price}</p>
+                </div>
+              </article>
+            ))}
           </div>
-        </div>
-      </main>
-      <Footer />
-    </>
+        </section>
+      </div>
+    </main>
   );
 }

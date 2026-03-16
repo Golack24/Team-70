@@ -9,16 +9,16 @@ import returnIcon from "./assets/returnicon.png";
 
 export default function Hero() {
   const products = [
-    "Black printed oversized t-shirt",
-    "Black printed oversized t-shirt",
-    "Black printed oversized t-shirt",
-    "Black printed oversized t-shirt",
-    "Black printed oversized t-shirt",
+    { name: "Black Printed Oversized T-Shirt", image: gymsharkImage, color: "Black", price: "£25" },
+    { name: "Training Oversized Tee", image: gymsharkImage, color: "Black", price: "£25" },
+    { name: "Performance Oversized Tee", image: gymsharkImage, color: "Black", price: "£25" },
+    { name: "Drop Shoulder Tee", image: gymsharkImage, color: "Black", price: "£25" },
+    { name: "Core Oversized Tee", image: gymsharkImage, color: "Black", price: "£25" },
   ];
 
   const categories = [
-    { title: "Womens", image: womenImage },
-    { title: "Mens", image: gymsharkImage },
+    { title: "Women", image: womenImage },
+    { title: "Men", image: gymsharkImage },
     { title: "Accessories", image: accessoryImage },
   ];
 
@@ -27,19 +27,19 @@ export default function Hero() {
       icon: deliveryIcon,
       title: "Free nationwide shipping",
       description:
-        "Enjoy free nationwide shipping on every order — with delivery arriving in 5 days or less, guaranteed.",
+        "Enjoy free nationwide shipping on every order — with delivery arriving in 5 days or less.",
     },
     {
       icon: chatIcon,
       title: "24/7 support team",
       description:
-        "Enjoy free nationwide shipping on every order — with delivery arriving in 5 days or less, guaranteed.",
+        "Need help with sizing, orders, or products? Our team is ready whenever you need us.",
     },
     {
       icon: returnIcon,
       title: "30 day returns",
       description:
-        "Enjoy free nationwide shipping on every order — with delivery arriving in 5 days or less, guaranteed.",
+        "Shop with confidence knowing you can return eligible items within 30 days.",
     },
   ];
 
@@ -47,47 +47,46 @@ export default function Hero() {
     <>
       <section className="hero">
         <div className="hero-content">
-          {/* LEFT SIDE TEXT */}
           <div className="hero-text">
-            <h1 className="hero-title">metric</h1>
-            <h2 className="hero-subtitle">measure every move</h2>
+            <h1 className="hero-title">Metric</h1>
+            <h2 className="hero-subtitle">Measure Every Move</h2>
             <p className="hero-description">
-              High-performance gymwear designed to optimise every rep, every
-              session.
+              High-performance gymwear designed to optimise every rep, every session.
             </p>
-            <button className="hero-button">shop now</button>
+            <button className="hero-button" type="button">
+              Shop Now
+            </button>
           </div>
 
-          {/* RIGHT SIDE IMAGE */}
           <div className="hero-image-wrapper">
             <img
               src={heroAthlete}
-              alt="Athlete holding a weight"
+              alt="Athlete wearing Metric gymwear"
               className="hero-main-image"
             />
           </div>
         </div>
       </section>
 
-      <div className="hero-promo-bar">
-        <span className="hero-promo-text">shop oversized shirts</span>
-      </div>
-
       <section className="product-gallery">
+        <div className="section-heading-row">
+          <h2 className="section-heading">Shop Oversized Shirts</h2>
+        </div>
+
         <div className="product-grid">
-          {products.map((name, idx) => (
-            <div className="product-card" key={`${name}-${idx}`}>
+          {products.map((product) => (
+            <article className="product-card" key={product.name}>
               <div
                 className="product-image"
-                style={{ backgroundImage: `url(${gymsharkImage})` }}
-                aria-hidden="true"
+                style={{ backgroundImage: `url(${product.image})` }}
+                aria-label={product.name}
               />
               <div className="product-info">
-                <h3 className="product-title">{name}</h3>
-                <p className="product-color">Black</p>
-                <p className="product-price">£25</p>
+                <h3 className="product-title">{product.name}</h3>
+                <p className="product-color">{product.color}</p>
+                <p className="product-price">{product.price}</p>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
@@ -96,17 +95,19 @@ export default function Hero() {
         <h2 className="categories-heading">Categories</h2>
         <div className="categories-grid">
           {categories.map((cat) => (
-            <div
+            <article
               className="category-card"
               key={cat.title}
               style={{ backgroundImage: `url(${cat.image})` }}
             >
               <div className="category-overlay" />
               <div className="category-content">
-                <span className="category-title">{cat.title}</span>
-                <button className="category-button">Shop Now</button>
+                <h3 className="category-title">{cat.title}</h3>
+                <button className="category-button" type="button">
+                  Shop Now
+                </button>
               </div>
-            </div>
+            </article>
           ))}
         </div>
       </section>
@@ -114,15 +115,15 @@ export default function Hero() {
       <section className="benefits-section">
         <div className="benefits-grid">
           {benefits.map((item) => (
-            <div className="benefit-card" key={item.title}>
+            <article className="benefit-card" key={item.title}>
               <div
                 className="benefit-icon"
-                aria-hidden="true"
                 style={{ backgroundImage: `url(${item.icon})` }}
+                aria-label={item.title}
               />
               <h3 className="benefit-title">{item.title}</h3>
               <p className="benefit-description">{item.description}</p>
-            </div>
+            </article>
           ))}
         </div>
       </section>
