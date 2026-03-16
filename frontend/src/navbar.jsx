@@ -24,6 +24,7 @@ export default function Navbar({ onNavigate, theme, onToggleTheme }) {
     { label: "About Us", page: "about" },
     { label: "Contact Us", page: "contact" },
     { label: "Sign Up", page: "signup" },
+    { label: "Log In", page: "login" },
   ];
 
   const mobileLinks = [...leftLinks, ...rightLinks];
@@ -83,8 +84,13 @@ export default function Navbar({ onNavigate, theme, onToggleTheme }) {
             </a>
           </li>
 
+<<<<<<< HEAD
           <li>
             <a href="#" className="nav-icon-link nav-icon-search" aria-label="Search">
+=======
+          <li className="nav-icon-search">
+            <a href="#" aria-label="Search" className="nav-icon-link">
+>>>>>>> 687141407e5d2aec5027d96121cc881f1be4d285
               <img src={searchIcon} alt="Search" className="nav-icon-img" />
             </a>
           </li>

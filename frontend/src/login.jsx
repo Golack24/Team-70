@@ -19,8 +19,13 @@ export default function Login({ onNavigate }) {
     }));
   };
 
+<<<<<<< HEAD
   const handleSubmit = (event) => {
     event.preventDefault();
+=======
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+>>>>>>> 687141407e5d2aec5027d96121cc881f1be4d285
     setError("");
     setSuccess("");
 
@@ -34,6 +39,7 @@ export default function Login({ onNavigate }) {
       return;
     }
 
+<<<<<<< HEAD
     setSuccess("Logged in successfully.");
     setFormData({
       email: "",
@@ -44,6 +50,40 @@ export default function Login({ onNavigate }) {
     setTimeout(() => {
       if (onNavigate) onNavigate("home");
     }, 1200);
+=======
+    try {
+      const response = await fetch(
+        "http://cs2team70.cs2410-web01pvm.aston.ac.uk/index.php?resource=users&action=login",
+        {
+          method: "POST",
+          credentials: "include", // To handle sessions/cookies
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        },
+      );
+
+      const data = await response.json();
+
+      if (response.ok && data.success) {
+        setSuccess("Logged in successfully!");
+        // Optionally handle 'rememberMe' by storing a token in localStorage if your backend returns one
+        // if (formData.rememberMe && data.token) localStorage.setItem('authToken', data.token);
+
+        setTimeout(() => {
+          if (onNavigate) onNavigate("home");
+        }, 1500);
+      } else {
+        setError(data.error || "Invalid email or password");
+      }
+    } catch (err) {
+      setError("Error connecting to the server. Please try again later.");
+    }
+>>>>>>> 687141407e5d2aec5027d96121cc881f1be4d285
   };
 
   const handleForgot = () => {
