@@ -104,24 +104,33 @@ export default function CheckoutPage({
             <button className="apply-btn" type="button" onClick={handleApplyDiscount}>Apply</button>
           </div>
 
-          {discountAmount > 0 && (
-            <div className="summary-line">
-              <span>Discount</span>
-              <span>-{formatPrice(discountAmount)}</span>
-            </div>
-          )}
-
-          <hr />
-
-          <div className="summary-total">
-            <span>Total</span>
-            <span>{formatPrice(total)}</span>
-          </div>
+                <div className="row total">
+                  <span>Total</span>
+                  <span>{formatPrice(total)}</span>
+                </div>
+                <div className="discount-section">
+                  <label>Discount Code</label>
+                  <input
+                    type="text"
+                    value={discountCode}
+                    placeholder="Enter code"
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                  />
+                </div>
+                <div className="discount-section">
+                  <label>Discount Code</label>
+                  <input
+                    type="text"
+                    value={discountCode}
+                    placeholder="Enter code"
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                  />
+                </div>
+              </div>
 
           <button className="checkout-btn">Place Order</button>
         </aside>
       </main>
-
       <Footer />
     </>
   );

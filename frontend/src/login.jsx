@@ -20,8 +20,6 @@ export default function LoginPage({ onNavigate, onAuth }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
-    // Basic validation
     if (!form.email || !form.password) {
       setError("Both fields are required");
       return;
@@ -143,6 +141,14 @@ export default function LoginPage({ onNavigate, onAuth }) {
               Create an account
             </button>
           </p>
+
+          <button
+            type="button"
+            className="auth-link"
+            onClick={handleForgot}
+          >
+            Forgot your password?
+          </button>
         </section>
       </main>
 

@@ -4,7 +4,8 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import gymsharkImage from "./assets/gymshark.png";
 import { fetchProducts } from "./api";
-
+import Navbar from "./navbar";
+import Footer from "./footer";
 // Local fallback so the Men page still shows products when the API has no data yet.
 const fallbackProducts = [
   {
