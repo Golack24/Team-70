@@ -31,6 +31,34 @@ try {
         $data = inputJson();
     }
 
+       //POST ACTIONS
+
+    if ($method === 'POST') {
+
+        $data = jsonInput() ?? [];
+
+        // REGISTER
+
+        if ($action === 'register') {
+
+            if (empty($data['email']) || empty($data['password'])) {
+                respond(['error' => 'Email and password required'], 422);
+            }
+
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$data['email']]);
+
+            if ($stmt->fetch()) {
+                respond(['error' => 'Email already in use'], 409);
+            }
+
+            $hash = password_hash($data['password'], PASSWORD_BCRYPT);
+
+            $stmt = $pdo->prepare("
+                INSERT INTO users
+                (username, first_name, last_name, email, password_hash, phone, role)
+                VALUES (:username, :first_name, :last_name, :email, :password_hash, :phone, :role)
+            ");
     if ($action == 'register') {
         if(empty($data['email']) || empty($data['password'])) {
             respond(['error' => 'Email and password required'],422);
@@ -59,12 +87,53 @@ try {
         if (empty('data'['email']) || empty($data['password'])) {
             respond(['error' => 'Email and password required'], 422);
         }
+
+        // LOGIN
+
+        if ($action === 'login') {
+
+            if (empty($data['email']) || empty($data['password'])) {
+                respond(['error' => 'Email and password required'], 422);
+            }
+
+            $stmt = $pdo->prepare("
+                SELECT id, password_hash, email, username, role
+                FROM users
+                WHERE email = ?
+            ");
+
         $stmt = $pdo->prepare("SELECT id, password_hash, email, username, role FROM users WHERE email = ?");
             $stmt->execute([$data['email']]);
             $u = $stmt->fetch();
             if (!$u || !password_verify($data['password'], $u['password_hash'])) {
                 respond(['error' => 'Invalid credentials'], 401);
             }
+
+            $_SESSION['user_id'] = $user['id'];
+            $_SESSION['role'] = $user['role'];
+
+            respond([
+                'success' => true,
+                'user' => [
+                    'id' => $user['id'],
+                    'email' => $user['email'],
+                    'username' => $user['username'],
+                    'role' => $user['role']
+                ]
+            ]);
+        }
+
+        // LOGOUT 
+
+        if ($action === 'logout') {
+
+            session_unset();
+            session_destroy();
+
+            respond(['success' => true]);
+        }
+
+        respond(['error' => 'Unknown POST action'], 400);
         $_SESSION['user_id'] = $u['id'];
             $_SESSION['role'] = $u['role'];
             respond(['success' => true, 'user' => [
@@ -83,6 +152,19 @@ try {
     respond(['error' => 'Unknown POST action'], 400);
 
 
+    
+      // GET USERS 
+
+    if ($method === 'GET') {
+
+        if ($id) {
+
+            $stmt = $pdo->prepare("
+                SELECT id, username, first_name, last_name, email, phone, role, created_at
+                FROM users
+                WHERE id = ?
+            ");
+
 if($method === 'GET') {
     if($id) {
         $stmt = $pdo->prepare("SELECT id, username, first_name, last_name, email, phone, role, created_at FROM users WHERE id = ?");
@@ -97,6 +179,9 @@ if($method === 'GET') {
     }
 
 }
+
+
+      // UPDATE USER
 
 if ($method === 'PUT') {
         if (!$id) respond(['error' => 'Missing user id'], 422);
@@ -135,6 +220,23 @@ if ($method === 'DELETE') {
     $isAdmin = ($_SESSION['role']?? '') === 'admin';
     if (!$curent || ($current !== $id && !$isAdmin)) respond(['error' => 'Unauthorised'], 403);
 
+      // DELETE USER
+
+    if ($method === 'DELETE') {
+
+        if (!$id) respond(['error' => 'Missing user id'], 422);
+
+        $current = authUserID();
+        $isAdmin = ($_SESSION['role'] ?? '') === 'admin';
+
+        if (!$current || ($current !== $id && !$isAdmin)) {
+            respond(['error' => 'Unauthorized'], 403);
+        }
+
+        $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
+        $stmt->execute([$id]);
+
+        respond(['success' => true]);
     $stmt = $pdo->prepare("DELETE FROM users WHERE id = ?");
     $stmt ->execute(['id']);
     respond(['success' -> true]);

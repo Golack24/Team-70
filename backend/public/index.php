@@ -6,7 +6,21 @@ header('Access-Control-Allow-Headers: Content-Type, Authorization');
 header('Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS');
 if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') { http_response_code(204); exit; }
 
+header("Access-Control-Allow-Origin: http://cs2team70.cs2410-web01pvm.aston.ac.uk");
+header("Access-Control-Allow-Headers: Content-Type, Authorization");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+header("Access-Control-Allow-Credentials: true");
+
+if ($_SERVER['REQUEST_METHOD'] === 'OPTIONS') {
+    http_response_code(200);
+    echo json_encode(['status' => 'ok']);
+    exit;
+}
+
+header("Content-Type: application/json; charset=utf-8");
+
 header('Content-Type: application/json; charset=utf-8');
+
 
 // Start session
 if (session_status() === PHP_SESSION_NONE) session_start();

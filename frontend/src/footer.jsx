@@ -9,15 +9,29 @@ import amazonPayIcon from "./assets/amazonpayicon.png";
 const footerColumns = [
   {
     heading: "My Account",
-    links: ["Log In", "Register"],
+    links: [
+      { label: "Log In", page: "login" },
+      { label: "Register", page: "signup" },
+    ],
   },
   {
     heading: "Pages",
-    links: ["Home", "Mens", "Womens", "Accessories"],
+    links: [
+      { label: "Home", page: "home" },
+      { label: "Mens", page: "men" },
+      { label: "Womens", page: "women" },
+      { label: "Accessories", page: "accessories" },
+    ],
   },
   {
     heading: "Help",
-    links: ["FAQ’s", "Live Chat", "Contact", "Shipping and Return", "Terms and Conditions"],
+    links: [
+      { label: "FAQ’s", page: "contact" },
+      { label: "Live Chat", page: "contact" },
+      { label: "Contact", page: "contact" },
+      { label: "Shipping and Return", page: "contact" },
+      { label: "Terms and Conditions", page: "about" },
+    ],
   },
 ];
 
@@ -32,25 +46,32 @@ const payments = [
 
 const socials = ["Facebook", "YouTube", "X", "TikTok", "Instagram"];
 
-export default function Footer() {
+export default function Footer({ onNavigate }) {
   return (
     <footer className="footer-panel">
       <div className="footer-columns">
         {footerColumns.map((col) => (
           <div className="footer-column" key={col.heading}>
             <h3 className="footer-heading">{col.heading}</h3>
+
             <ul className="footer-links">
               {col.links.map((link) => (
-                <li key={link}>
-                  <a className="footer-link" href="#">
-                    {link}
+                <li key={link.label}>
+                  <a
+                    href="#"
+                    className="footer-link"
+                    onClick={(e) => {
+                      e.preventDefault();
+                      onNavigate?.(link.page);
+                    }}
+                  >
+                    {link.label}
                   </a>
                 </li>
               ))}
             </ul>
           </div>
         ))}
-
       </div>
 
       <div className="footer-bottom">
@@ -64,7 +85,7 @@ export default function Footer() {
 
         <div className="footer-social">
           {socials.map((label) => (
-            <a className="social-chip" href="#" key={label}>
+            <a key={label} href="#" className="social-chip">
               {label}
             </a>
           ))}

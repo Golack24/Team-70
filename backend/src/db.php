@@ -1,44 +1,21 @@
 <?php
+$host = 'localhost';
+$db   = 'cs2team70_db';
+$user = 'cs2team70';
+$pass = 'co0dJ2qvmGYs7J9SrkVOjXrdQ';
+$charset = 'utf8mb4';
 
-// Database connection (aston)
-$host = 'localhost'; 
-$dbname = 'cs2team70_db'; 
-$user = 'cs2team70'; 
-$pass = 'co0dJ2qvmGYs7J9SrkVOjXrdQ'; 
+$dsn = "mysql:host=$host;dbname=$db;charset=$charset";
 
 try {
-    $dsn = "mysql:host=$host;dbname=$dbname;charset=utf8mb4";
-
-    //PDO connection
-    $pdo = new PDO($dsn, $user, $pass);
-
-    // PDO options for error handling & fetching
-    $pdo->setAttribute(PDO::ATTR_ERRMODE, PDO::ERRMODE_EXCEPTION);
-    $pdo->setAttribute(PDO::ATTR_DEFAULT_FETCH_MODE, PDO::FETCH_ASSOC);
-
-} catch (PDOException $e) {
-    http_response_code(500);
-    echo json_encode([
-        "error" => "Database connection failed",
-        "details" => $e->getMessage()
+    $pdo = new PDO($dsn, $user, $pass, [
+        PDO::ATTR_ERRMODE => PDO::ERRMODE_EXCEPTION,
     ]);
-
+} catch (PDOException $e) {
+    echo json_encode([
+        'error' => 'Database connection failed',
+        'details' => $e->getMessage()
+    ]);
     exit;
 }
-
-?>
-
-<?php
-$host = "localhost";
-$dbname = "cs2team70_db";
-$username = "cs2team70";
-$password = "co0dJ2qvmGYs7J9SrkVOjXrdQ";
-
-$conn = new mysqli($host, $username, $password, $dbname);
-
-if ($conn->connect_error) {
-    die("Connection failed: " . $conn->connect_error);
-}
-
-echo "CONNECTED SUCCESSFULLY!";
 ?>

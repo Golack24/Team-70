@@ -1,4 +1,4 @@
-const API_BASE = (import.meta.env.VITE_API_BASE || "http://localhost:8000").replace(/\/$/, "");
+const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
 const API_ROOT = `${API_BASE}/index.php`;
 
 const toQuery = (params = {}) => {
@@ -13,7 +13,9 @@ const toQuery = (params = {}) => {
 
 async function request(resource, params = {}) {
   const url = toQuery({ resource, ...params });
-  const res = await fetch(url);
+  const res = await fetch(url, {
+    credentials: "include",
+  });
   const data = await res.json().catch(() => ({}));
   if (!res.ok) {
     const message = data?.error || `Request failed (${res.status})`;
@@ -25,12 +27,12 @@ async function request(resource, params = {}) {
 export async function fetchProducts(params = {}) {
   return request("products", params);
 }
-
 // Auth helpers
 const jsonRequest = async (action, body = {}) => {
   const res = await fetch(`${API_ROOT}?resource=users&action=${action}`, {
     method: "POST",
     headers: { "Content-Type": "application/json" },
+    credentials: "include",
     body: JSON.stringify(body),
   });
   const data = await res.json().catch(() => ({}));
@@ -48,8 +50,7 @@ export async function registerUser(payload) {
 export async function loginUser(payload) {
   return jsonRequest("login", payload);
 }
-
+// backend expects POST logout
 export async function logoutUser() {
-  // backend expects POST logout
   return jsonRequest("logout", {});
 }

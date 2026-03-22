@@ -19,13 +19,16 @@ export default function CheckoutPage({
     (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
     0,
   );
+
   const shipping = 0;
   const total = subtotal + shipping;
 
   return (
     <>
       <div className="top-promo-bar">
-        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
+        <span className="top-promo-text">
+          Free shipping on all orders today
+        </span>
       </div>
 
       <Navbar onNavigate={onNavigate} />
@@ -38,6 +41,7 @@ export default function CheckoutPage({
               <h1>Checkout</h1>
               <p className="lede">Secure your essentials in under a minute.</p>
             </div>
+
             <button
               className="ghost-link"
               type="button"
@@ -48,6 +52,7 @@ export default function CheckoutPage({
           </div>
 
           <div className="checkout-grid">
+            {/* LEFT SIDE — CART */}
             <div className="cart-panel">
               {cart.length === 0 && (
                 <div className="cart-empty">
@@ -69,9 +74,12 @@ export default function CheckoutPage({
                 >
                   <div
                     className="cart-thumb"
-                    style={{ backgroundImage: `url(${item.image || ""})` }}
+                    style={{
+                      backgroundImage: `url(${item.image || ""})`,
+                    }}
                     aria-hidden="true"
                   />
+
                   <div className="cart-meta">
                     <div className="cart-line">
                       <h3>{item.name}</h3>
@@ -79,10 +87,12 @@ export default function CheckoutPage({
                         {formatPrice((item.price || 0) * (item.quantity || 1))}
                       </span>
                     </div>
+
                     <p className="muted">
-                      {item.category_name || "Gymwear"}{" "}
+                      {item.category_name || "Gymwear"}
                       {item.size ? ` · Size ${item.size}` : ""}
                     </p>
+
                     <div className="cart-actions">
                       <button
                         type="button"
@@ -91,6 +101,7 @@ export default function CheckoutPage({
                       >
                         Remove
                       </button>
+
                       <div className="qty">
                         <button
                           type="button"
@@ -100,7 +111,9 @@ export default function CheckoutPage({
                         >
                           -
                         </button>
+
                         <span>{item.quantity || 1}</span>
+
                         <button
                           type="button"
                           onClick={() =>
@@ -116,17 +129,21 @@ export default function CheckoutPage({
               ))}
             </div>
 
+            {/* RIGHT SIDE — SUMMARY */}
             <aside className="summary-panel">
               <h2>Order summary</h2>
+
               <div className="summary-rows">
                 <div className="row">
                   <span>Subtotal</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
+
                 <div className="row">
                   <span>Shipping</span>
                   <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
                 </div>
+
                 <div className="row total">
                   <span>Total</span>
                   <span>{formatPrice(total)}</span>

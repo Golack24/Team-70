@@ -4,7 +4,7 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import { loginUser } from "./api";
 
-export default function LoginPage({ onNavigate, onAuth }) {
+export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -18,9 +18,6 @@ export default function LoginPage({ onNavigate, onAuth }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-    setSuccess("");
-
-    // ✅ validation (from incoming branch)
     if (!form.email || !form.password) {
       setError("Both fields are required");
       return;
@@ -34,19 +31,11 @@ export default function LoginPage({ onNavigate, onAuth }) {
     setLoading(true);
 
     try {
-      // ✅ clean API abstraction (better than raw fetch)
       const resp = await loginUser(form);
-
-      setSuccess("Logged in successfully!");
-
-      // store user globally if needed
-      onAuth?.(resp?.user || resp);
-
-      setTimeout(() => {
-        onNavigate?.("home");
-      }, 1200);
+      const loggedInUser = resp?.user || resp;
+      onAuth?.(loggedInUser);
     } catch (err) {
-      setError(err?.message || "Invalid email or password");
+      setError(err?.message || "Login failed");
     } finally {
       setLoading(false);
     }
@@ -63,7 +52,7 @@ export default function LoginPage({ onNavigate, onAuth }) {
         <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
       </div>
 
-      <Navbar onNavigate={onNavigate} />
+      <Navbar onNavigate={onNavigate} user={user} onLogout={onLogout} />
 
       <main className="auth-page">
         <section className="auth-card">
@@ -111,6 +100,12 @@ export default function LoginPage({ onNavigate, onAuth }) {
               </button>
             </div>
           </form>
+
+          <div className="forgot-password">
+            <button className="auth-link" onClick={handleForgot}>
+              Forgot your password?
+            </button>
+          </div>
 
           <p className="auth-footer">
             New here?{" "}
