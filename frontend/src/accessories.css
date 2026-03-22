@@ -1,11 +1,11 @@
 .accessories-page {
-  min-height: calc(100vh - 320px);
-  background: var(--bg);
-  padding: 48px 60px 140px;
+  min-height: calc(100vh - var(--navbar-offset, 140px));
+  background: #000;
+  padding: var(--page-top-padding) var(--page-side-padding)
+    var(--page-bottom-padding);
   display: flex;
   flex-direction: column;
   gap: 24px;
-  transition: background-color 0.25s ease, color 0.25s ease;
 }
 
 .accessories-layout {
@@ -16,7 +16,7 @@
 
 .accessories-header {
   text-align: center;
-  color: var(--text);
+  color: #f5f5f5;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -27,19 +27,19 @@
   font-size: 3.2rem;
   letter-spacing: 0.12em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: #d7fa00;
   margin: 0;
 }
 
 .accessories-subtitle {
   margin: 0;
-  color: var(--muted-text);
+  color: #dcdcdc;
   font-size: 1.1rem;
 }
 
 .accessories-filters {
-  background: var(--surface);
-  border: 1px solid var(--border);
+  background: #0a0a0a;
+  border: 1px solid rgba(255, 255, 255, 0.12);
   border-radius: 14px;
   padding: 18px;
   display: flex;
@@ -56,7 +56,7 @@
   font-size: 1.4rem;
   letter-spacing: 0.08em;
   text-transform: uppercase;
-  color: var(--accent);
+  color: #d7fa00;
 }
 
 .filter-group {
@@ -67,7 +67,7 @@
 
 .filter-heading {
   margin: 0;
-  color: var(--text);
+  color: #f5f5f5;
   font-size: 1rem;
   letter-spacing: 0.02em;
   text-transform: uppercase;
@@ -81,8 +81,8 @@
 
 .filter-chip {
   background: transparent;
-  border: 1px solid var(--border);
-  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: #f5f5f5;
   border-radius: 10px;
   padding: 8px 12px;
   font-size: 0.95rem;
@@ -91,9 +91,9 @@
 }
 
 .filter-chip:hover {
-  border-color: var(--accent);
-  color: var(--accent);
-  background: color-mix(in srgb, var(--accent) 8%, transparent);
+  border-color: #d7fa00;
+  color: #d7fa00;
+  background: rgba(215, 250, 0, 0.08);
 }
 
 .accessories-content {
@@ -109,19 +109,17 @@
 }
 
 .accessories-card {
-  background: var(--surface);
+  background: #0a0a0a;
   border-radius: 18px;
   padding: 16px 16px 20px;
   display: flex;
   flex-direction: column;
   height: 100%;
-  box-shadow: 0 18px 32px var(--shadow);
+  box-shadow: 0 18px 32px rgba(0, 0, 0, 0.35);
 }
 
 .accessories-image {
-  background-position: center;
-  background-size: cover;
-  background-repeat: no-repeat;
+  background: center/cover no-repeat;
   border-radius: 14px;
   width: 100%;
   aspect-ratio: 3 / 4;
@@ -133,7 +131,7 @@
   display: flex;
   flex-direction: column;
   gap: 4px;
-  color: var(--text);
+  color: #f5f5f5;
 }
 
 .accessories-name {
@@ -146,13 +144,13 @@
 
 .accessories-color {
   margin: 0;
-  color: var(--muted-text);
+  color: #bfbfbf;
   font-size: 0.95rem;
 }
 
 .accessories-price {
   margin: 4px 0 0;
-  color: var(--accent);
+  color: #d7fa00;
   font-weight: 800;
   font-size: 1rem;
 }
@@ -163,9 +161,9 @@
   align-self: flex-start;
   padding: 10px 16px;
   border-radius: 10px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  background: #0a0a0a;
+  color: #f5f5f5;
   font-size: 0.95rem;
   letter-spacing: 0.04em;
   text-transform: uppercase;
@@ -174,7 +172,8 @@
 
 @media (max-width: 1024px) {
   .accessories-page {
-    padding: 32px 24px 120px;
+    padding: 220px 24px 120px;
+    min-height: calc(100vh - 240px);
     gap: 24px;
   }
 

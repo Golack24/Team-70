@@ -17,7 +17,7 @@ import { logoutUser } from "./api";
 
 const PromoBar = () => (
   <div className="top-promo-bar">
-    <div className="top-promo-text">10% OFF WITH CODE "METRIC"</div>
+    <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
   </div>
 );
 
@@ -71,7 +71,9 @@ function App() {
       const existing = prev.find((p) => p.id === product.id);
       if (existing) {
         return prev.map((p) =>
-          p.id === product.id ? { ...p, quantity: (p.quantity || 1) + quantity } : p
+          p.id === product.id
+            ? { ...p, quantity: (p.quantity || 1) + quantity }
+            : p,
         );
       }
       const base = {
@@ -90,10 +92,16 @@ function App() {
       prev
         .map((p) =>
           p.id === productId
-            ? { ...p, quantity: Math.max(1, Number.isNaN(Number(nextQty)) ? 1 : nextQty) }
-            : p
+            ? {
+                ...p,
+                quantity: Math.max(
+                  1,
+                  Number.isNaN(Number(nextQty)) ? 1 : nextQty,
+                ),
+              }
+            : p,
         )
-        .filter((p) => p.quantity > 0)
+        .filter((p) => p.quantity > 0),
     );
   };
 
@@ -194,27 +202,22 @@ function App() {
     );
   }
 
-
-
   return (
-    <>
+    <StrictMode>
       <PromoBar />
       <Navbar onNavigate={handleNavigate} user={user} onLogout={handleLogout} />
       {/* ALL content must be wrapped inside this div */}
       <div
         style={{
-          marginTop: "calc(var(--navbar-offset, 140px) + clamp(16px, 6vw, 54px))",
+          marginTop:
+            "calc(var(--navbar-offset, 140px) + clamp(16px, 6vw, 54px))",
         }}
       >
         <Hero onNavigate={handleNavigate} />
       </div>
       <Footer />
-    </>
+    </StrictMode>
   );
 }
 
-createRoot(document.getElementById("root")).render(
-  <StrictMode>
-    <App />
-  </StrictMode>
-);
+createRoot(document.getElementById("root")).render(<App />);

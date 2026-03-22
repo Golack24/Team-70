@@ -79,26 +79,30 @@ export default function Hero({ onNavigate }) {
     <>
       <section className="hero">
         <div className="hero-content">
+          {/* LEFT SIDE TEXT */}
           <div className="hero-text">
-            <h1 className="hero-title">Metric</h1>
-            <h2 className="hero-subtitle">Measure Every Move</h2>
+            <h1 className="hero-title">metric</h1>
+            <h2 className="hero-subtitle">measure every move</h2>
             <p className="hero-description">
               High-performance gymwear designed to optimise every rep, every session.
             </p>
-            <button className="hero-button" type="button">
-              Shop Now
-            </button>
+            <button className="hero-button">shop now</button>
           </div>
 
+          {/* RIGHT SIDE IMAGE */}
           <div className="hero-image-wrapper">
             <img
               src={heroAthlete}
-              alt="Athlete wearing Metric gymwear"
+              alt="Athlete holding a weight"
               className="hero-main-image"
             />
           </div>
         </div>
       </section>
+
+      <div className="hero-promo-bar">
+        <span className="hero-promo-text">shop oversized shirts</span>
+      </div>
 
       <section className="product-gallery">
         {error && <p className="hero-error">Could not load products. {error}</p>}
@@ -134,19 +138,17 @@ export default function Hero({ onNavigate }) {
         <h2 className="categories-heading">Categories</h2>
         <div className="categories-grid">
           {categories.map((cat) => (
-            <article
+            <div
               className="category-card"
               key={cat.title}
               style={{ backgroundImage: `url(${cat.image})` }}
             >
               <div className="category-overlay" />
               <div className="category-content">
-                <h3 className="category-title">{cat.title}</h3>
-                <button className="category-button" type="button">
-                  Shop Now
-                </button>
+                <span className="category-title">{cat.title}</span>
+                <button className="category-button">Shop Now</button>
               </div>
-            </article>
+            </div>
           ))}
         </div>
       </section>
@@ -154,15 +156,15 @@ export default function Hero({ onNavigate }) {
       <section className="benefits-section">
         <div className="benefits-grid">
           {benefits.map((item) => (
-            <article className="benefit-card" key={item.title}>
+            <div className="benefit-card" key={item.title}>
               <div
                 className="benefit-icon"
+                aria-hidden="true"
                 style={{ backgroundImage: `url(${item.icon})` }}
-                aria-label={item.title}
               />
               <h3 className="benefit-title">{item.title}</h3>
               <p className="benefit-description">{item.description}</p>
-            </article>
+            </div>
           ))}
         </div>
       </section>

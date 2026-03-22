@@ -1,9 +1,11 @@
 import { useEffect, useState } from "react";
 import "./accessories.css";
+import Navbar from "./navbar";
+import Footer from "./footer";
 import accessoryImage from "./assets/accessory.png";
 import { fetchProducts } from "./api";
-import Navbar from "./Navbar";
-import Footer from "./Footer";
+import Navbar from "./navbar";
+import Footer from "./footer";
 
 const filterGroups = [
   {
@@ -28,7 +30,7 @@ const formatPrice = (value) => {
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
 };
 
-export default function AccessoriesPage() {
+export default function AccessoriesPage({ onNavigate }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -72,29 +74,28 @@ export default function AccessoriesPage() {
           )}
         </section>
 
-      <button
-        className="accessories-filters-toggle"
-        type="button"
-        onClick={() => setMobileFiltersOpen((v) => !v)}
-      >
-        {mobileFiltersOpen ? "Hide Filters" : "Show Filters"}
-      </button>
+        <button
+          className="accessories-filters-toggle"
+          type="button"
+          onClick={() => setMobileFiltersOpen((v) => !v)}
+        >
+          {mobileFiltersOpen ? "Hide Filters" : "Show Filters"}
+        </button>
 
-      <div className="accessories-layout">
-        <aside className={`accessories-filters ${mobileFiltersOpen ? "open" : ""}`}>
-          <h2 className="filters-title">Filter</h2>
-
-          {filterGroups.map((group) => (
-            <section className="filter-group" key={group.title}>
-              <h3 className="filter-heading">{group.title}</h3>
-              <div className="filter-options">
-                {group.options.map((opt) => (
-                  <button className="filter-chip" type="button" key={opt}>
-                    {opt}
-                  </button>
-                ))}
+        <div className="accessories-layout">
+          <aside className={`accessories-filters ${mobileFiltersOpen ? "open" : ""}`}>
+            <h2 className="filters-title">Filter</h2>
+            {filterGroups.map((group) => (
+              <div className="filter-group" key={group.title}>
+                <h3 className="filter-heading">{group.title}</h3>
+                <div className="filter-options">
+                  {group.options.map((opt) => (
+                    <button key={opt} className="filter-chip" type="button">
+                      {opt}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </section>
             ))}
         </aside>
 

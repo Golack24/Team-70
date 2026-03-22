@@ -1,5 +1,7 @@
 import { useEffect, useState } from "react";
 import "./men.css";
+import Navbar from "./navbar";
+import Footer from "./footer";
 import gymsharkImage from "./assets/gymshark.png";
 import { fetchProducts } from "./api";
 import Navbar from "./navbar";
@@ -135,7 +137,7 @@ const formatPrice = (value) => {
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
 };
 
-export default function MenPage() {
+export default function MenPage({ onNavigate }) {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
   const [products, setProducts] = useState([]);
   const [error, setError] = useState(null);
@@ -181,29 +183,28 @@ export default function MenPage() {
           {error && <p className="men-error">Unable to load live products. Showing featured picks.</p>}
         </section>
 
-      <button
-        className="men-filters-toggle"
-        type="button"
-        onClick={() => setMobileFiltersOpen((v) => !v)}
-      >
-        {mobileFiltersOpen ? "Hide Filters" : "Show Filters"}
-      </button>
+        <button
+          className="men-filters-toggle"
+          type="button"
+          onClick={() => setMobileFiltersOpen((v) => !v)}
+        >
+          {mobileFiltersOpen ? "Hide Filters" : "Show Filters"}
+        </button>
 
-      <div className="men-layout">
-        <aside className={`men-filters ${mobileFiltersOpen ? "open" : ""}`}>
-          <h2 className="filters-title">Filter</h2>
-
-          {filterGroups.map((group) => (
-            <section className="filter-group" key={group.title}>
-              <h3 className="filter-heading">{group.title}</h3>
-              <div className="filter-options">
-                {group.options.map((opt) => (
-                  <button className="filter-chip" type="button" key={opt}>
-                    {opt}
-                  </button>
-                ))}
+        <div className="men-layout">
+          <aside className={`men-filters ${mobileFiltersOpen ? "open" : ""}`}>
+            <h2 className="filters-title">Filter</h2>
+            {filterGroups.map((group) => (
+              <div className="filter-group" key={group.title}>
+                <h3 className="filter-heading">{group.title}</h3>
+                <div className="filter-options">
+                  {group.options.map((opt) => (
+                    <button key={opt} className="filter-chip" type="button">
+                      {opt}
+                    </button>
+                  ))}
+                </div>
               </div>
-              </section>
             ))}
           </aside>
 

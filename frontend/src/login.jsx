@@ -8,6 +8,7 @@ export default function LoginPage({ onNavigate, onAuth }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,15 +18,43 @@ export default function LoginPage({ onNavigate, onAuth }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
+
+    // ✅ validation (from incoming branch)
+    if (!form.email || !form.password) {
+      setError("Both fields are required");
+      return;
+    }
+
+    if (form.password.length < 6) {
+      setError("Password must be at least 6 characters");
+      return;
+    }
+
     setLoading(true);
+
     try {
+      // ✅ clean API abstraction (better than raw fetch)
       const resp = await loginUser(form);
+
+      setSuccess("Logged in successfully!");
+
+      // store user globally if needed
       onAuth?.(resp?.user || resp);
+
+      setTimeout(() => {
+        onNavigate?.("home");
+      }, 1200);
     } catch (err) {
-      setError(err?.message || "Login failed");
+      setError(err?.message || "Invalid email or password");
     } finally {
       setLoading(false);
     }
+  };
+
+  const handleForgot = () => {
+    setError("Password reset is not implemented yet");
+    setTimeout(() => setError(""), 2000);
   };
 
   return (
@@ -33,7 +62,9 @@ export default function LoginPage({ onNavigate, onAuth }) {
       <div className="top-promo-bar">
         <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
       </div>
+
       <Navbar onNavigate={onNavigate} />
+
       <main className="auth-page">
         <section className="auth-card">
           <header className="auth-header">
@@ -56,6 +87,7 @@ export default function LoginPage({ onNavigate, onAuth }) {
                   placeholder="you@example.com"
                 />
               </label>
+
               <label className="form-field">
                 <span>Password*</span>
                 <input
@@ -71,6 +103,7 @@ export default function LoginPage({ onNavigate, onAuth }) {
             </div>
 
             {error && <p className="auth-error">{error}</p>}
+            {success && <p className="auth-success">{success}</p>}
 
             <div className="form-actions">
               <button type="submit" className="auth-submit" disabled={loading}>
@@ -81,12 +114,25 @@ export default function LoginPage({ onNavigate, onAuth }) {
 
           <p className="auth-footer">
             New here?{" "}
-            <button type="button" className="auth-link" onClick={() => onNavigate?.("signup")}>
+            <button
+              type="button"
+              className="auth-link"
+              onClick={() => onNavigate?.("signup")}
+            >
               Create an account
             </button>
           </p>
+
+          <button
+            type="button"
+            className="auth-link"
+            onClick={handleForgot}
+          >
+            Forgot your password?
+          </button>
         </section>
       </main>
+
       <Footer />
     </>
   );

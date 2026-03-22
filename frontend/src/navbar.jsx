@@ -7,8 +7,8 @@ import searchIcon from "./assets/searchicon.png";
 export default function Navbar({ onNavigate, user, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
-  const handleNav = (page) => (event) => {
-    event.preventDefault();
+  const handleNav = (page) => (e) => {
+    e.preventDefault();
     setMenuOpen(false);
     if (onNavigate) onNavigate(page);
   };
@@ -34,23 +34,31 @@ export default function Navbar({ onNavigate, user, onLogout }) {
   ];
 
   const mobileLinks = [...leftLinks, ...rightLinks];
+
   const navClass = menuOpen ? "navbar is-open" : "navbar";
 
   return (
     <nav className={navClass}>
       <div className="navbar-inner">
         <button
-          className="nav-toggle"
-          onClick={() => setMenuOpen((value) => !value)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
           type="button"
+          className="nav-toggle"
+          aria-expanded={menuOpen}
+          aria-controls="nav-mobile-menu"
+          onClick={() => setMenuOpen((v) => !v)}
+          aria-label={menuOpen ? "Close menu" : "Open menu"}
         >
-          {menuOpen ? "Close" : "Menu"}
+          <span className="sr-only">{menuOpen ? "Close" : "Menu"}</span>
+          <span className={`nav-toggle-icon ${menuOpen ? "open" : ""}`}>
+            <span />
+            <span />
+            <span />
+          </span>
         </button>
 
         <ul className="nav-links">
           {leftLinks.map((item) => (
-            <li key={item.page}>
+            <li key={item.label}>
               <a href="#" onClick={handleNav(item.page)}>
                 {item.label}
               </a>
@@ -59,10 +67,10 @@ export default function Navbar({ onNavigate, user, onLogout }) {
         </ul>
 
         <div className="logo-container">
-          <a href="#" onClick={handleNav("home")} aria-label="Go to home page">
-            <img src={logo} alt="Metric logo" className="logo-img" />
-          </a>
+          <img src={logo} alt="Logo" className="logo-img" />
         </div>
+
+        <div className="nav-spacer" aria-hidden="true" />
 
         <ul className="nav-links nav-links-right">
           {rightLinks.map((item) => (
@@ -85,7 +93,7 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               )}
             </li>
           ))}
-
+          
           <li>
             <a
               href="#"
@@ -96,13 +104,13 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               <img src={cartIcon} alt="Cart" className="nav-icon-img" />
             </a>
           </li>
-
           <li className="nav-icon-search">
             <a href="#" aria-label="Search" className="nav-icon-link">
               <img src={searchIcon} alt="Search" className="nav-icon-img" />
             </a>
           </li>
         </ul>
+      </div>
 
       {menuOpen && (
         <div className="nav-mobile-menu" id="nav-mobile-menu">
@@ -126,7 +134,7 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               >
                 {item.label}
               </button>
-            )
+            ),
           )}
           <button
             className="nav-mobile-link icon-link"
