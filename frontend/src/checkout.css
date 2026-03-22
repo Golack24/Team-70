@@ -1,11 +1,11 @@
+
 .checkout-page {
-<<<<<<<<< Temporary merge branch 1
   background: #000;
-  min-height: calc(100vh - var(--navbar-offset, 140px));
-  padding: var(--page-top-padding) var(--page-side-padding)
-    var(--page-bottom-padding);
-  display: flex;
-  justify-content: center;
+  min-height: 100vh;
+  padding: 260px 60px 140px;
+  display: grid;
+  grid-template-columns: 1fr 360px;
+  gap: 50px;
 }
 
 .checkout-wrapper {
@@ -97,7 +97,7 @@
 
 .cart-meta {
   padding: 12px 12px;
-=========
+
   padding: 260px 60px 140px;
   background: #000;
   display: grid;
@@ -213,95 +213,13 @@
   color: #d7fa00;
 }
 
+
 .discount-section {
->>>>>>>>> Temporary merge branch 2
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-<<<<<<<<< Temporary merge branch 1
-.cart-line {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  gap: 12px;
-}
-
-.cart-line h3 {
-  margin: 0;
-  font-size: 1.05rem;
-  color: #fff;
-}
-
-.muted {
-  margin: 0;
-  color: #a7a7a7;
-  font-size: 0.95rem;
-}
-
-.price {
-  color: #d7fa00;
-  font-weight: 700;
-}
-
-.cart-actions {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  gap: 10px;
-}
-
-.pill {
-  background: transparent;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  color: #fff;
-  padding: 8px 12px;
-  border-radius: 999px;
-  cursor: pointer;
-  letter-spacing: 0.06em;
-}
-
-.qty {
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
-  background: #131313;
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 999px;
-  padding: 6px 12px;
-}
-
-.qty button {
-  background: transparent;
-  border: none;
-  color: #fff;
-  font-size: 1rem;
-  cursor: pointer;
-}
-
-.summary-panel h2 {
-  margin: 0 0 12px;
-  font-family: "BebasKai", sans-serif;
-  letter-spacing: 0.1em;
-  text-transform: uppercase;
-  color: #d7fa00;
-}
-
-.form-section {
-  margin-top: 14px;
-  padding: 14px 0;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.section-head h3 {
-  margin: 4px 0 0;
-  font-size: 1.1rem;
-  color: #fff;
-}
 
 .section-head .eyebrow {
   color: #8f8f8f;
