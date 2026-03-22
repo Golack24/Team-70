@@ -28,3 +28,18 @@ try {
 }
 
 ?>
+
+<?php
+$host = "localhost";
+$dbname = "cs2team70_db";
+$username = "cs2team70";
+$password = "co0dJ2qvmGYs7J9SrkVOjXrdQ";
+
+$conn = new mysqli($host, $username, $password, $dbname);
+
+if ($conn->connect_error) {
+    die("Connection failed: " . $conn->connect_error);
+}
+
+echo "CONNECTED SUCCESSFULLY!";
+?>

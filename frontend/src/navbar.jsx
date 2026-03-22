@@ -4,7 +4,7 @@ import logo from "./assets/logo.png";
 import cartIcon from "./assets/carticon.png";
 import searchIcon from "./assets/searchicon.png";
 
-export default function Navbar({ onNavigate }) {
+export default function Navbar({ onNavigate, user, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNav = (page) => (e) => {
@@ -20,11 +20,19 @@ export default function Navbar({ onNavigate }) {
     { label: "Accessories", page: "accessories" },
   ];
 
+  const authLinks = user
+    ? [{ label: "Logout", action: "logout" }]
+    : [
+        { label: "Sign Up", page: "signup" },
+        { label: "Log In", page: "login" },
+      ];
+
   const rightLinks = [
     { label: "About Us", page: "about" },
     { label: "Contact Us", page: "contact" },
     { label: "Sign Up", page: "signup" },
     { label: "Log In", page: "login" },
+    ...authLinks,
   ];
 
   const mobileLinks = [...leftLinks, ...rightLinks];
@@ -69,14 +77,33 @@ export default function Navbar({ onNavigate }) {
         <ul className="nav-links nav-links-right">
           {rightLinks.map((item) => (
             <li key={item.label}>
-              <a href="#" onClick={handleNav(item.page)}>
-                {item.label}
-              </a>
+              {item.action === "logout" ? (
+                <button
+                  type="button"
+                  className="nav-auth-btn"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onLogout?.();
+                  }}
+                >
+                  Logout
+                </button>
+              ) : (
+                <a href="#" onClick={handleNav(item.page)}>
+                  {item.label}
+                </a>
+              )}
             </li>
           ))}
           
           <li>
             <a href="#" aria-label="Cart" className="nav-icon-link"onClick={handleNav("checkout")}>
+            <a
+              href="#"
+              aria-label="Cart"
+              className="nav-icon-link"
+              onClick={handleNav("checkout")}
+            >
               <img src={cartIcon} alt="Cart" className="nav-icon-img" />
             </a>
           </li>
@@ -91,16 +118,33 @@ export default function Navbar({ onNavigate }) {
 
       {menuOpen && (
         <div className="nav-mobile-menu" id="nav-mobile-menu">
-          {mobileLinks.map((item) => (
-            <button
-              key={item.label}
-              className="nav-mobile-link"
-              onClick={handleNav(item.page)}
-            >
-              {item.label}
-            </button>
-          ))}
-          <button className="nav-mobile-link icon-link" type="button">
+          {mobileLinks.map((item) =>
+            item.action === "logout" ? (
+              <button
+                key={item.label}
+                className="nav-mobile-link"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onLogout?.();
+                }}
+              >
+                {item.label}
+              </button>
+            ) : (
+              <button
+                key={item.label}
+                className="nav-mobile-link"
+                onClick={handleNav(item.page)}
+              >
+                {item.label}
+              </button>
+            )
+          )}
+          <button
+            className="nav-mobile-link icon-link"
+            type="button"
+            onClick={handleNav("checkout")}
+          >
             <img src={cartIcon} alt="Cart" className="nav-icon-img" />
             <span>Cart</span>
           </button>

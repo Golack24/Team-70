@@ -1,24 +1,18 @@
+
 import { useState } from "react";
-import "./login.css";
+import "./signup.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
+import { loginUser } from "./api";
 
-export default function Login({ onNavigate }) {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-    rememberMe: false,
-  });
-
+export default function LoginPage({ onNavigate, onAuth }) {
+  const [form, setForm] = useState({ email: "", password: "" });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
-    const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({
-      ...prev,
-      [name]: type === "checkbox" ? checked : value,
-    }));
+    const { name, value } = e.target;
+    setForm((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
@@ -76,6 +70,17 @@ export default function Login({ onNavigate }) {
     setTimeout(() => setError(""), 2000);
   };
 
+    setLoading(true);
+    try {
+      const resp = await loginUser(form);
+      onAuth?.(resp?.user || resp);
+    } catch (err) {
+      setError(err?.message || "Login failed");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <>
       <div className="top-promo-bar">
@@ -130,6 +135,47 @@ export default function Login({ onNavigate }) {
             <div className="form-actions">
               <button type="submit" className="login-submit">
                 Sign In
+      <main className="auth-page">
+        <section className="auth-card">
+          <header className="auth-header">
+            <h1 className="auth-heading">Log In</h1>
+            <p className="auth-subheading">
+              Welcome back. Enter your credentials to access your account.
+            </p>
+          </header>
+
+          <form className="auth-form" onSubmit={handleSubmit}>
+            <div className="form-grid">
+              <label className="form-field">
+                <span>Email*</span>
+                <input
+                  type="email"
+                  name="email"
+                  value={form.email}
+                  onChange={handleChange}
+                  required
+                  placeholder="you@example.com"
+                />
+              </label>
+              <label className="form-field">
+                <span>Password*</span>
+                <input
+                  type="password"
+                  name="password"
+                  value={form.password}
+                  onChange={handleChange}
+                  required
+                  placeholder="••••••••"
+                  minLength={6}
+                />
+              </label>
+            </div>
+
+            {error && <p className="auth-error">{error}</p>}
+
+            <div className="form-actions">
+              <button type="submit" className="auth-submit" disabled={loading}>
+                {loading ? "Logging in..." : "Log In"}
               </button>
             </div>
           </form>
@@ -151,6 +197,12 @@ export default function Login({ onNavigate }) {
               Forgot your password?
             </button>
           </div>
+          <p className="auth-footer">
+            New here?{" "}
+            <button type="button" className="auth-link" onClick={() => onNavigate?.("signup")}>
+              Create an account
+            </button>
+          </p>
         </section>
       </main>
       <Footer />
