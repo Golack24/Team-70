@@ -5,6 +5,7 @@ import Footer from "./footer";
 import accessoryImage from "./assets/accessory.png";
 import { fetchProducts } from "./api";
 
+
 const filterGroups = [
   {
     title: "Category",
@@ -95,7 +96,7 @@ export default function AccessoriesPage({ onNavigate }) {
                 </div>
               </div>
             ))}
-          </aside>
+        </aside>
 
           <section className="accessories-products">
             <div className="accessories-grid">

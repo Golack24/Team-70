@@ -8,6 +8,7 @@ export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -17,7 +18,6 @@ export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-
     if (!form.email || !form.password) {
       setError("Both fields are required");
       return;
@@ -92,6 +92,7 @@ export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
             </div>
 
             {error && <p className="auth-error">{error}</p>}
+            {success && <p className="auth-success">{success}</p>}
 
             <div className="form-actions">
               <button type="submit" className="auth-submit" disabled={loading}>
@@ -116,6 +117,14 @@ export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
               Create an account
             </button>
           </p>
+
+          <button
+            type="button"
+            className="auth-link"
+            onClick={handleForgot}
+          >
+            Forgot your password?
+          </button>
         </section>
       </main>
 

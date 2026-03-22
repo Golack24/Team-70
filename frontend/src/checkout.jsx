@@ -148,6 +148,24 @@ export default function CheckoutPage({
                   <span>Total</span>
                   <span>{formatPrice(total)}</span>
                 </div>
+                <div className="discount-section">
+                  <label>Discount Code</label>
+                  <input
+                    type="text"
+                    value={discountCode}
+                    placeholder="Enter code"
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                  />
+                </div>
+                <div className="discount-section">
+                  <label>Discount Code</label>
+                  <input
+                    type="text"
+                    value={discountCode}
+                    placeholder="Enter code"
+                    onChange={(e) => setDiscountCode(e.target.value)}
+                  />
+                </div>
               </div>
 
               <button className="primary-btn" type="button">
@@ -157,7 +175,6 @@ export default function CheckoutPage({
           </div>
         </section>
       </main>
-
       <Footer />
     </>
   );
