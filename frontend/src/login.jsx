@@ -4,7 +4,7 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import { loginUser } from "./api";
 
-export default function LoginPage({ onNavigate, onAuth }) {
+export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -17,68 +17,33 @@ export default function LoginPage({ onNavigate, onAuth }) {
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
-<<<<<<<<< Temporary merge branch 1
-    setLoading(true);
-    try {
-      const resp = await loginUser(form);
-      onAuth?.(resp?.user || resp);
-    } catch (err) {
-      setError(err?.message || "Login failed");
-    } finally {
-      setLoading(false);
-    }
-=========
-    setSuccess("");
 
-    // Basic validation matching site patterns
-    if (!formData.email || !formData.password) {
+    if (!form.email || !form.password) {
       setError("Both fields are required");
       return;
     }
 
-    if (formData.password.length < 6) {
+    if (form.password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
     }
 
+    setLoading(true);
+
     try {
-      const response = await fetch(
-        "http://cs2team70.cs2410-web01pvm.aston.ac.uk/index.php?resource=users&action=login",
-        {
-          method: "POST",
-          credentials: "include", // To handle sessions/cookies
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: formData.email,
-            password: formData.password,
-          }),
-        },
-      );
-
-      const data = await response.json();
-
-      if (response.ok && data.success) {
-        setSuccess("Logged in successfully!");
-        // Optionally handle 'rememberMe' by storing a token in localStorage if your backend returns one
-        // if (formData.rememberMe && data.token) localStorage.setItem('authToken', data.token);
-
-        setTimeout(() => {
-          if (onNavigate) onNavigate("home");
-        }, 1500);
-      } else {
-        setError(data.error || "Invalid email or password");
-      }
+      const resp = await loginUser(form);
+      const loggedInUser = resp?.user || resp;
+      onAuth?.(loggedInUser);
     } catch (err) {
-      setError("Error connecting to the server. Please try again later.");
+      setError(err?.message || "Login failed");
+    } finally {
+      setLoading(false);
     }
   };
 
   const handleForgot = () => {
     setError("Password reset is not implemented yet");
     setTimeout(() => setError(""), 2000);
->>>>>>>>> Temporary merge branch 2
   };
 
   return (
@@ -87,8 +52,8 @@ export default function LoginPage({ onNavigate, onAuth }) {
         <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
       </div>
 
-      <Navbar onNavigate={onNavigate} />
-<<<<<<<<< Temporary merge branch 1
+      <Navbar onNavigate={onNavigate} user={user} onLogout={onLogout} />
+
       <main className="auth-page">
         <section className="auth-card">
           <header className="auth-header">
@@ -135,7 +100,12 @@ export default function LoginPage({ onNavigate, onAuth }) {
             </div>
           </form>
 
-<<<<<<<<< Temporary merge branch 1
+          <div className="forgot-password">
+            <button className="auth-link" onClick={handleForgot}>
+              Forgot your password?
+            </button>
+          </div>
+
           <p className="auth-footer">
             New here?{" "}
             <button

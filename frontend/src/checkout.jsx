@@ -19,14 +19,16 @@ export default function CheckoutPage({
     (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
     0,
   );
+
   const shipping = 0;
   const total = subtotal + shipping;
 
   return (
     <>
       <div className="top-promo-bar">
-<<<<<<<<< Temporary merge branch 1
-        <span className="top-promo-text">Free shipping on all orders today</span>
+        <span className="top-promo-text">
+          Free shipping on all orders today
+        </span>
       </div>
 
       <Navbar onNavigate={onNavigate} />
@@ -39,6 +41,7 @@ export default function CheckoutPage({
               <h1>Checkout</h1>
               <p className="lede">Secure your essentials in under a minute.</p>
             </div>
+
             <button
               className="ghost-link"
               type="button"
@@ -49,6 +52,7 @@ export default function CheckoutPage({
           </div>
 
           <div className="checkout-grid">
+            {/* LEFT SIDE — CART */}
             <div className="cart-panel">
               {cart.length === 0 && (
                 <div className="cart-empty">
@@ -70,9 +74,12 @@ export default function CheckoutPage({
                 >
                   <div
                     className="cart-thumb"
-                    style={{ backgroundImage: `url(${item.image || ""})` }}
+                    style={{
+                      backgroundImage: `url(${item.image || ""})`,
+                    }}
                     aria-hidden="true"
                   />
+
                   <div className="cart-meta">
                     <div className="cart-line">
                       <h3>{item.name}</h3>
@@ -80,10 +87,12 @@ export default function CheckoutPage({
                         {formatPrice((item.price || 0) * (item.quantity || 1))}
                       </span>
                     </div>
+
                     <p className="muted">
-                      {item.category_name || "Gymwear"}{" "}
+                      {item.category_name || "Gymwear"}
                       {item.size ? ` · Size ${item.size}` : ""}
                     </p>
+
                     <div className="cart-actions">
                       <button
                         type="button"
@@ -92,6 +101,7 @@ export default function CheckoutPage({
                       >
                         Remove
                       </button>
+
                       <div className="qty">
                         <button
                           type="button"
@@ -101,7 +111,9 @@ export default function CheckoutPage({
                         >
                           -
                         </button>
+
                         <span>{item.quantity || 1}</span>
+
                         <button
                           type="button"
                           onClick={() =>
@@ -117,17 +129,21 @@ export default function CheckoutPage({
               ))}
             </div>
 
+            {/* RIGHT SIDE — SUMMARY */}
             <aside className="summary-panel">
               <h2>Order summary</h2>
+
               <div className="summary-rows">
                 <div className="row">
                   <span>Subtotal</span>
                   <span>{formatPrice(subtotal)}</span>
                 </div>
+
                 <div className="row">
                   <span>Shipping</span>
                   <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
                 </div>
+
                 <div className="row total">
                   <span>Total</span>
                   <span>{formatPrice(total)}</span>
@@ -141,90 +157,8 @@ export default function CheckoutPage({
           </div>
         </section>
       </main>
-      <Footer />
-    </>
-  );
-}
-=========
-        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
-      </div>
-
-      <Navbar onNavigate={onNavigate} />
-
-      <main className="checkout-page">
-        <section className="checkout-left">
-          <h1 className="checkout-title">Checkout</h1>
-          <p className="checkout-subtitle">Secure your essentials in under a minute.</p>
-
-          {items.length === 0 && (
-            <p className="empty-cart">Your cart is empty.</p>
-          )}
-
-          {items.map((item) => (
-            <div key={item.id} className="checkout-item">
-              <div className="item-info">
-                <h3 className="item-name">{item.product.name}</h3>
-                <p className="item-color">£{item.product.price}</p>
-                <button className="remove-btn" onClick={() => removeItem(item.id)}>
-                  Remove
-                </button>
-              </div>
-
-              {/* Quantity selector */}
-              <div className="qty-box">
-                <button onClick={() => updateQty(item.id, item.quantity - 1)}>-</button>
-                <span>{item.quantity}</span>
-                <button onClick={() => updateQty(item.id, item.quantity + 1)}>+</button>
-              </div>
-            </div>
-          ))}
-        </section>
-
-        {/* RIGHT SIDE — ORDER SUMMARY */}
-        <aside className="checkout-right">
-          <h2 className="summary-title">Order Summary</h2>
-
-          <div className="summary-line">
-            <span>Subtotal</span>
-            <span>£{subtotal.toFixed(2)}</span>
-          </div>
-
-          <div className="summary-line">
-            <span>Shipping</span>
-            <span>FREE</span>
-          </div>
-
-          <div className="discount-section">
-            <label>Discount Code</label>
-            <input
-              type="text"
-              value={discountCode}
-              placeholder="Enter code"
-              onChange={(e) => setDiscountCode(e.target.value)}
-            />
-            <button className="apply-btn">Apply</button>
-          </div>
-
-          {discountAmount > 0 && (
-            <div className="summary-line">
-              <span>Discount</span>
-              <span>-£{discountAmount.toFixed(2)}</span>
-            </div>
-          )}
-
-          <hr />
-
-          <div className="summary-total">
-            <span>Total</span>
-            <span>£{total.toFixed(2)}</span>
-          </div>
-
-          <button className="checkout-btn">Place Order</button>
-        </aside>
-      </main>
 
       <Footer />
     </>
   );
 }
->>>>>>>>> Temporary merge branch 2
