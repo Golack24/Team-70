@@ -10,9 +10,9 @@ import returnIcon from "./assets/returnicon.png";
 import { fetchProducts } from "./api";
 
 const categories = [
-  { title: "Womens", image: womenImage },
-  { title: "Mens", image: gymsharkImage },
-  { title: "Accessories", image: accessoryImage },
+  { title: "Womens", image: womenImage, route: "women" },
+  { title: "Mens", image: gymsharkImage, route: "men" },
+  { title: "Accessories", image: accessoryImage, route: "accessories" },
 ];
 
 const benefits = [
@@ -72,31 +72,27 @@ export default function Hero({ onNavigate }) {
   }, []);
 
   const handleClickProduct = (product) => {
-    if (onNavigate) onNavigate({ name: "product", productId: product.id, product });
+    if (onNavigate)
+      onNavigate({ name: "product", productId: product.id, product });
   };
 
   return (
     <>
       <section className="hero">
         <div className="hero-content">
-          {/* LEFT SIDE TEXT */}
           <div className="hero-text">
             <h1 className="hero-title">metric</h1>
             <h2 className="hero-subtitle">measure every move</h2>
             <p className="hero-description">
-              High-performance gymwear designed to optimise every rep, every session.
+              High-performance gymwear designed to optimise every rep, every
+              session.
             </p>
-            <button className="hero-button">shop now</button>
-            <button 
-              className="hero-button" 
-              style={{ marginLeft: '1rem', backgroundColor: '#000', color: '#fff' }}
-              onClick={() => onNavigate("admin")}
-            >
-              Admin Dashboard (Temp)
+
+            <button className="hero-button" onClick={() => onNavigate("men")}>
+              shop now
             </button>
           </div>
 
-          {/* RIGHT SIDE IMAGE */}
           <div className="hero-image-wrapper">
             <img
               src={heroAthlete}
@@ -112,8 +108,14 @@ export default function Hero({ onNavigate }) {
       </div>
 
       <section className="product-gallery">
-        {error && <p className="hero-error">Could not load products. {error}</p>}
-        {!items.length && !error && <p className="hero-empty">New drops coming soon.</p>}
+        {error && (
+          <p className="hero-error">Could not load products. {error}</p>
+        )}
+
+        {!items.length && !error && (
+          <p className="hero-empty">New drops coming soon.</p>
+        )}
+
         {!!items.length && (
           <div className="product-grid">
             {items.map((item, idx) => (
@@ -126,14 +128,19 @@ export default function Hero({ onNavigate }) {
                 <div
                   className="product-image"
                   style={{
-                    backgroundImage: `url(${item.image ? item.image : gymsharkImage})`,
+                    backgroundImage: `url(${
+                      item.image ? item.image : gymsharkImage
+                    })`,
                   }}
-                  aria-hidden="true"
                 />
                 <div className="product-info">
                   <h3 className="product-title">{item.name}</h3>
-                  <p className="product-color">{item.color || item.category_name || "Metric"}</p>
-                  <p className="product-price">{formatPrice(item.price ?? item.amount)}</p>
+                  <p className="product-color">
+                    {item.color || item.category_name || "Metric"}
+                  </p>
+                  <p className="product-price">
+                    {formatPrice(item.price ?? item.amount)}
+                  </p>
                 </div>
               </button>
             ))}
@@ -151,9 +158,16 @@ export default function Hero({ onNavigate }) {
               style={{ backgroundImage: `url(${cat.image})` }}
             >
               <div className="category-overlay" />
+
               <div className="category-content">
                 <span className="category-title">{cat.title}</span>
-                <button className="category-button">Shop Now</button>
+
+                <button
+                  className="category-button"
+                  onClick={() => onNavigate(cat.route)}
+                >
+                  Shop Now
+                </button>
               </div>
             </div>
           ))}
@@ -166,7 +180,6 @@ export default function Hero({ onNavigate }) {
             <div className="benefit-card" key={item.title}>
               <div
                 className="benefit-icon"
-                aria-hidden="true"
                 style={{ backgroundImage: `url(${item.icon})` }}
               />
               <h3 className="benefit-title">{item.title}</h3>
