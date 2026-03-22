@@ -141,9 +141,7 @@
   letter-spacing: 0.08em;
   text-transform: uppercase;
   cursor: pointer;
-  transition:
-    border-color 0.15s ease,
-    background-color 0.15s ease;
+  transition: border-color 0.15s ease, background-color 0.15s ease;
 }
 
 .nav-toggle:hover,
@@ -177,10 +175,7 @@
   height: 2px;
   background: #fff;
   border-radius: 1px;
-  transition:
-    transform 0.2s ease,
-    top 0.2s ease,
-    opacity 0.2s ease;
+  transition: transform 0.2s ease, top 0.2s ease, opacity 0.2s ease;
 }
 
 .nav-toggle-icon span:nth-child(1) {

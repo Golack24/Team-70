@@ -25,7 +25,8 @@ export default function CheckoutPage({
   return (
     <>
       <div className="top-promo-bar">
-        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
+<<<<<<<<< Temporary merge branch 1
+        <span className="top-promo-text">Free shipping on all orders today</span>
       </div>
 
       <Navbar onNavigate={onNavigate} />
@@ -140,8 +141,90 @@ export default function CheckoutPage({
           </div>
         </section>
       </main>
+      <Footer />
+    </>
+  );
+}
+=========
+        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
+      </div>
+
+      <Navbar onNavigate={onNavigate} />
+
+      <main className="checkout-page">
+        <section className="checkout-left">
+          <h1 className="checkout-title">Checkout</h1>
+          <p className="checkout-subtitle">Secure your essentials in under a minute.</p>
+
+          {items.length === 0 && (
+            <p className="empty-cart">Your cart is empty.</p>
+          )}
+
+          {items.map((item) => (
+            <div key={item.id} className="checkout-item">
+              <div className="item-info">
+                <h3 className="item-name">{item.product.name}</h3>
+                <p className="item-color">£{item.product.price}</p>
+                <button className="remove-btn" onClick={() => removeItem(item.id)}>
+                  Remove
+                </button>
+              </div>
+
+              {/* Quantity selector */}
+              <div className="qty-box">
+                <button onClick={() => updateQty(item.id, item.quantity - 1)}>-</button>
+                <span>{item.quantity}</span>
+                <button onClick={() => updateQty(item.id, item.quantity + 1)}>+</button>
+              </div>
+            </div>
+          ))}
+        </section>
+
+        {/* RIGHT SIDE — ORDER SUMMARY */}
+        <aside className="checkout-right">
+          <h2 className="summary-title">Order Summary</h2>
+
+          <div className="summary-line">
+            <span>Subtotal</span>
+            <span>£{subtotal.toFixed(2)}</span>
+          </div>
+
+          <div className="summary-line">
+            <span>Shipping</span>
+            <span>FREE</span>
+          </div>
+
+          <div className="discount-section">
+            <label>Discount Code</label>
+            <input
+              type="text"
+              value={discountCode}
+              placeholder="Enter code"
+              onChange={(e) => setDiscountCode(e.target.value)}
+            />
+            <button className="apply-btn">Apply</button>
+          </div>
+
+          {discountAmount > 0 && (
+            <div className="summary-line">
+              <span>Discount</span>
+              <span>-£{discountAmount.toFixed(2)}</span>
+            </div>
+          )}
+
+          <hr />
+
+          <div className="summary-total">
+            <span>Total</span>
+            <span>£{total.toFixed(2)}</span>
+          </div>
+
+          <button className="checkout-btn">Place Order</button>
+        </aside>
+      </main>
 
       <Footer />
     </>
   );
 }
+>>>>>>>>> Temporary merge branch 2

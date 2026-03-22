@@ -20,7 +20,6 @@ export default function Navbar({ onNavigate, user, onLogout }) {
     { label: "Accessories", page: "accessories" },
   ];
 
-  // ✅ FIXED: no duplicate auth links
   const rightLinks = user
     ? [
         { label: "About Us", page: "about" },
