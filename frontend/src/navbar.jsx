@@ -95,9 +95,16 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               )}
             </li>
           ))}
-          
+
           <li>
-            <a href="#" aria-label="Cart" className="nav-icon-link"onClick={handleNav("checkout")}>
+            <a
+              href="#"
+              aria-label="Cart"
+              className="nav-icon-link"
+              onClick={handleNav("checkout")}
+            >
+              {" "}
+            </a>
             <a
               href="#"
               aria-label="Cart"
@@ -138,7 +145,7 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               >
                 {item.label}
               </button>
-            )
+            ),
           )}
           <button
             className="nav-mobile-link icon-link"
