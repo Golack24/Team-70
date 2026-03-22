@@ -4,7 +4,7 @@ import logo from "./assets/logo.png";
 import cartIcon from "./assets/carticon.png";
 import searchIcon from "./assets/searchicon.png";
 
-export default function Navbar({ onNavigate, theme, onToggleTheme }) {
+export default function Navbar({ onNavigate, user, onLogout }) {
   const [menuOpen, setMenuOpen] = useState(false);
 
   const handleNav = (page) => (event) => {
@@ -20,11 +20,17 @@ export default function Navbar({ onNavigate, theme, onToggleTheme }) {
     { label: "Accessories", page: "accessories" },
   ];
 
+  const authLinks = user
+    ? [{ label: "Logout", action: "logout" }]
+    : [
+        { label: "Sign Up", page: "signup" },
+        { label: "Log In", page: "login" },
+      ];
+
   const rightLinks = [
     { label: "About Us", page: "about" },
     { label: "Contact Us", page: "contact" },
-    { label: "Sign Up", page: "signup" },
-    { label: "Log In", page: "login" },
+    ...authLinks,
   ];
 
   const mobileLinks = [...leftLinks, ...rightLinks];
@@ -60,75 +66,82 @@ export default function Navbar({ onNavigate, theme, onToggleTheme }) {
 
         <ul className="nav-links nav-links-right">
           {rightLinks.map((item) => (
-            <li key={item.page}>
-              <a href="#" onClick={handleNav(item.page)}>
-                {item.label}
-              </a>
+            <li key={item.label}>
+              {item.action === "logout" ? (
+                <button
+                  type="button"
+                  className="nav-auth-btn"
+                  onClick={() => {
+                    setMenuOpen(false);
+                    onLogout?.();
+                  }}
+                >
+                  Logout
+                </button>
+              ) : (
+                <a href="#" onClick={handleNav(item.page)}>
+                  {item.label}
+                </a>
+              )}
             </li>
           ))}
 
           <li>
-            <button
-              type="button"
-              className="theme-toggle"
-              onClick={onToggleTheme}
-              aria-label="Toggle dark mode"
+            <a
+              href="#"
+              aria-label="Cart"
+              className="nav-icon-link"
+              onClick={handleNav("checkout")}
             >
-              {theme === "dark" ? "Light Mode" : "Dark Mode"}
-            </button>
-          </li>
-
-          <li>
-            <a href="#" className="nav-icon-link" aria-label="Cart">
               <img src={cartIcon} alt="Cart" className="nav-icon-img" />
             </a>
           </li>
 
-<<<<<<< HEAD
-          <li>
-            <a href="#" className="nav-icon-link nav-icon-search" aria-label="Search">
-=======
           <li className="nav-icon-search">
             <a href="#" aria-label="Search" className="nav-icon-link">
->>>>>>> 687141407e5d2aec5027d96121cc881f1be4d285
               <img src={searchIcon} alt="Search" className="nav-icon-img" />
             </a>
           </li>
         </ul>
 
-        <div className="nav-spacer" />
-
-        {menuOpen && (
-          <div className="nav-mobile-menu">
-            {mobileLinks.map((item) => (
+      {menuOpen && (
+        <div className="nav-mobile-menu" id="nav-mobile-menu">
+          {mobileLinks.map((item) =>
+            item.action === "logout" ? (
               <button
-                key={item.page}
+                key={item.label}
                 className="nav-mobile-link"
-                onClick={handleNav(item.page)}
-                type="button"
+                onClick={() => {
+                  setMenuOpen(false);
+                  onLogout?.();
+                }}
               >
                 {item.label}
               </button>
-            ))}
-
-            <button
-              className="nav-mobile-link"
-              onClick={onToggleTheme}
-              type="button"
-            >
-              Switch to {theme === "dark" ? "Light" : "Dark"} Mode
-            </button>
-
-            <button className="nav-mobile-link" type="button">
-              Cart
-            </button>
-
-            <button className="nav-mobile-link" type="button">
-              Search
-            </button>
-          </div>
-        )}
-      </div>
+            ) : (
+              <button
+                key={item.label}
+                className="nav-mobile-link"
+                onClick={handleNav(item.page)}
+              >
+                {item.label}
+              </button>
+            )
+          )}
+          <button
+            className="nav-mobile-link icon-link"
+            type="button"
+            onClick={handleNav("checkout")}
+          >
+            <img src={cartIcon} alt="Cart" className="nav-icon-img" />
+            <span>Cart</span>
+          </button>
+          <button className="nav-mobile-link icon-link" type="button">
+            <img src={searchIcon} alt="Search" className="nav-icon-img" />
+            <span>Search</span>
+          </button>
+        </div>
+      )}
     </nav>
   );
 }

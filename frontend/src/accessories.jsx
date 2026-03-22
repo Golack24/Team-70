@@ -1,44 +1,76 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import "./accessories.css";
 import accessoryImage from "./assets/accessory.png";
+import { fetchProducts } from "./api";
+import Navbar from "./Navbar";
+import Footer from "./Footer";
+
+const filterGroups = [
+  {
+    title: "Category",
+    options: ["Bags", "Supports", "Hydration", "Headwear", "Training"],
+  },
+  {
+    title: "Colour",
+    options: ["Black", "Grey", "White"],
+  },
+  {
+    title: "Price",
+    options: ["Under £15", "£15 - £30", "£30+"],
+  },
+];
+
+const formatPrice = (value) => {
+  if (value === undefined || value === null || Number.isNaN(Number(value))) {
+    return "£--";
+  }
+  const num = Number(value);
+  return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
+};
 
 export default function AccessoriesPage() {
   const [mobileFiltersOpen, setMobileFiltersOpen] = useState(false);
+  const [products, setProducts] = useState([]);
+  const [error, setError] = useState(null);
 
-  const products = [
-    { name: "Lifting Straps", color: "Black", price: "£15" },
-    { name: "Wrist Wraps", color: "Black", price: "£18" },
-    { name: "Performance Cap", color: "Black", price: "£20" },
-    { name: "Gym Towel", color: "Grey", price: "£12" },
-    { name: "Water Bottle", color: "Black", price: "£14" },
-    { name: "Training Socks", color: "White", price: "£10" },
-    { name: "Logo Beanie", color: "Black", price: "£16" },
-    { name: "Grip Gloves", color: "Black", price: "£22" },
-    { name: "Performance Belt", color: "Black", price: "£30" },
-    { name: "Duffel Bag", color: "Black", price: "£45" },
-    { name: "Crossbody Bag", color: "Black", price: "£28" },
-    { name: "Phone Armband", color: "Black", price: "£13" },
-    { name: "Shaker Bottle", color: "Black", price: "£12" },
-    { name: "Headband", color: "Black", price: "£9" },
-    { name: "Calf Sleeves", color: "Black", price: "£18" },
-  ];
-
-  const filterGroups = [
-    { title: "Category", options: ["Bags", "Supports", "Hydration", "Headwear", "Training"] },
-    { title: "Colour", options: ["Black", "Grey", "White"] },
-    { title: "Price", options: ["Under £15", "£15 - £30", "£30+"] },
-    { title: "Material", options: ["Cotton", "Poly Blend", "Neoprene", "Leather"] },
-  ];
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const payload = await fetchProducts({ limit: 24 });
+        const data = payload?.data || [];
+        if (!cancelled && data.length) {
+          setProducts(data);
+          setError(null);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setError(err?.message || "Failed to load products");
+        }
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   return (
-    <main className="accessories-page">
-      <header className="accessories-header">
-        <h1 className="accessories-title">Accessories</h1>
-        <p className="accessories-subtitle">
-          Training essentials to support every session. Durable, functional, and
-          ready for daily use.
-        </p>
-      </header>
+    <>
+      <div className="top-promo-bar">
+        <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
+      </div>
+      <Navbar onNavigate={onNavigate} />
+      <main className="accessories-page">
+        <section className="accessories-header">
+          <h1 className="accessories-title">Accessories</h1>
+          <p className="accessories-subtitle">
+            Support pieces engineered for training—built to last and keep you moving.
+          </p>
+          {error && (
+            <p className="accessories-error">Unable to load live products. Showing featured picks.</p>
+          )}
+        </section>
 
       <button
         className="accessories-filters-toggle"
@@ -49,9 +81,7 @@ export default function AccessoriesPage() {
       </button>
 
       <div className="accessories-layout">
-        <aside
-          className={`accessories-filters ${mobileFiltersOpen ? "open" : ""}`}
-        >
+        <aside className={`accessories-filters ${mobileFiltersOpen ? "open" : ""}`}>
           <h2 className="filters-title">Filter</h2>
 
           {filterGroups.map((group) => (
@@ -65,28 +95,43 @@ export default function AccessoriesPage() {
                 ))}
               </div>
             </section>
-          ))}
+            ))}
         </aside>
 
-        <section className="accessories-content">
-          <div className="accessories-grid">
-            {products.map((product) => (
-              <article className="accessories-card" key={product.name}>
-                <div
-                  className="accessories-image"
-                  style={{ backgroundImage: `url(${accessoryImage})` }}
-                  aria-label={product.name}
-                />
-                <div className="accessories-info">
-                  <h3 className="accessories-name">{product.name}</h3>
-                  <p className="accessories-color">{product.color}</p>
-                  <p className="accessories-price">{product.price}</p>
-                </div>
-              </article>
-            ))}
-          </div>
-        </section>
-      </div>
-    </main>
+          <section className="accessories-products">
+            <div className="accessories-grid">
+              {products.map((product, idx) => (
+                <button
+                  type="button"
+                  className="accessories-card"
+                  key={`${product.id || idx}-${product.name}`}
+                  onClick={() =>
+                    onNavigate?.({
+                      name: "product",
+                      productId: product.id,
+                      product,
+                    })
+                  }
+                >
+                  <div
+                    className="accessories-image"
+                    style={{ backgroundImage: `url(${product.image || accessoryImage})` }}
+                    aria-hidden="true"
+                  />
+                  <div className="accessories-info">
+                    <h3 className="accessories-name">{product.name}</h3>
+                    <p className="accessories-color">
+                      {product.color || product.category_name || "Metric"}
+                    </p>
+                    <p className="accessories-price">{formatPrice(product.price)}</p>
+                  </div>
+                </button>
+              ))}
+            </div>
+          </section>
+        </div>
+      </main>
+      <Footer />
+    </>
   );
 }

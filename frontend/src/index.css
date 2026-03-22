@@ -1,8 +1,11 @@
 :root {
-  --promo-height: 38px;
-  --nav-height: 120px;
-  --nav-height-mobile: 120px;
-
+  --promo-height: 32px;
+  --nav-height: clamp(94px, 9.5vw, 148px);
+  --nav-height-mobile: clamp(104px, 16vw, 152px);
+  --navbar-offset: calc(var(--promo-height) + var(--nav-height));
+  --page-top-padding: calc(var(--navbar-offset) + clamp(32px, 7vw, 108px));
+  --page-side-padding: clamp(16px, 5vw, 60px);
+  --page-bottom-padding: clamp(120px, 10vw, 180px);
   font-family: "BebasKai", "Pervitina", system-ui, -apple-system, sans-serif;
   line-height: 1.5;
   font-weight: 400;
@@ -10,53 +13,16 @@
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-}
-
-:root.dark {
-  --bg: #000000;
-  --surface: #111111;
-  --surface-2: #1a1a1a;
-  --text: #ffffff;
-  --muted-text: #b5b5b5;
-  --border: rgba(255, 255, 255, 0.14);
-  --accent: #d7fa00;
-  --accent-hover: #b9d500;
-  --shadow: rgba(0, 0, 0, 0.28);
-}
-
-:root.light {
-  --bg: #f7f7f7;
-  --surface: #ffffff;
-  --surface-2: #efefef;
-  --text: #111111;
-  --muted-text: #5a5a5a;
-  --border: rgba(0, 0, 0, 0.12);
-  --accent: #8ea800;
-  --accent-hover: #738800;
-  --shadow: rgba(0, 0, 0, 0.10);
-}
-
-html,
-body {
-  background: var(--bg);
-  color: var(--text);
-  transition: background-color 0.25s ease, color 0.25s ease;
-}
-
-html {
-  scroll-behavior: smooth;
-}
-
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
+  background-color: #000;
+  color: #fff;
 }
 
 body {
   margin: 0;
   min-width: 320px;
   min-height: 100vh;
+  background: #000;
+  color: #fff;
   display: block;
   overflow-x: hidden;
 }
@@ -65,60 +31,7 @@ body {
   width: 100%;
 }
 
-a {
-  font-weight: 600;
-  color: var(--text);
-  text-decoration: none;
-  background-color: transparent;
-  transition: color 0.2s ease;
-}
-
-a:hover {
-  color: var(--accent);
-}
-
-button,
-input,
-textarea,
-select {
-  font: inherit;
-}
-
-img {
-  max-width: 100%;
-  display: block;
-}
-
 .page-blank {
   min-height: 60vh;
-  background: var(--bg);
-}
-
-.center {
-  text-align: center;
-}
-
-.muted {
-  color: var(--muted-text);
-  font-size: 0.95rem;
-}
-
-.top-promo-bar {
-  width: 100%;
-  min-height: var(--promo-height);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  background: var(--accent);
-  color: #000000;
-  text-align: center;
-  padding: 8px 16px;
-  letter-spacing: 0.08em;
-  text-transform: uppercase;
-  font-weight: 700;
-}
-
-.top-promo-text {
-  font-size: 0.95rem;
-  line-height: 1.2;
+  background: #000;
 }

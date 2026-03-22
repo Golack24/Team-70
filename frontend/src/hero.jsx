@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import "./hero.css";
 import heroAthlete from "./assets/hero-athlete.png";
 import gymsharkImage from "./assets/gymshark.png";
@@ -6,42 +7,73 @@ import accessoryImage from "./assets/accessory.png";
 import deliveryIcon from "./assets/deliveryicon.png";
 import chatIcon from "./assets/chaticon.png";
 import returnIcon from "./assets/returnicon.png";
+import { fetchProducts } from "./api";
 
-export default function Hero() {
-  const products = [
-    { name: "Black Printed Oversized T-Shirt", image: gymsharkImage, color: "Black", price: "£25" },
-    { name: "Training Oversized Tee", image: gymsharkImage, color: "Black", price: "£25" },
-    { name: "Performance Oversized Tee", image: gymsharkImage, color: "Black", price: "£25" },
-    { name: "Drop Shoulder Tee", image: gymsharkImage, color: "Black", price: "£25" },
-    { name: "Core Oversized Tee", image: gymsharkImage, color: "Black", price: "£25" },
-  ];
+const categories = [
+  { title: "Womens", image: womenImage },
+  { title: "Mens", image: gymsharkImage },
+  { title: "Accessories", image: accessoryImage },
+];
 
-  const categories = [
-    { title: "Women", image: womenImage },
-    { title: "Men", image: gymsharkImage },
-    { title: "Accessories", image: accessoryImage },
-  ];
+const benefits = [
+  {
+    icon: deliveryIcon,
+    title: "Free nationwide shipping",
+    description:
+      "Enjoy free nationwide shipping on every order with delivery arriving in 5 days or less, guaranteed.",
+  },
+  {
+    icon: chatIcon,
+    title: "24/7 support team",
+    description:
+      "Reach us anytime for fit guidance, shipping updates, or order help—real people, always on.",
+  },
+  {
+    icon: returnIcon,
+    title: "30 day returns",
+    description:
+      "Not right? Send it back within 30 days in original condition for a quick refund or exchange.",
+  },
+];
 
-  const benefits = [
-    {
-      icon: deliveryIcon,
-      title: "Free nationwide shipping",
-      description:
-        "Enjoy free nationwide shipping on every order — with delivery arriving in 5 days or less.",
-    },
-    {
-      icon: chatIcon,
-      title: "24/7 support team",
-      description:
-        "Need help with sizing, orders, or products? Our team is ready whenever you need us.",
-    },
-    {
-      icon: returnIcon,
-      title: "30 day returns",
-      description:
-        "Shop with confidence knowing you can return eligible items within 30 days.",
-    },
-  ];
+const formatPrice = (value) => {
+  if (value === undefined || value === null || Number.isNaN(Number(value))) {
+    return "£--";
+  }
+  const num = Number(value);
+  return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
+};
+
+export default function Hero({ onNavigate }) {
+  const [items, setItems] = useState([]);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    let cancelled = false;
+    const load = async () => {
+      try {
+        const payload = await fetchProducts({ limit: 5 });
+        const data = payload?.data || [];
+        if (!cancelled) {
+          setItems(data.slice(0, 5));
+          setError(null);
+        }
+      } catch (err) {
+        if (!cancelled) {
+          setItems([]);
+          setError(err?.message || "Unable to load products");
+        }
+      }
+    };
+    load();
+    return () => {
+      cancelled = true;
+    };
+  }, []);
+
+  const handleClickProduct = (product) => {
+    if (onNavigate) onNavigate({ name: "product", productId: product.id, product });
+  };
 
   return (
     <>
@@ -69,26 +101,33 @@ export default function Hero() {
       </section>
 
       <section className="product-gallery">
-        <div className="section-heading-row">
-          <h2 className="section-heading">Shop Oversized Shirts</h2>
-        </div>
-
-        <div className="product-grid">
-          {products.map((product) => (
-            <article className="product-card" key={product.name}>
-              <div
-                className="product-image"
-                style={{ backgroundImage: `url(${product.image})` }}
-                aria-label={product.name}
-              />
-              <div className="product-info">
-                <h3 className="product-title">{product.name}</h3>
-                <p className="product-color">{product.color}</p>
-                <p className="product-price">{product.price}</p>
-              </div>
-            </article>
-          ))}
-        </div>
+        {error && <p className="hero-error">Could not load products. {error}</p>}
+        {!items.length && !error && <p className="hero-empty">New drops coming soon.</p>}
+        {!!items.length && (
+          <div className="product-grid">
+            {items.map((item, idx) => (
+              <button
+                type="button"
+                className="product-card"
+                key={`${item.id || idx}-${item.name}`}
+                onClick={() => handleClickProduct(item)}
+              >
+                <div
+                  className="product-image"
+                  style={{
+                    backgroundImage: `url(${item.image ? item.image : gymsharkImage})`,
+                  }}
+                  aria-hidden="true"
+                />
+                <div className="product-info">
+                  <h3 className="product-title">{item.name}</h3>
+                  <p className="product-color">{item.color || item.category_name || "Metric"}</p>
+                  <p className="product-price">{formatPrice(item.price ?? item.amount)}</p>
+                </div>
+              </button>
+            ))}
+          </div>
+        )}
       </section>
 
       <section className="categories-section">
