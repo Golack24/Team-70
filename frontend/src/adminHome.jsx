@@ -19,14 +19,11 @@ export default function AdminHome({ onLogout, onPageChange }) {
   });
 
   useEffect(() => {
-    // Load initial dashboard stats
     fetchStats();
   }, []);
 
   const fetchStats = async () => {
     try {
-      // TODO: Replace with actual API calls to backend
-      // Example: const response = await fetch('/api/admin/stats');
       setStats({
         totalProducts: 125,
         lowStockItems: 8,
