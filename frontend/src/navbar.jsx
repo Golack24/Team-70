@@ -33,6 +33,15 @@ export default function Navbar({ onNavigate, user, onLogout }) {
         { label: "Log In", page: "login" },
       ];
 
+  const adminLink = user && user.role === "admin" ? [{ label: "Admin", page: "admin" }] : [];
+
+  const rightLinks = [
+    { label: "About Us", page: "about" },
+    { label: "Contact Us", page: "contact" },
+    ...adminLink,
+    ...authLinks,
+  ];
+
   const mobileLinks = [...leftLinks, ...rightLinks];
 
   return (

@@ -87,6 +87,13 @@ export default function Hero({ onNavigate }) {
               High-performance gymwear designed to optimise every rep, every session.
             </p>
             <button className="hero-button">shop now</button>
+            <button 
+              className="hero-button" 
+              style={{ marginLeft: '1rem', backgroundColor: '#000', color: '#fff' }}
+              onClick={() => onNavigate("admin")}
+            >
+              Admin Dashboard (Temp)
+            </button>
           </div>
 
           {/* RIGHT SIDE IMAGE */}

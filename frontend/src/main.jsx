@@ -1,6 +1,7 @@
 import { StrictMode, useEffect, useState } from "react";
 import { createRoot } from "react-dom/client";
 import "./index.css";
+import "./admin.css";
 import Navbar from "./navbar";
 import Hero from "./hero";
 import Footer from "./footer";
@@ -13,6 +14,7 @@ import SignupPage from "./signup";
 import LoginPage from "./login";
 import CheckoutPage from "./checkout";
 import ProductPage from "./product";
+import AdminHome from "./adminHome";
 import { logoutUser } from "./api";
 
 const PromoBar = () => (
@@ -197,6 +199,17 @@ function App() {
           productId={page.productId}
           onNavigate={handleNavigate}
           onAddToCart={addToCart}
+        />
+      </StrictMode>
+    );
+  }
+
+  if (page.name === "admin") {
+    return (
+      <StrictMode>
+        <AdminHome
+          onLogout={handleLogout}
+          onPageChange={(pageName) => setPage({ name: pageName })}
         />
       </StrictMode>
     );
