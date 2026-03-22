@@ -1,4 +1,7 @@
 :root {
+  --promo-height: 38px;
+  --nav-height: 120px;
+
   --promo-height: 32px;
   --nav-height: clamp(94px, 9.5vw, 148px);
   --nav-height-mobile: clamp(104px, 16vw, 152px);
@@ -6,7 +9,13 @@
   --page-top-padding: calc(var(--navbar-offset) + clamp(32px, 7vw, 108px));
   --page-side-padding: clamp(16px, 5vw, 60px);
   --page-bottom-padding: clamp(120px, 10vw, 180px);
-  font-family: "BebasKai", "Pervitina", system-ui, -apple-system, sans-serif;
+
+  font-family:
+    "BebasKai",
+    "Pervitina",
+    system-ui,
+    -apple-system,
+    sans-serif;
   line-height: 1.5;
   font-weight: 400;
   font-synthesis: none;
@@ -15,6 +24,17 @@
   -moz-osx-font-smoothing: grayscale;
   background-color: #000;
   color: #fff;
+}
+
+a {
+  font-weight: 600;
+  color: var(--accent);
+  text-decoration: none;
+  background-color: #000;
+  color: #fff;
+}
+a:hover {
+  color: #b9d500;
 }
 
 body {
@@ -34,4 +54,11 @@ body {
 .page-blank {
   min-height: 60vh;
   background: #000;
+}
+.center {
+  text-align: center;
+}
+.muted {
+  color: var(--secondary);
+  font-size: 0.95rem;
 }

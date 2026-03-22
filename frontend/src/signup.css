@@ -77,7 +77,9 @@
   padding: 14px 16px;
   color: #f5f5f5;
   font-size: 1.05rem;
-  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    border-color 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .form-field input:focus,
@@ -103,7 +105,9 @@
   font-size: 1.05rem;
   text-transform: uppercase;
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .auth-submit:hover {
@@ -147,15 +151,13 @@
 @media (max-width: 1024px) {
   .auth-page {
     padding: calc(var(--navbar-offset, 140px) + clamp(20px, 6vw, 64px))
-      clamp(14px, 5vw, 36px)
-      clamp(110px, 12vw, 150px);
+      clamp(14px, 5vw, 36px) clamp(110px, 12vw, 150px);
   }
 }
 
 @media (max-width: 640px) {
   .auth-page {
     padding: calc(var(--navbar-offset, 140px) + clamp(16px, 7vw, 44px))
-      clamp(12px, 5vw, 28px)
-      clamp(100px, 12vw, 140px);
+      clamp(12px, 5vw, 28px) clamp(100px, 12vw, 140px);
   }
 }

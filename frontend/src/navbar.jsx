@@ -30,7 +30,12 @@ export default function Navbar({ onNavigate, user, onLogout }) {
   const rightLinks = [
     { label: "About Us", page: "about" },
     { label: "Contact Us", page: "contact" },
+<<<<<<<<< Temporary merge branch 1
     ...authLinks,
+=========
+    { label: "Sign Up", page: "signup" },
+    { label: "Log In", page: "login" },
+>>>>>>>>> Temporary merge branch 2
   ];
 
   const mobileLinks = [...leftLinks, ...rightLinks];
@@ -93,7 +98,9 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               )}
             </li>
           ))}
+          
           <li>
+<<<<<<<<< Temporary merge branch 1
             <a
               href="#"
               aria-label="Cart"
@@ -133,7 +140,7 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               >
                 {item.label}
               </button>
-            )
+            ),
           )}
           <button
             className="nav-mobile-link icon-link"

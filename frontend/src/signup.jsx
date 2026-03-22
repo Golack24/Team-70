@@ -54,12 +54,14 @@ export default function SignupPage({ onNavigate, onAuth }) {
         <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
       </div>
       <Navbar onNavigate={onNavigate} />
+<<<<<<<<< Temporary merge branch 1
       <main className="auth-page">
         <section className="auth-card">
           <header className="auth-header">
             <h1 className="auth-heading">Create Account</h1>
             <p className="auth-subheading">
-              Join Metric to manage orders, save favourites, and checkout faster.
+              Join Metric to manage orders, save favourites, and checkout
+              faster.
             </p>
           </header>
 
@@ -75,6 +77,7 @@ export default function SignupPage({ onNavigate, onAuth }) {
                   placeholder="Jordan"
                 />
               </label>
+
               <label className="form-field">
                 <span>Last Name</span>
                 <input
@@ -85,6 +88,7 @@ export default function SignupPage({ onNavigate, onAuth }) {
                   placeholder="Adebayo"
                 />
               </label>
+
               <label className="form-field">
                 <span>Username</span>
                 <input
@@ -95,6 +99,7 @@ export default function SignupPage({ onNavigate, onAuth }) {
                   placeholder="metric_jordan"
                 />
               </label>
+
               <label className="form-field">
                 <span>Phone</span>
                 <input
@@ -105,6 +110,7 @@ export default function SignupPage({ onNavigate, onAuth }) {
                   placeholder="+44 7123 456789"
                 />
               </label>
+
               <label className="form-field">
                 <span>Email*</span>
                 <input
@@ -116,6 +122,7 @@ export default function SignupPage({ onNavigate, onAuth }) {
                   placeholder="you@example.com"
                 />
               </label>
+
               <label className="form-field">
                 <span>Password*</span>
                 <input
@@ -128,6 +135,7 @@ export default function SignupPage({ onNavigate, onAuth }) {
                   minLength={6}
                 />
               </label>
+
               <label className="form-field">
                 <span>Confirm Password*</span>
                 <input
@@ -153,12 +161,17 @@ export default function SignupPage({ onNavigate, onAuth }) {
 
           <p className="auth-footer">
             Already have an account?{" "}
-            <button type="button" className="auth-link" onClick={() => onNavigate?.("login")}>
+            <button
+              type="button"
+              className="auth-link"
+              onClick={() => onNavigate?.("login")}
+            >
               Log in instead
             </button>
           </p>
         </section>
       </main>
+
       <Footer />
     </>
   );
