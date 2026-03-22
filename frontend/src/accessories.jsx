@@ -4,8 +4,6 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import accessoryImage from "./assets/accessory.png";
 import { fetchProducts } from "./api";
-import Navbar from "./navbar";
-import Footer from "./footer";
 
 const filterGroups = [
   {
