@@ -10,7 +10,7 @@ export default function Navbar({ onNavigate, user, onLogout }) {
   const handleNav = (page) => (e) => {
     e.preventDefault();
     setMenuOpen(false);
-    if (onNavigate) onNavigate(page);
+    onNavigate?.(page);
   };
 
   const leftLinks = [
@@ -20,44 +20,37 @@ export default function Navbar({ onNavigate, user, onLogout }) {
     { label: "Accessories", page: "accessories" },
   ];
 
-  const authLinks = user
-    ? [{ label: "Logout", action: "logout" }]
+  // ✅ FIXED: no duplicate auth links
+  const rightLinks = user
+    ? [
+        { label: "About Us", page: "about" },
+        { label: "Contact Us", page: "contact" },
+        { label: "Logout", action: "logout" },
+      ]
     : [
+        { label: "About Us", page: "about" },
+        { label: "Contact Us", page: "contact" },
         { label: "Sign Up", page: "signup" },
         { label: "Log In", page: "login" },
       ];
 
-  const rightLinks = [
-    { label: "About Us", page: "about" },
-    { label: "Contact Us", page: "contact" },
-    { label: "Sign Up", page: "signup" },
-    { label: "Log In", page: "login" },
-    ...authLinks,
-  ];
-
   const mobileLinks = [...leftLinks, ...rightLinks];
 
-  const navClass = menuOpen ? "navbar is-open" : "navbar";
-
   return (
-    <nav className={navClass}>
+    <nav className={`navbar ${menuOpen ? "is-open" : ""}`}>
       <div className="navbar-inner">
+        {/* MOBILE TOGGLE */}
         <button
           type="button"
           className="nav-toggle"
-          aria-expanded={menuOpen}
-          aria-controls="nav-mobile-menu"
           onClick={() => setMenuOpen((v) => !v)}
-          aria-label={menuOpen ? "Close menu" : "Open menu"}
         >
-          <span className="sr-only">{menuOpen ? "Close" : "Menu"}</span>
-          <span className={`nav-toggle-icon ${menuOpen ? "open" : ""}`}>
-            <span />
-            <span />
-            <span />
-          </span>
+          <span />
+          <span />
+          <span />
         </button>
 
+        {/* LEFT LINKS */}
         <ul className="nav-links">
           {leftLinks.map((item) => (
             <li key={item.label}>
@@ -68,18 +61,17 @@ export default function Navbar({ onNavigate, user, onLogout }) {
           ))}
         </ul>
 
+        {/* LOGO */}
         <div className="logo-container">
           <img src={logo} alt="Logo" className="logo-img" />
         </div>
 
-        <div className="nav-spacer" aria-hidden="true" />
-
+        {/* RIGHT LINKS */}
         <ul className="nav-links nav-links-right">
           {rightLinks.map((item) => (
             <li key={item.label}>
               {item.action === "logout" ? (
                 <button
-                  type="button"
                   className="nav-auth-btn"
                   onClick={() => {
                     setMenuOpen(false);
@@ -96,18 +88,10 @@ export default function Navbar({ onNavigate, user, onLogout }) {
             </li>
           ))}
 
+          {/* CART */}
           <li>
             <a
               href="#"
-              aria-label="Cart"
-              className="nav-icon-link"
-              onClick={handleNav("checkout")}
-            >
-              {" "}
-            </a>
-            <a
-              href="#"
-              aria-label="Cart"
               className="nav-icon-link"
               onClick={handleNav("checkout")}
             >
@@ -115,16 +99,18 @@ export default function Navbar({ onNavigate, user, onLogout }) {
             </a>
           </li>
 
-          <li className="nav-icon-search">
-            <a href="#" aria-label="Search" className="nav-icon-link">
+          {/* SEARCH */}
+          <li>
+            <a href="#" className="nav-icon-link">
               <img src={searchIcon} alt="Search" className="nav-icon-img" />
             </a>
           </li>
         </ul>
       </div>
 
+      {/* MOBILE MENU */}
       {menuOpen && (
-        <div className="nav-mobile-menu" id="nav-mobile-menu">
+        <div className="nav-mobile-menu">
           {mobileLinks.map((item) =>
             item.action === "logout" ? (
               <button
@@ -147,15 +133,17 @@ export default function Navbar({ onNavigate, user, onLogout }) {
               </button>
             ),
           )}
+
+          {/* MOBILE ICONS */}
           <button
             className="nav-mobile-link icon-link"
-            type="button"
             onClick={handleNav("checkout")}
           >
             <img src={cartIcon} alt="Cart" className="nav-icon-img" />
             <span>Cart</span>
           </button>
-          <button className="nav-mobile-link icon-link" type="button">
+
+          <button className="nav-mobile-link icon-link">
             <img src={searchIcon} alt="Search" className="nav-icon-img" />
             <span>Search</span>
           </button>

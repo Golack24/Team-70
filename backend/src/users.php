@@ -20,15 +20,13 @@ $id = isset($_GET['id']) ? (int) $_GET['id'] : null;
 
 try {
 
-    /* =========================
-       POST ACTIONS
-    ========================== */
+       //POST ACTIONS
 
     if ($method === 'POST') {
 
         $data = jsonInput() ?? [];
 
-        /* REGISTER */
+        // REGISTER
 
         if ($action === 'register') {
 
@@ -67,7 +65,7 @@ try {
             ], 201);
         }
 
-        /* LOGIN */
+        // LOGIN
 
         if ($action === 'login') {
 
@@ -102,7 +100,7 @@ try {
             ]);
         }
 
-        /* LOGOUT */
+        // LOGOUT 
 
         if ($action === 'logout') {
 
@@ -116,9 +114,8 @@ try {
     }
 
 
-    /* =========================
-       GET USERS
-    ========================== */
+    
+      // GET USERS 
 
     if ($method === 'GET') {
 
@@ -151,9 +148,7 @@ try {
     }
 
 
-    /* =========================
-       UPDATE USER
-    ========================== */
+      // UPDATE USER
 
     if ($method === 'PUT') {
 
@@ -204,9 +199,7 @@ try {
     }
 
 
-    /* =========================
-       DELETE USER
-    ========================== */
+      // DELETE USER
 
     if ($method === 'DELETE') {
 
