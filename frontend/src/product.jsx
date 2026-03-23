@@ -108,14 +108,6 @@ export default function ProductPage({
     onNavigate?.("men");
   };
 
-  const adjustQty = (delta) => {
-    setQty((q) => Math.max(1, q + delta));
-  };
-
-  const handleAdd = () => {
-    if (!p) return;
-    onAddToCart?.(p, qty);
-  };
 
   return (
     <>
