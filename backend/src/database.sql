@@ -1,5 +1,5 @@
 CREATE DATABASE IF NOT EXISTS cs2team70_db;
-USE c2steam70_db;
+USE cs2team70_db;
 
 CREATE TABLE users (
     id int AUTO_INCREMENT PRIMARY key,
@@ -30,33 +30,31 @@ CREATE TABLE products (
 
 );
 
-CREATE TABLE tags {
+CREATE TABLE tags (
     id int AUTO_INCREMENT PRIMARY key,
     name VARCHAR(100) NOT NULL UNIQUE,
     slug VARCHAR(100) NOT NULL UNIQUE
 
-};
+);
 
 CREATE TABLE reviews (
-    id int AUTO_INCREMENT PRIMARY key,
-    users_id INT NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     product_id INT NOT NULL,
-    rating TINYINT  NOT NULL CHECK (rating BETWEEN 1 AND 5),
+    rating TINYINT NOT NULL CHECK (rating BETWEEN 1 AND 5),
     comment TEXT,
-    FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE,
-    FOREIGN Key (product_id) REFERENCES products(id) ON Delete CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE
 );
 
 
-
 CREATE TABLE favourites (
-    id int AUTO_INCREMENT PRIMARY Key,
-    users_id INT NOT NULL,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
     product_id INT NOT NULL,
-    FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE,
-    FOREIGN Key (product_id) REFERENCES products(id) ON Delete CASCADE,
-    UNIQUE Key unique_favourite (user_id, product_id)
-
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE,
+    FOREIGN KEY (product_id) REFERENCES products(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_favourite (user_id, product_id)
 );
 
 CREATE TABLE coupons (
@@ -91,15 +89,15 @@ CREATE TABLE basket (
 );
 
 CREATE TABLE addresses (
-    id int AUTO_INCREMENT PRIMARY key,
+    id INT AUTO_INCREMENT PRIMARY KEY,
     user_id INT NOT NULL,
     line1 VARCHAR(255) NOT NULL,
-    line2 VARCHAR(25VARCHAR(255) DEFAULT NULL,
+    line2 VARCHAR(255) DEFAULT NULL,
     city VARCHAR(100) NOT NULL,
     postcode VARCHAR(20) NOT NULL,
-    countryVARCHAR(100) NOT NULL,
+    country VARCHAR(100) NOT NULL,
     is_default TINYINT(1) DEFAULT 0,
-    FOREIGN Key (user_id) REFERENCES users(id) ON Delete CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
 
 CREATE TABLE shipping (

@@ -7,6 +7,11 @@ function respond($d, $s = 200) {
     exit;
 }
 
+respond([
+  'session_user_id' => $_SESSION['user_id'] ?? null,
+  'session_role' => $_SESSION['role'] ?? null
+]);
+
 function authUserID() {
     return $_SESSION['user_id'] ?? null;
 }

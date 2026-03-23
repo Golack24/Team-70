@@ -57,15 +57,15 @@ export default function MenPage({ onNavigate }) {
 
       console.log("MEN PAGE API DATA:", data);
 
-      const menProducts = data.filter((product) => {
-        const categoryName = String(product.category_name || product.category || "").trim().toLowerCase();
+     
+    const menProducts = data.filter((product) => {
+        const categoryName = String(
+        product.category_name || product.category || "" ).trim().toLowerCase();
+
         const categoryId = Number(product.category_id);
 
-        return (
-          categoryName.includes("men") ||
-          categoryId === 1
-        );
-      });
+        return categoryName === "men" || categoryId === 1;
+    });
 
       if (!cancelled) {
         setProducts(menProducts);

@@ -17,9 +17,6 @@ function authRole() {
 
 try {
 
-    /* =============================
-       REGISTER / LOGIN / LOGOUT
-    ============================== */
 
     if ($method === 'POST') {
 
@@ -56,7 +53,46 @@ try {
             ]);
 
             respond(['success' => true, 'id' => $pdo->lastInsertId()], 201);
+
         }
+
+
+                    // RESET PASSWORD
+            if ($action === 'reset_password') {
+
+            if (empty($input['email']) || empty($input['password'])) {
+                respond(['error' => 'Email and password required'], 422);
+            }
+
+            if (strlen($input['password']) < 6) {
+                respond(['error' => 'Password must be at least 6 characters'], 422);
+            }
+
+            $stmt = $pdo->prepare("SELECT id FROM users WHERE email = ?");
+            $stmt->execute([$input['email']]);
+            $user = $stmt->fetch();
+
+            if (!$user) {
+                respond(['error' => 'User not found'], 404);
+            }
+
+            $hash = password_hash($input['password'], PASSWORD_BCRYPT);
+
+            $stmt = $pdo->prepare("
+                UPDATE users
+                SET password_hash = ?
+                WHERE email = ?
+            ");
+
+            $stmt->execute([$hash, $input['email']]);
+
+            respond([
+                'success' => true,
+                'message' => 'Password updated successfully'
+            ]);
+        }
+
+
 
         // LOGIN
         if ($action === 'login') {

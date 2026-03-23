@@ -16,6 +16,7 @@ import CheckoutPage from "./checkout";
 import ProductPage from "./product";
 import AdminHome from "./adminHome";
 import { logoutUser } from "./api";
+import ResetPasswordPage from "./resetPassword";
 
 const PromoBar = () => (
   <div className="top-promo-bar">
@@ -150,6 +151,13 @@ function App() {
     return (
       <StrictMode>
         <LoginPage onNavigate={handleNavigate} onAuth={handleAuthSuccess} />
+      </StrictMode>
+    );
+  }
+  if (page.name === "reset-password") {
+    return (
+      <StrictMode>
+        <ResetPasswordPage onNavigate={handleNavigate} />
       </StrictMode>
     );
   }
