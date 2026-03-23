@@ -12,18 +12,44 @@ const toQuery = (params = {}) => {
   return url.toString();
 };
 
+
 async function request(resource, params = {}) {
   const url = toQuery({ resource, ...params });
-  const res = await fetch(url, {
-    credentials: "include",
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const message = data?.error || `Request failed (${res.status})`;
-    throw new Error(message);
+  console.log("API REQUEST:", url);
+
+  try {
+    const res = await fetch(url, {
+      credentials: "include",
+    });
+
+    console.log("API RESPONSE STATUS:", res.status, url);
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      const message = data?.error || `Request failed (${res.status})`;
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("API FETCH FAILED:", url, err);
+    throw err;
   }
-  return data;
 }
+
+//async function request(resource, params = {}) {
+//  const url = toQuery({ resource, ...params });
+//  const res = await fetch(url, {
+//    credentials: "include",
+//  });
+//  const data = await res.json().catch(() => ({}));
+//  if (!res.ok) {
+//    const message = data?.error || `Request failed (${res.status})`;
+//    throw new Error(message);
+//  }
+//  return data;
+//}
 
 async function sendJson(resource, method, body = {}, params = {}) {
   const url = toQuery({ resource, ...params });
