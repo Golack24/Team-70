@@ -1,10 +1,8 @@
-
 import { useState } from "react";
 import "./signup.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { loginUser } from "./api";
-
 
 export default function LoginPage({ onNavigate, onAuth }) {
   const [form, setForm] = useState({ email: "", password: "" });
@@ -63,17 +61,20 @@ export default function LoginPage({ onNavigate, onAuth }) {
         }
       }
     } catch (err) {
-      setError(err?.message || "Error connecting to the server. Please try again later.");
+      setError(
+        err?.message ||
+          "Error connecting to the server. Please try again later.",
+      );
     } finally {
       setLoading(false);
     }
   };
 
   const handleForgot = () => {
-    setError("Password reset is not implemented yet");
-    setTimeout(() => setError(""), 2000);
+    setError("");
+    setSuccess("");
+    onNavigate?.("reset-password");
   };
-
   return (
     <>
       <div className="top-promo-bar">
@@ -125,7 +126,12 @@ export default function LoginPage({ onNavigate, onAuth }) {
               <button type="submit" className="auth-submit" disabled={loading}>
                 {loading ? "Logging in..." : "Log In"}
               </button>
-              <button type="button" className="auth-link" onClick={handleForgot} style={{marginLeft: 12}}>
+              <button
+                type="button"
+                className="auth-link"
+                onClick={handleForgot}
+                style={{ marginLeft: 12 }}
+              >
                 Forgot password?
               </button>
             </div>
@@ -142,11 +148,7 @@ export default function LoginPage({ onNavigate, onAuth }) {
             </button>
           </p>
 
-          <button
-            type="button"
-            className="auth-link"
-            onClick={handleForgot}
-          >
+          <button type="button" className="auth-link" onClick={handleForgot}>
             Forgot your password?
           </button>
         </section>
