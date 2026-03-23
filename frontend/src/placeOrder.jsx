@@ -1,7 +1,6 @@
 import { useState } from "react";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import { createAddress, createOrder } from "./api";
 import {
   fetchCouponByCode,
   calculateDiscount,
@@ -83,8 +82,13 @@ export default function PlaceOrderPage({
           {success ? (
             <div className="summary-panel" style={{ maxWidth: "700px" }}>
               <h2>Order placed successfully</h2>
-              <p>Your order has been placed and is now visible in the admin system.</p>
-              <p><strong>Total:</strong> {formatPrice(total)}</p>
+              <p>
+                Your order has been placed and is now visible in the admin
+                system.
+              </p>
+              <p>
+                <strong>Total:</strong> {formatPrice(total)}
+              </p>
 
               <button
                 type="button"
@@ -165,7 +169,9 @@ export default function PlaceOrderPage({
                       {item.name} × {item.quantity || 1}
                     </span>
                     <span>
-                      {formatPrice(Number(item.price || 0) * Number(item.quantity || 1))}
+                      {formatPrice(
+                        Number(item.price || 0) * Number(item.quantity || 1),
+                      )}
                     </span>
                   </div>
                 ))}
@@ -256,33 +262,35 @@ export default function PlaceOrderPage({
     {error && <p className="place-order-error">{error}</p>}
   </div>
 
-<div className="place-order-success">
-  <h2>Order placed successfully</h2>
-  <p>Your order has been placed and is now visible in the admin system.</p>
-  <p><strong>Total:</strong> {formatPrice(total)}</p>
+  <div className="place-order-success">
+    <h2>Order placed successfully</h2>
+    <p>Your order has been placed and is now visible in the admin system.</p>
+    <p>
+      <strong>Total:</strong> {formatPrice(total)}
+    </p>
 
-  <button
-    type="button"
-    className="primary-btn"
-    onClick={() => onNavigate?.("home")}
-  >
-    Continue shopping
-  </button>
-</div>
+    <button
+      type="button"
+      className="primary-btn"
+      onClick={() => onNavigate?.("home")}
+    >
+      Continue shopping
+    </button>
+  </div>
 
-<div className="place-order-success">
-  <h2>Order placed successfully</h2>
-  <p>Your order has been placed and is now visible in the admin system.</p>
-  <p><strong>Total:</strong> {formatPrice(total)}</p>
+  <div className="place-order-success">
+    <h2>Order placed successfully</h2>
+    <p>Your order has been placed and is now visible in the admin system.</p>
+    <p>
+      <strong>Total:</strong> {formatPrice(total)}
+    </p>
 
-  <button
-    type="button"
-    className="primary-btn"
-    onClick={() => onNavigate?.("home")}
-  >
-    Continue shopping
-  </button>
-</div>
-
-</div>
-
+    <button
+      type="button"
+      className="primary-btn"
+      onClick={() => onNavigate?.("home")}
+    >
+      Continue shopping
+    </button>
+  </div>
+</div>;
