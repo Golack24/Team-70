@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminSidebar from './adminSidebar';
 import AdminHeader from './adminHeader';
 import AdminDashboard from './modules/AdminDashboard';
@@ -7,66 +7,49 @@ import AdminInventory from './modules/AdminInventory';
 import AdminOrders from './modules/AdminOrders';
 import AdminCustomers from './modules/AdminCustomers';
 import AdminAnalytics from './modules/AdminAnalytics';
-
-const BASE_URL =
-  "http://cs2team70.cs2410-web01pvm.aston.ac.uk/index.php";
+import { fetchProducts, fetchOrders, fetchUsers } from './api';
 
 export default function AdminHome({ onLogout }) {
   const [activePage, setActivePage] = useState('dashboard');
-
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    lowStockItems: 0,
-    newOrders: 0,
-    totalCustomers: 0,
-    totalRevenue: 0,
-  });
-
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchStats();
-  }, []);
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
 
-  const fetchStats = async () => {
+  const loadAdminData = useCallback(async () => {
     try {
       setLoading(true);
+      setError('');
 
       const [productsRes, ordersRes, usersRes] = await Promise.all([
-        fetch(`${BASE_URL}?resource=products`),
-        fetch(`${BASE_URL}?resource=orders`),
-        fetch(`${BASE_URL}?resource=users`)
+        fetchProducts(),
+        fetchOrders(),
+        fetchUsers(),
       ]);
 
-      const productsData = await productsRes.json();
-      const ordersData = await ordersRes.json();
-      const usersData = await usersRes.json();
-
-      const products = productsData?.data || [];
-      const orders = Array.isArray(ordersData) ? ordersData : [];
-      const users = Array.isArray(usersData) ? usersData : [];
-
-      // Calculate stats
-      const lowStock = products.filter(p => Number(p.stock) < 10).length;
-
-      const revenue = orders.reduce(
-        (sum, o) => sum + Number(o.total || 0),
-        0
-      );
-
-      setStats({
-        totalProducts: products.length,
-        lowStockItems: lowStock,
-        newOrders: orders.length,
-        totalCustomers: users.length,
-        totalRevenue: revenue,
-      });
-
-    } catch (error) {
-      console.error('Failed to fetch stats:', error);
+      setProducts(Array.isArray(productsRes?.data) ? productsRes.data : []);
+      setOrders(Array.isArray(ordersRes) ? ordersRes : []);
+      setUsers(Array.isArray(usersRes) ? usersRes : []);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to load admin data');
     } finally {
       setLoading(false);
     }
+  }, []);
+
+  useEffect(() => {
+    loadAdminData();
+  }, [loadAdminData]);
+
+  const stats = {
+    totalProducts: products.length,
+    lowStockItems: products.filter((p) => Number(p.stock || 0) < 10).length,
+    newOrders: orders.filter((o) => ['pending', 'paid'].includes(String(o.status || '').toLowerCase())).length,
+    totalCustomers: users.filter((u) => u.role !== 'admin' && u.role !== 'staff').length,
+    totalRevenue: orders.reduce((sum, o) => sum + Number(o.total || 0), 0),
   };
 
   const handlePageChange = (pageId) => {
@@ -91,28 +74,32 @@ export default function AdminHome({ onLogout }) {
 
   return (
     <div className="admin-app">
-      {/* Sidebar */}
       <AdminSidebar
         activePage={activePage}
         onPageChange={handlePageChange}
         onLogout={handleLogout}
       />
 
-      {/* Header */}
       <AdminHeader
         currentPage={activePage}
         pageTitle={currentPageConfig.title}
         onLogout={handleLogout}
       />
 
-      {/* Main content */}
       <main className="admin-main">
-        {loading && activePage === "dashboard" ? (
-          <p style={{ padding: "20px" }}>Loading dashboard...</p>
+        {loading ? (
+          <p style={{ padding: '20px' }}>Loading admin data...</p>
+        ) : error ? (
+          <div style={{ padding: '20px', color: 'crimson' }}>
+            Failed to load admin data: {error}
+          </div>
         ) : (
           <CurrentComponent
             stats={stats}
-            onStatsChange={setStats}
+            products={products}
+            orders={orders}
+            users={users}
+            refreshData={loadAdminData}
             onPageChange={handlePageChange}
           />
         )}

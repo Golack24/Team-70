@@ -1,97 +1,51 @@
-import React, { useState } from 'react';
-import { FiAlertTriangle, FiRefreshCw, FiSearch } from 'react-icons/fi';
+import React, { useMemo, useState } from 'react';
+import { FiAlertTriangle, FiSearch } from 'react-icons/fi';
+import { updateProduct } from '../../api';
 
-export default function AdminInventory() {
-  const [inventory, setInventory] = useState([
-    {
-      id: 1,
-      name: 'Running Shoes Pro - Size 9',
-      sku: 'RSP-001-9',
-      currentStock: 12,
-      minStock: 10,
-      maxStock: 50,
-      reorderPoint: 15,
-      status: 'low',
-    },
-    {
-      id: 2,
-      name: 'Athletic Jacket - M',
-      sku: 'AJ-002-M',
-      currentStock: 28,
-      minStock: 5,
-      maxStock: 40,
-      reorderPoint: 15,
-      status: 'normal',
-    },
-    {
-      id: 3,
-      name: 'Training Shorts - L',
-      sku: 'TS-003-L',
-      currentStock: 5,
-      minStock: 10,
-      maxStock: 30,
-      reorderPoint: 15,
-      status: 'critical',
-    },
-    {
-      id: 4,
-      name: 'Running Shoes Pro - Size 10',
-      sku: 'RSP-001-10',
-      currentStock: 45,
-      minStock: 10,
-      maxStock: 50,
-      reorderPoint: 15,
-      status: 'normal',
-    },
-  ]);
-
+export default function AdminInventory({ products = [], refreshData }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [editingId, setEditingId] = useState(null);
-  const [editValues, setEditValues] = useState({});
+  const [editStock, setEditStock] = useState('');
+
+  const inventory = useMemo(() => {
+    return products.map((p) => {
+      const stock = Number(p.stock || 0);
+      let status = 'normal';
+      if (stock === 0) status = 'critical';
+      else if (stock < 10) status = 'low';
+
+      return {
+        id: p.id,
+        sku: `PRD-${String(p.id).padStart(3, '0')}`,
+        name: p.name,
+        currentStock: stock,
+        status,
+      };
+    });
+  }, [products]);
 
   const lowStockItems = inventory.filter((item) => item.status !== 'normal');
-
-  const handleUpdateStock = (id, field, value) => {
-    const updatedInventory = inventory.map((item) => {
-      if (item.id === id) {
-        const updated = { ...item, [field]: parseInt(value) };
-        if (updated.currentStock === 0) {
-          updated.status = 'critical';
-        } else if (updated.currentStock <= updated.reorderPoint) {
-          updated.status = 'low';
-        } else {
-          updated.status = 'normal';
-        }
-        return updated;
-      }
-      return item;
-    });
-    setInventory(updatedInventory);
-  };
-
-  const handleStartEdit = (item) => {
-    setEditingId(item.id);
-    setEditValues({
-      currentStock: item.currentStock,
-      minStock: item.minStock,
-      maxStock: item.maxStock,
-      reorderPoint: item.reorderPoint,
-    });
-  };
-
-  const handleSaveEdit = (id) => {
-    handleUpdateStock(id, 'currentStock', editValues.currentStock);
-    handleUpdateStock(id, 'minStock', editValues.minStock);
-    handleUpdateStock(id, 'maxStock', editValues.maxStock);
-    handleUpdateStock(id, 'reorderPoint', editValues.reorderPoint);
-    setEditingId(null);
-  };
 
   const filteredInventory = inventory.filter(
     (item) =>
       item.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       item.sku.toLowerCase().includes(searchTerm.toLowerCase())
   );
+
+  const handleStartEdit = (item) => {
+    setEditingId(item.id);
+    setEditStock(item.currentStock);
+  };
+
+  const handleSaveEdit = async (id) => {
+    try {
+      await updateProduct(id, { stock: Number(editStock) });
+      setEditingId(null);
+      await refreshData?.();
+    } catch (err) {
+      alert(err.message || 'Failed to update stock');
+    }
+  };
 
   const getStatusColor = (status) => {
     switch (status) {
@@ -119,15 +73,8 @@ export default function AdminInventory() {
             <div style={{ flex: 1 }}>
               <h3 style={{ margin: '0 0 0.5rem' }}>Low Stock Alert</h3>
               <p style={{ margin: '0.5rem 0', color: 'var(--admin-text-muted)', fontSize: '0.9rem' }}>
-                {lowStockItems.length} item{lowStockItems.length !== 1 ? 's' : ''} below reorder point
+                {lowStockItems.length} item{lowStockItems.length !== 1 ? 's' : ''} low in stock
               </p>
-              <div style={{ display: 'flex', gap: '0.5rem', flexWrap: 'wrap' }}>
-                {lowStockItems.map((item) => (
-                  <span key={item.id} className="admin-badge admin-badge-warning">
-                    {item.sku}
-                  </span>
-                ))}
-              </div>
             </div>
           </div>
         </div>
@@ -160,9 +107,6 @@ export default function AdminInventory() {
       <div className="admin-panel">
         <div className="admin-panel-header">
           <h2 className="admin-panel-title">Stock Levels</h2>
-          <button className="admin-btn">
-            <FiRefreshCw size={18} /> Reorder
-          </button>
         </div>
 
         <div className="admin-table-wrapper">
@@ -172,9 +116,6 @@ export default function AdminInventory() {
                 <th>SKU</th>
                 <th>Product</th>
                 <th>Current Stock</th>
-                <th>Min Stock</th>
-                <th>Max Stock</th>
-                <th>Reorder Point</th>
                 <th>Status</th>
                 <th>Action</th>
               </tr>
@@ -189,59 +130,12 @@ export default function AdminInventory() {
                       <input
                         type="number"
                         className="admin-input"
-                        value={editValues.currentStock}
-                        onChange={(e) =>
-                          setEditValues({ ...editValues, currentStock: e.target.value })
-                        }
-                        style={{ width: '80px', padding: '0.4rem' }}
+                        value={editStock}
+                        onChange={(e) => setEditStock(e.target.value)}
+                        style={{ width: '90px', padding: '0.4rem' }}
                       />
                     ) : (
                       item.currentStock
-                    )}
-                  </td>
-                  <td>
-                    {editingId === item.id ? (
-                      <input
-                        type="number"
-                        className="admin-input"
-                        value={editValues.minStock}
-                        onChange={(e) =>
-                          setEditValues({ ...editValues, minStock: e.target.value })
-                        }
-                        style={{ width: '80px', padding: '0.4rem' }}
-                      />
-                    ) : (
-                      item.minStock
-                    )}
-                  </td>
-                  <td>
-                    {editingId === item.id ? (
-                      <input
-                        type="number"
-                        className="admin-input"
-                        value={editValues.maxStock}
-                        onChange={(e) =>
-                          setEditValues({ ...editValues, maxStock: e.target.value })
-                        }
-                        style={{ width: '80px', padding: '0.4rem' }}
-                      />
-                    ) : (
-                      item.maxStock
-                    )}
-                  </td>
-                  <td>
-                    {editingId === item.id ? (
-                      <input
-                        type="number"
-                        className="admin-input"
-                        value={editValues.reorderPoint}
-                        onChange={(e) =>
-                          setEditValues({ ...editValues, reorderPoint: e.target.value })
-                        }
-                        style={{ width: '80px', padding: '0.4rem' }}
-                      />
-                    ) : (
-                      item.reorderPoint
                     )}
                   </td>
                   <td>
@@ -255,7 +149,6 @@ export default function AdminInventory() {
                         <button
                           className="admin-table-action"
                           onClick={() => handleSaveEdit(item.id)}
-                          style={{ color: 'var(--admin-success)' }}
                         >
                           Save
                         </button>
@@ -277,6 +170,13 @@ export default function AdminInventory() {
                   </td>
                 </tr>
               ))}
+              {!filteredInventory.length && (
+                <tr>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>
+                    No inventory items found
+                  </td>
+                </tr>
+              )}
             </tbody>
           </table>
         </div>

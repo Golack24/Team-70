@@ -1,135 +1,68 @@
-import React, { useState } from 'react';
-import { FiFilter, FiSearch, FiEye, FiPrinter } from 'react-icons/fi';
+import React, { useMemo, useState } from 'react';
+import { FiSearch, FiEye } from 'react-icons/fi';
+import { updateOrder } from '../../api';
 
-export default function AdminOrders() {
-  const [orders, setOrders] = useState([
-    {
-      id: 'ORD-001',
-      customer: 'John Doe',
-      email: 'john@example.com',
-      amount: 120.5,
-      status: 'completed',
-      date: '2026-03-20',
-      items: 2,
-      paymentMethod: 'Credit Card',
-    },
-    {
-      id: 'ORD-002',
-      customer: 'Jane Smith',
-      email: 'jane@example.com',
-      amount: 250.0,
-      status: 'shipped',
-      date: '2026-03-19',
-      items: 3,
-      paymentMethod: 'PayPal',
-    },
-    {
-      id: 'ORD-003',
-      customer: 'Bob Johnson',
-      email: 'bob@example.com',
-      amount: 85.75,
-      status: 'pending',
-      date: '2026-03-18',
-      items: 1,
-      paymentMethod: 'Debit Card',
-    },
-    {
-      id: 'ORD-004',
-      customer: 'Alice Williams',
-      email: 'alice@example.com',
-      amount: 340.0,
-      status: 'processing',
-      date: '2026-03-17',
-      items: 4,
-      paymentMethod: 'Credit Card',
-    },
-    {
-      id: 'ORD-005',
-      customer: 'Charlie Brown',
-      email: 'charlie@example.com',
-      amount: 95.25,
-      status: 'new',
-      date: '2026-03-21',
-      items: 2,
-      paymentMethod: 'Credit Card',
-    },
-  ]);
-
+export default function AdminOrders({ orders = [], users = [], refreshData }) {
   const [searchTerm, setSearchTerm] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [showDetails, setShowDetails] = useState(false);
 
-  const statusColors = {
-    new: 'admin-badge-info',
-    processing: 'admin-badge-warning',
-    pending: 'admin-badge-warning',
-    shipped: 'admin-badge-accent',
-    completed: 'admin-badge-success',
-    cancelled: 'admin-badge-danger',
+  const enrichedOrders = useMemo(() => {
+    return orders.map((order) => {
+      const user = users.find((u) => Number(u.id) === Number(order.user_id));
+      const customerName =
+        [user?.first_name, user?.last_name].filter(Boolean).join(' ').trim() ||
+        user?.username ||
+        'Unknown User';
+
+      return {
+        ...order,
+        customer: customerName,
+        email: user?.email || 'N/A',
+      };
+    });
+  }, [orders, users]);
+
+  const handleStatusChange = async (orderId, newStatus) => {
+    try {
+      await updateOrder(orderId, { status: newStatus });
+      await refreshData?.();
+    } catch (err) {
+      alert(err.message || 'Failed to update order');
+    }
   };
 
-  const handleStatusChange = (orderId, newStatus) => {
-    setOrders(
-      orders.map((order) =>
-        order.id === orderId ? { ...order, status: newStatus } : order
-      )
-    );
-  };
-
-  const filteredOrders = orders.filter((order) => {
+  const filteredOrders = enrichedOrders.filter((order) => {
     const matchesSearch =
-      order.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.customer.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      order.email.toLowerCase().includes(searchTerm.toLowerCase());
+      String(order.id).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(order.customer).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      String(order.email).toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesFilter = filterStatus === 'all' || order.status === filterStatus;
+    const matchesFilter =
+      filterStatus === 'all' || String(order.status).toLowerCase() === filterStatus;
 
     return matchesSearch && matchesFilter;
   });
 
   const orderStats = {
-    new: orders.filter((o) => o.status === 'new').length,
-    pending: orders.filter((o) => o.status === 'pending' || o.status === 'processing').length,
-    shipped: orders.filter((o) => o.status === 'shipped').length,
-    completed: orders.filter((o) => o.status === 'completed').length,
+    new: enrichedOrders.filter((o) => o.status === 'pending').length,
+    pending: enrichedOrders.filter((o) => o.status === 'paid').length,
+    shipped: enrichedOrders.filter((o) => o.status === 'shipped').length,
+    completed: enrichedOrders.filter((o) => o.status === 'delivered').length,
   };
 
   return (
     <div>
       <div className="admin-dashboard admin-grid-4">
-        <div className="admin-stat-card">
-          <div className="admin-stat-content">
-            <span className="admin-stat-label">New Orders</span>
-            <span className="admin-stat-value">{orderStats.new}</span>
-            <span className="admin-stat-change positive">Awaiting action</span>
-          </div>
-        </div>
-        <div className="admin-stat-card">
-          <div className="admin-stat-content">
-            <span className="admin-stat-label">Pending/Processing</span>
-            <span className="admin-stat-value">{orderStats.pending}</span>
-            <span className="admin-stat-change positive">In progress</span>
-          </div>
-        </div>
-        <div className="admin-stat-card">
-          <div className="admin-stat-content">
-            <span className="admin-stat-label">Shipped</span>
-            <span className="admin-stat-value">{orderStats.shipped}</span>
-            <span className="admin-stat-change positive">On the way</span>
-          </div>
-        </div>
-        <div className="admin-stat-card">
-          <div className="admin-stat-content">
-            <span className="admin-stat-label">Completed</span>
-            <span className="admin-stat-value">{orderStats.completed}</span>
-            <span className="admin-stat-change positive">Total</span>
-          </div>
-        </div>
+        <div className="admin-stat-card"><div className="admin-stat-content"><span className="admin-stat-label">Pending</span><span className="admin-stat-value">{orderStats.new}</span></div></div>
+        <div className="admin-stat-card"><div className="admin-stat-content"><span className="admin-stat-label">Paid</span><span className="admin-stat-value">{orderStats.pending}</span></div></div>
+        <div className="admin-stat-card"><div className="admin-stat-content"><span className="admin-stat-label">Shipped</span><span className="admin-stat-value">{orderStats.shipped}</span></div></div>
+        <div className="admin-stat-card"><div className="admin-stat-content"><span className="admin-stat-label">Delivered</span><span className="admin-stat-value">{orderStats.completed}</span></div></div>
       </div>
 
       <div className="admin-panel">
-        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto auto', gap: '0.75rem' }}>
+        <div style={{ display: 'grid', gridTemplateColumns: '1fr auto', gap: '0.75rem' }}>
           <div style={{ position: 'relative' }}>
             <FiSearch
               size={18}
@@ -159,17 +92,12 @@ export default function AdminOrders() {
             style={{ minWidth: '150px' }}
           >
             <option value="all">All Orders</option>
-            <option value="new">New</option>
-            <option value="processing">Processing</option>
             <option value="pending">Pending</option>
+            <option value="paid">Paid</option>
             <option value="shipped">Shipped</option>
-            <option value="completed">Completed</option>
+            <option value="delivered">Delivered</option>
             <option value="cancelled">Cancelled</option>
           </select>
-
-          <button className="admin-btn">
-            <FiFilter size={18} /> More Filters
-          </button>
         </div>
       </div>
 
@@ -185,10 +113,7 @@ export default function AdminOrders() {
                 <th>Order ID</th>
                 <th>Customer</th>
                 <th>Amount</th>
-                <th>Items</th>
                 <th>Status</th>
-                <th>Date</th>
-                <th>Payment</th>
                 <th>Actions</th>
               </tr>
             </thead>
@@ -196,47 +121,30 @@ export default function AdminOrders() {
               {filteredOrders.length > 0 ? (
                 filteredOrders.map((order) => (
                   <tr key={order.id}>
-                    <td style={{ fontWeight: '700', color: 'var(--admin-accent)' }}>
-                      {order.id}
-                    </td>
+                    <td>#{order.id}</td>
                     <td>
                       <div>
                         <div style={{ fontWeight: '500' }}>{order.customer}</div>
-                        <div
-                          style={{
-                            fontSize: '0.8rem',
-                            color: 'var(--admin-text-muted)',
-                          }}
-                        >
+                        <div style={{ fontSize: '0.8rem', color: 'var(--admin-text-muted)' }}>
                           {order.email}
                         </div>
                       </div>
                     </td>
-                    <td>£{order.amount.toFixed(2)}</td>
-                    <td>{order.items}</td>
+                    <td>£{Number(order.total || 0).toFixed(2)}</td>
                     <td>
                       <select
                         value={order.status}
-                        onChange={(e) =>
-                          handleStatusChange(order.id, e.target.value)
-                        }
+                        onChange={(e) => handleStatusChange(order.id, e.target.value)}
                         className="admin-select"
-                        style={{
-                          padding: '0.3rem 0.5rem',
-                          fontSize: '0.85rem',
-                          minWidth: 'auto',
-                        }}
+                        style={{ padding: '0.3rem 0.5rem', fontSize: '0.85rem', minWidth: 'auto' }}
                       >
-                        <option value="new">New</option>
-                        <option value="processing">Processing</option>
                         <option value="pending">Pending</option>
+                        <option value="paid">Paid</option>
                         <option value="shipped">Shipped</option>
-                        <option value="completed">Completed</option>
+                        <option value="delivered">Delivered</option>
                         <option value="cancelled">Cancelled</option>
                       </select>
                     </td>
-                    <td>{order.date}</td>
-                    <td>{order.paymentMethod}</td>
                     <td>
                       <button
                         className="admin-table-action"
@@ -248,18 +156,12 @@ export default function AdminOrders() {
                       >
                         <FiEye size={16} />
                       </button>
-                      <button
-                        className="admin-table-action"
-                        title="Print"
-                      >
-                        <FiPrinter size={16} />
-                      </button>
                     </td>
                   </tr>
                 ))
               ) : (
                 <tr>
-                  <td colSpan="8" style={{ textAlign: 'center', padding: '2rem' }}>
+                  <td colSpan="5" style={{ textAlign: 'center', padding: '2rem' }}>
                     No orders found
                   </td>
                 </tr>
@@ -273,74 +175,20 @@ export default function AdminOrders() {
         <div className="admin-modal-overlay" onClick={() => setShowDetails(false)}>
           <div className="admin-modal" onClick={(e) => e.stopPropagation()}>
             <div className="admin-modal-header">
-              <h2 className="admin-modal-title">Order Details - {selectedOrder.id}</h2>
-              <button
-                className="admin-modal-close"
-                onClick={() => setShowDetails(false)}
-              >
-                ✕
-              </button>
+              <h2 className="admin-modal-title">Order Details - #{selectedOrder.id}</h2>
+              <button className="admin-modal-close" onClick={() => setShowDetails(false)}>✕</button>
             </div>
 
             <div className="admin-modal-body">
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--admin-text-muted)', marginBottom: '0.25rem' }}>
-                    Customer Name
-                  </div>
-                  <div style={{ fontWeight: '600' }}>{selectedOrder.customer}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--admin-text-muted)', marginBottom: '0.25rem' }}>
-                    Email
-                  </div>
-                  <div style={{ fontWeight: '600' }}>{selectedOrder.email}</div>
-                </div>
-              </div>
-
-              <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginBottom: '1rem' }}>
-                <div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--admin-text-muted)', marginBottom: '0.25rem' }}>
-                    Order Date
-                  </div>
-                  <div style={{ fontWeight: '600' }}>{selectedOrder.date}</div>
-                </div>
-                <div>
-                  <div style={{ fontSize: '0.85rem', color: 'var(--admin-text-muted)', marginBottom: '0.25rem' }}>
-                    Total Amount
-                  </div>
-                  <div style={{ fontWeight: '600', color: 'var(--admin-accent)' }}>
-                    £{selectedOrder.amount.toFixed(2)}
-                  </div>
-                </div>
-              </div>
-
-              <div style={{ borderTop: '1px solid var(--admin-border)', paddingTop: '1rem' }}>
-                <div
-                  style={{
-                    fontSize: '0.85rem',
-                    color: 'var(--admin-text-muted)',
-                    marginBottom: '0.5rem',
-                  }}
-                >
-                  Order Status
-                </div>
-                <span className={`admin-badge ${statusColors[selectedOrder.status]}`}>
-                  {selectedOrder.status.charAt(0).toUpperCase() +
-                    selectedOrder.status.slice(1)}
-                </span>
-              </div>
+              <p><strong>Customer:</strong> {selectedOrder.customer}</p>
+              <p><strong>Email:</strong> {selectedOrder.email}</p>
+              <p><strong>Total:</strong> £{Number(selectedOrder.total || 0).toFixed(2)}</p>
+              <p><strong>Status:</strong> {selectedOrder.status}</p>
             </div>
 
             <div className="admin-modal-footer">
-              <button
-                className="admin-btn"
-                onClick={() => setShowDetails(false)}
-              >
+              <button className="admin-btn" onClick={() => setShowDetails(false)}>
                 Close
-              </button>
-              <button className="admin-btn admin-btn-primary">
-                Print Invoice
               </button>
             </div>
           </div>

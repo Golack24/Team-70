@@ -73,13 +73,12 @@ CREATE TABLE coupons (
 
 
 CREATE TABLE orders (
-    id AUTO_INCREMENT PRIMARY Key,
-    users_id INT NOT NULL,
-    total DECIMAL(0,2) NOT NULL DEFAULT 0.00,
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    user_id INT NOT NULL,
+    total DECIMAL(10,2) NOT NULL DEFAULT 0.00,
     status ENUM('pending', 'paid', 'shipped', 'delivered', 'cancelled') DEFAULT 'pending',
-    FOREIGN Key (user_id) REFERENCES users(id) ON DELETE CASCADE
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE
 );
-
 
 CREATE TABLE basket (
     id int AUTO_INCREMENT PRIMARY key,
