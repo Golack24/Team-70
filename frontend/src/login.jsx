@@ -1,10 +1,12 @@
+
 import { useState } from "react";
 import "./signup.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
 import { loginUser } from "./api";
 
-export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
+
+export default function LoginPage({ onNavigate, onAuth }) {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
@@ -22,20 +24,46 @@ export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
       setError("Both fields are required");
       return;
     }
-
     if (form.password.length < 6) {
       setError("Password must be at least 6 characters");
       return;
     }
-
     setLoading(true);
-
     try {
-      const resp = await loginUser(form);
-      const loggedInUser = resp?.user || resp;
-      onAuth?.(loggedInUser);
+      if (typeof loginUser === "function") {
+        const resp = await loginUser(form);
+        onAuth?.(resp?.user || resp);
+        setSuccess("Logged in successfully!");
+        setTimeout(() => {
+          if (onNavigate) onNavigate("home");
+        }, 1500);
+      } else {
+        const response = await fetch(
+          "http://cs2team70.cs2410-web01pvm.aston.ac.uk/index.php?resource=users&action=login",
+          {
+            method: "POST",
+            credentials: "include",
+            headers: {
+              "Content-Type": "application/json",
+            },
+            body: JSON.stringify({
+              email: form.email,
+              password: form.password,
+            }),
+          },
+        );
+        const data = await response.json();
+        if (response.ok && data.success) {
+          setSuccess("Logged in successfully!");
+          setTimeout(() => {
+            if (onNavigate) onNavigate("home");
+          }, 1500);
+        } else {
+          setError(data.error || "Invalid email or password");
+        }
+      }
     } catch (err) {
-      setError(err?.message || "Login failed");
+      setError(err?.message || "Error connecting to the server. Please try again later.");
     } finally {
       setLoading(false);
     }
@@ -52,8 +80,7 @@ export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
         <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
       </div>
 
-      <Navbar onNavigate={onNavigate} user={user} onLogout={onLogout} />
-
+      <Navbar onNavigate={onNavigate} />
       <main className="auth-page">
         <section className="auth-card">
           <header className="auth-header">
@@ -98,14 +125,11 @@ export default function LoginPage({ onNavigate, onAuth, user, onLogout }) {
               <button type="submit" className="auth-submit" disabled={loading}>
                 {loading ? "Logging in..." : "Log In"}
               </button>
+              <button type="button" className="auth-link" onClick={handleForgot} style={{marginLeft: 12}}>
+                Forgot password?
+              </button>
             </div>
           </form>
-
-          <div className="forgot-password">
-            <button className="auth-link" onClick={handleForgot}>
-              Forgot your password?
-            </button>
-          </div>
 
           <p className="auth-footer">
             New here?{" "}

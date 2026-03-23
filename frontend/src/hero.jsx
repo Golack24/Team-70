@@ -91,6 +91,14 @@ export default function Hero({ onNavigate }) {
             <button className="hero-button" onClick={() => onNavigate("men")}>
               shop now
             </button>
+            {/* This can be removed or replaced with a proper admin link */}
+            <button
+              className="hero-button"
+              style={{ marginTop: "0.5rem", background: "#222", color: "#fff" }}
+              onClick={() => onNavigate("admin")}
+            >
+              Admin Dashboard
+            </button>
           </div>
 
           <div className="hero-image-wrapper">

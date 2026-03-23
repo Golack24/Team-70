@@ -54,6 +54,7 @@ export default function SignupPage({ onNavigate, onAuth }) {
         <span className="top-promo-text">10% OFF WITH CODE 'METRIC'</span>
       </div>
       <Navbar onNavigate={onNavigate} />
+
       <main className="auth-page">
         <section className="auth-card">
           <header className="auth-header">
