@@ -6,6 +6,10 @@ import PlaceOrderPage from "./placeOrder";
 /* Helpers                       */
 /* ----------------------------- */
 
+/* -------------------------------- */
+/* Utility to build query strings */
+/* -------------------------------- */
+
 const toQuery = (params = {}) => {
   const url = new URL(API_ROOT);
 
@@ -43,7 +47,6 @@ async function sendJson(resource, method, body = {}, params = {}) {
       "Content-Type": "application/json",
     },
     credentials: "include",
-    body: JSON.stringify(body),
   });
 
   const data = await res.json().catch(() => ({}));
@@ -80,17 +83,17 @@ export async function fetchProducts(params = {}) {
   return request("products", params);
 }
 
-export async function createProduct(payload) {
-  return sendJson("products", "POST", payload);
+/* -------------------------------- */
+/* Orders */
+/* -------------------------------- */
+
+export async function fetchOrders(params = {}) {
+  return request("orders", params);
 }
 
-export async function updateProduct(id, payload) {
-  return sendJson("products", "PUT", payload, { id });
-}
-
-export async function deleteProduct(id) {
-  return sendNoBody("products", "DELETE", { id });
-}
+/* -------------------------------- */
+/* Users */
+/* -------------------------------- */
 
 /* ----------------------------- */
 /* Users                         */
@@ -100,12 +103,12 @@ export async function fetchUsers(params = {}) {
   return request("users", params);
 }
 
-export async function updateUser(id, payload) {
-  return sendJson("users", "PUT", payload, { id });
-}
+/* -------------------------------- */
+/* Coupons */
+/* -------------------------------- */
 
-export async function deleteUser(id) {
-  return sendNoBody("users", "DELETE", { id });
+export async function fetchCouponByCode(code) {
+  return request("coupons", { code });
 }
 
 /* ----------------------------- */
@@ -124,8 +127,34 @@ export async function updateOrder(id, payload) {
   return sendJson("orders", "PUT", payload, { id });
 }
 
-export async function deleteOrder(id) {
-  return sendNoBody("orders", "DELETE", { id });
+  if (subtotal < minOrderValue) {
+    return {
+      valid: false,
+      discountAmount: 0,
+      finalTotal: subtotal,
+      message: `Minimum order is £${minOrderValue.toFixed(2)}`,
+    };
+  }
+
+  let discountAmount = 0;
+
+  if (coupon.discount_type === "percentage") {
+    discountAmount =
+      subtotal * (Number(coupon.discount_value || 0) / 100);
+  }
+
+  if (coupon.discount_type === "fixed") {
+    discountAmount = Number(coupon.discount_value || 0);
+  }
+
+  discountAmount = Math.min(discountAmount, subtotal);
+
+  return {
+    valid: true,
+    discountAmount,
+    finalTotal: subtotal - discountAmount,
+    message: `${coupon.code || coupon.CODE} applied`,
+  };
 }
 
 /* ----------------------------- */

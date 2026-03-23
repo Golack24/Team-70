@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useMemo, useState } from "react";
 import "./checkout.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
@@ -10,8 +10,9 @@ import {
 } from "./api";
 
 const formatPrice = (value) => {
-  if (value === undefined || value === null || Number.isNaN(Number(value)))
+  if (value === undefined || value === null || Number.isNaN(Number(value))) {
     return "£--";
+  }
   const num = Number(value);
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
 };
@@ -23,13 +24,83 @@ export default function CheckoutPage({
   onRemove,
 }) {
   const [discountCode, setDiscountCode] = useState("");
-  const subtotal = cart.reduce(
-    (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
-    0,
-  );
+  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [discountMessage, setDiscountMessage] = useState("");
+  const [discountError, setDiscountError] = useState("");
+  const [applyingDiscount, setApplyingDiscount] = useState(false);
+
+  const subtotal = useMemo(() => {
+    return cart.reduce(
+      (sum, item) => sum + Number(item.price || 0) * Number(item.quantity || 1),
+      0
+    );
+  }, [cart]);
 
   const shipping = 0;
-  const total = subtotal + shipping;
+
+  const discountResult = useMemo(() => {
+    if (!appliedCoupon) {
+      return {
+        valid: false,
+        discountAmount: 0,
+        finalTotal: subtotal,
+      };
+    }
+
+    return calculateDiscount(appliedCoupon, subtotal);
+  }, [appliedCoupon, subtotal]);
+
+  const total = Math.max(0, Number(discountResult.finalTotal || subtotal) + shipping);
+
+  const handleApplyDiscount = async () => {
+    const code = discountCode.trim();
+
+    if (!code) {
+      setDiscountError("Please enter a discount code");
+      setDiscountMessage("");
+      setAppliedCoupon(null);
+      return;
+    }
+
+    try {
+      setApplyingDiscount(true);
+      setDiscountError("");
+      setDiscountMessage("");
+
+      const coupon = await fetchCouponByCode(code);
+
+      if (!coupon) {
+        setAppliedCoupon(null);
+        setDiscountError("Coupon not found");
+        return;
+      }
+
+      const result = calculateDiscount(coupon, subtotal);
+
+      if (!result.valid) {
+        setAppliedCoupon(null);
+        setDiscountError(result.message);
+        return;
+      }
+
+      setAppliedCoupon(coupon);
+      setDiscountMessage(result.message);
+      setDiscountError("");
+    } catch (err) {
+      setAppliedCoupon(null);
+      setDiscountMessage("");
+      setDiscountError(err.message || "Failed to apply coupon");
+    } finally {
+      setApplyingDiscount(false);
+    }
+  };
+
+  const handleRemoveDiscount = () => {
+    setAppliedCoupon(null);
+    setDiscountCode("");
+    setDiscountMessage("");
+    setDiscountError("");
+  };
 
   return (
     <>
@@ -60,7 +131,6 @@ export default function CheckoutPage({
           </div>
 
           <div className="checkout-grid">
-            {/* LEFT SIDE — CART */}
             <div className="cart-panel">
               {cart.length === 0 && (
                 <div className="cart-empty">
@@ -137,7 +207,6 @@ export default function CheckoutPage({
               ))}
             </div>
 
-            {/* RIGHT SIDE — SUMMARY */}
             <aside className="summary-panel">
               <h2>Order summary</h2>
 
@@ -152,29 +221,73 @@ export default function CheckoutPage({
                   <span>{shipping === 0 ? "Free" : formatPrice(shipping)}</span>
                 </div>
 
+                {appliedCoupon && discountResult.valid && (
+                  <div className="row">
+                    <span>
+                      Discount ({appliedCoupon.code || appliedCoupon.CODE})
+                    </span>
+                    <span>-{formatPrice(discountResult.discountAmount)}</span>
+                  </div>
+                )}
+
                 <div className="row total">
                   <span>Total</span>
                   <span>{formatPrice(total)}</span>
                 </div>
+
                 <div className="discount-section">
                   <label>Discount Code</label>
-                  <input
-                    type="text"
-                    value={discountCode}
-                    placeholder="Enter code"
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                  />
+                  <div style={{ display: "flex", gap: "0.5rem" }}>
+                    <input
+                      type="text"
+                      value={discountCode}
+                      placeholder="Enter code"
+                      onChange={(e) => setDiscountCode(e.target.value)}
+                      disabled={applyingDiscount}
+                    />
+                    <button
+                      type="button"
+                      className="primary-btn"
+                      onClick={handleApplyDiscount}
+                      disabled={applyingDiscount || cart.length === 0}
+                    >
+                      {applyingDiscount ? "Applying..." : "Apply"}
+                    </button>
+                  </div>
+
+                  {discountMessage && (
+                    <p style={{ color: "green", marginTop: "0.5rem" }}>
+                      {discountMessage}
+                    </p>
+                  )}
+
+                  {discountError && (
+                    <p style={{ color: "crimson", marginTop: "0.5rem" }}>
+                      {discountError}
+                    </p>
+                  )}
+
+                  {appliedCoupon && discountResult.valid && (
+                    <button
+                      type="button"
+                      className="ghost-link"
+                      onClick={handleRemoveDiscount}
+                      style={{ marginTop: "0.5rem" }}
+                    >
+                      Remove discount
+                    </button>
+                  )}
                 </div>
-                
               </div>
 
-              <button className="primary-btn" type="button">
+              <button className="primary-btn" type="button" disabled={cart.length === 0}>
                 Place order
               </button>
             </aside>
           </div>
         </section>
       </main>
+
       <Footer />
     </>
   );
