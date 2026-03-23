@@ -1,3 +1,4 @@
+import { useState } from "react";
 import "./checkout.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
@@ -15,6 +16,7 @@ export default function CheckoutPage({
   onUpdateQty,
   onRemove,
 }) {
+  const [discountCode, setDiscountCode] = useState("");
   const subtotal = cart.reduce(
     (sum, item) => sum + (item.price || 0) * (item.quantity || 1),
     0,
