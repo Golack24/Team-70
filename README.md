@@ -1,6 +1,7 @@
 # Team-70 Presents METRIC
 
-<img width="907" height="247" alt="image" src="https://github.com/user-attachments/assets/f3ffb6b9-042f-4e2d-a231-4e691280a8ec" />
+<img width="906" height="245" alt="image" src="https://github.com/user-attachments/assets/6a408378-6976-479b-84c6-4baede368481" />
+
 
 Metric is a full-stack e-commerce web application designed for browsing, purchasing, and managing high-performance gymwear. The system focuses on clean UI design, responsive layouts, and robust backend integration using a relational database.
 
