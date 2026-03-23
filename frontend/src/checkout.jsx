@@ -2,6 +2,12 @@ import { useState } from "react";
 import "./checkout.css";
 import Navbar from "./navbar";
 import Footer from "./footer";
+import {
+  fetchCouponByCode,
+  calculateDiscount,
+  createAddress,
+  createOrder,
+} from "./api";
 
 const formatPrice = (value) => {
   if (value === undefined || value === null || Number.isNaN(Number(value)))
