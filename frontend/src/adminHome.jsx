@@ -1,18 +1,18 @@
-import React, { useState, useEffect, useCallback } from 'react';
-import AdminSidebar from './adminSidebar';
-import AdminHeader from './adminHeader';
-import AdminDashboard from './modules/AdminDashboard';
-import AdminProducts from './modules/AdminProducts';
-import AdminInventory from './modules/AdminInventory';
-import AdminOrders from './modules/AdminOrders';
-import AdminCustomers from './modules/AdminCustomers';
-import AdminAnalytics from './modules/AdminAnalytics';
-import { fetchProducts, fetchOrders, fetchUsers } from './api';
+import React, { useState, useEffect, useCallback } from "react";
+import AdminSidebar from "./adminSidebar";
+import AdminHeader from "./adminHeader";
+import AdminDashboard from "./modules/AdminDashboard";
+import AdminProducts from "./modules/AdminProducts";
+import AdminInventory from "./modules/AdminInventory";
+import AdminOrders from "./modules/AdminOrders";
+import AdminCustomers from "./modules/AdminCustomers";
+import AdminAnalytics from "./modules/AdminAnalytics";
+import { fetchProducts, fetchOrders, fetchUsers } from "./api";
 
 export default function AdminHome({ onLogout }) {
-  const [activePage, setActivePage] = useState('dashboard');
+  const [activePage, setActivePage] = useState("dashboard");
   const [loading, setLoading] = useState(true);
-  const [error, setError] = useState('');
+  const [error, setError] = useState("");
 
   const [products, setProducts] = useState([]);
   const [orders, setOrders] = useState([]);
@@ -21,20 +21,48 @@ export default function AdminHome({ onLogout }) {
   const loadAdminData = useCallback(async () => {
     try {
       setLoading(true);
-      setError('');
+      setError("");
 
-      const [productsRes, ordersRes, usersRes] = await Promise.all([
+      const results = await Promise.allSettled([
         fetchProducts(),
         fetchOrders(),
         fetchUsers(),
       ]);
 
-      setProducts(Array.isArray(productsRes?.data) ? productsRes.data : []);
-      setOrders(Array.isArray(ordersRes) ? ordersRes : []);
-      setUsers(Array.isArray(usersRes) ? usersRes : []);
-    } catch (err) {
-      console.error(err);
-      setError(err.message || 'Failed to load admin data');
+      const [productsResult, ordersResult, usersResult] = results;
+
+      if (productsResult.status === "fulfilled") {
+        const productsRes = productsResult.value;
+        setProducts(Array.isArray(productsRes?.data) ? productsRes.data : []);
+      } else {
+        console.error("Products failed:", productsResult.reason);
+        setProducts([]);
+      }
+
+      if (ordersResult.status === "fulfilled") {
+        const ordersRes = ordersResult.value;
+        setOrders(Array.isArray(ordersRes) ? ordersRes : []);
+      } else {
+        console.error("Orders failed:", ordersResult.reason);
+        setOrders([]);
+      }
+
+      if (usersResult.status === "fulfilled") {
+        const usersRes = usersResult.value;
+        setUsers(Array.isArray(usersRes) ? usersRes : []);
+      } else {
+        console.error("Users failed:", usersResult.reason);
+        setUsers([]);
+      }
+
+      const errors = [];
+      if (productsResult.status === "rejected") errors.push("products");
+      if (ordersResult.status === "rejected") errors.push("orders");
+      if (usersResult.status === "rejected") errors.push("users");
+
+      if (errors.length) {
+        setError(`Some admin data failed to load: ${errors.join(", ")}`);
+      }
     } finally {
       setLoading(false);
     }
@@ -47,8 +75,12 @@ export default function AdminHome({ onLogout }) {
   const stats = {
     totalProducts: products.length,
     lowStockItems: products.filter((p) => Number(p.stock || 0) < 10).length,
-    newOrders: orders.filter((o) => ['pending', 'paid'].includes(String(o.status || '').toLowerCase())).length,
-    totalCustomers: users.filter((u) => u.role !== 'admin' && u.role !== 'staff').length,
+    newOrders: orders.filter((o) =>
+      ["pending", "paid"].includes(String(o.status || "").toLowerCase()),
+    ).length,
+    totalCustomers: users.filter(
+      (u) => u.role !== "admin" && u.role !== "staff",
+    ).length,
     totalRevenue: orders.reduce((sum, o) => sum + Number(o.total || 0), 0),
   };
 
@@ -61,12 +93,12 @@ export default function AdminHome({ onLogout }) {
   };
 
   const pageConfig = {
-    dashboard: { title: 'Dashboard', component: AdminDashboard },
-    products: { title: 'Product Management', component: AdminProducts },
-    inventory: { title: 'Inventory Management', component: AdminInventory },
-    orders: { title: 'Order Management', component: AdminOrders },
-    customers: { title: 'Customer Management', component: AdminCustomers },
-    analytics: { title: 'Sales Analytics', component: AdminAnalytics },
+    dashboard: { title: "Dashboard", component: AdminDashboard },
+    products: { title: "Product Management", component: AdminProducts },
+    inventory: { title: "Inventory Management", component: AdminInventory },
+    orders: { title: "Order Management", component: AdminOrders },
+    customers: { title: "Customer Management", component: AdminCustomers },
+    analytics: { title: "Sales Analytics", component: AdminAnalytics },
   };
 
   const currentPageConfig = pageConfig[activePage] || pageConfig.dashboard;
@@ -88,9 +120,9 @@ export default function AdminHome({ onLogout }) {
 
       <main className="admin-main">
         {loading ? (
-          <p style={{ padding: '20px' }}>Loading admin data...</p>
+          <p style={{ padding: "20px" }}>Loading admin data...</p>
         ) : error ? (
-          <div style={{ padding: '20px', color: 'crimson' }}>
+          <div style={{ padding: "20px", color: "crimson" }}>
             Failed to load admin data: {error}
           </div>
         ) : (

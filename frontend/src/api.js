@@ -1,5 +1,5 @@
-//const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
+//const API_BASE = "http://localhost:8000";
 const API_ROOT = `${API_BASE}/index.php`;
 
 const toQuery = (params = {}) => {
@@ -11,7 +11,6 @@ const toQuery = (params = {}) => {
   });
   return url.toString();
 };
-
 
 async function request(resource, params = {}) {
   const url = toQuery({ resource, ...params });
@@ -38,18 +37,19 @@ async function request(resource, params = {}) {
   }
 }
 
-//async function request(resource, params = {}) {
-//  const url = toQuery({ resource, ...params });
-//  const res = await fetch(url, {
-//    credentials: "include",
-//  });
-//  const data = await res.json().catch(() => ({}));
-//  if (!res.ok) {
-//    const message = data?.error || `Request failed (${res.status})`;
-//    throw new Error(message);
-//  }
-//  return data;
-//}
+/*async function request(resource, params = {}) {
+  const url = toQuery({ resource, ...params });
+  const res = await fetch(url, {
+    credentials: "include",
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const message = data?.error || `Request failed (${res.status})`;
+    throw new Error(message);
+  }
+  return data;
+}
+  */
 
 async function sendJson(resource, method, body = {}, params = {}) {
   const url = toQuery({ resource, ...params });
