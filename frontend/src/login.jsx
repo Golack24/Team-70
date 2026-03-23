@@ -15,7 +15,7 @@ export default function LoginPage({ onNavigate, onAuth }) {
     setForm((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = (e) => {
     e.preventDefault();
     setError("");
     if (!form.email || !form.password) {
