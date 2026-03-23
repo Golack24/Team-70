@@ -151,3 +151,7 @@ export async function loginUser(payload) {
 export async function logoutUser() {
   return jsonRequest("logout", {});
 }
+
+export async function resetPasswordUser(payload) {
+  return jsonRequest("reset_password", payload);
+}
