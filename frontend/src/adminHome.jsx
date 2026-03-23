@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import AdminSidebar from './adminSidebar';
 import AdminHeader from './adminHeader';
 import AdminDashboard from './modules/AdminDashboard';
@@ -7,33 +7,49 @@ import AdminInventory from './modules/AdminInventory';
 import AdminOrders from './modules/AdminOrders';
 import AdminCustomers from './modules/AdminCustomers';
 import AdminAnalytics from './modules/AdminAnalytics';
+import { fetchProducts, fetchOrders, fetchUsers } from './api';
 
-export default function AdminHome({ onLogout, onPageChange }) {
+export default function AdminHome({ onLogout }) {
   const [activePage, setActivePage] = useState('dashboard');
-  const [stats, setStats] = useState({
-    totalProducts: 0,
-    lowStockItems: 0,
-    newOrders: 0,
-    totalCustomers: 0,
-    totalRevenue: 0,
-  });
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState('');
 
-  useEffect(() => {
-    fetchStats();
+  const [products, setProducts] = useState([]);
+  const [orders, setOrders] = useState([]);
+  const [users, setUsers] = useState([]);
+
+  const loadAdminData = useCallback(async () => {
+    try {
+      setLoading(true);
+      setError('');
+
+      const [productsRes, ordersRes, usersRes] = await Promise.all([
+        fetchProducts(),
+        fetchOrders(),
+        fetchUsers(),
+      ]);
+
+      setProducts(Array.isArray(productsRes?.data) ? productsRes.data : []);
+      setOrders(Array.isArray(ordersRes) ? ordersRes : []);
+      setUsers(Array.isArray(usersRes) ? usersRes : []);
+    } catch (err) {
+      console.error(err);
+      setError(err.message || 'Failed to load admin data');
+    } finally {
+      setLoading(false);
+    }
   }, []);
 
-  const fetchStats = async () => {
-    try {
-      setStats({
-        totalProducts: 125,
-        lowStockItems: 8,
-        newOrders: 12,
-        totalCustomers: 342,
-        totalRevenue: 24850.75,
-      });
-    } catch (error) {
-      console.error('Failed to fetch stats:', error);
-    }
+  useEffect(() => {
+    loadAdminData();
+  }, [loadAdminData]);
+
+  const stats = {
+    totalProducts: products.length,
+    lowStockItems: products.filter((p) => Number(p.stock || 0) < 10).length,
+    newOrders: orders.filter((o) => ['pending', 'paid'].includes(String(o.status || '').toLowerCase())).length,
+    totalCustomers: users.filter((u) => u.role !== 'admin' && u.role !== 'staff').length,
+    totalRevenue: orders.reduce((sum, o) => sum + Number(o.total || 0), 0),
   };
 
   const handlePageChange = (pageId) => {
@@ -63,17 +79,30 @@ export default function AdminHome({ onLogout, onPageChange }) {
         onPageChange={handlePageChange}
         onLogout={handleLogout}
       />
+
       <AdminHeader
         currentPage={activePage}
         pageTitle={currentPageConfig.title}
         onLogout={handleLogout}
       />
+
       <main className="admin-main">
-        <CurrentComponent
-          stats={stats}
-          onStatsChange={setStats}
-          onPageChange={handlePageChange}
-        />
+        {loading ? (
+          <p style={{ padding: '20px' }}>Loading admin data...</p>
+        ) : error ? (
+          <div style={{ padding: '20px', color: 'crimson' }}>
+            Failed to load admin data: {error}
+          </div>
+        ) : (
+          <CurrentComponent
+            stats={stats}
+            products={products}
+            orders={orders}
+            users={users}
+            refreshData={loadAdminData}
+            onPageChange={handlePageChange}
+          />
+        )}
       </main>
     </div>
   );

@@ -1,4 +1,5 @@
-const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
+//const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
+const API_BASE = "http://localhost:8000";
 const API_ROOT = `${API_BASE}/index.php`;
 
 const toQuery = (params = {}) => {
@@ -11,9 +12,65 @@ const toQuery = (params = {}) => {
   return url.toString();
 };
 
+
 async function request(resource, params = {}) {
   const url = toQuery({ resource, ...params });
+  console.log("API REQUEST:", url);
+
+  try {
+    const res = await fetch(url, {
+      credentials: "include",
+    });
+
+    console.log("API RESPONSE STATUS:", res.status, url);
+
+    const data = await res.json().catch(() => ({}));
+
+    if (!res.ok) {
+      const message = data?.error || `Request failed (${res.status})`;
+      throw new Error(message);
+    }
+
+    return data;
+  } catch (err) {
+    console.error("API FETCH FAILED:", url, err);
+    throw err;
+  }
+}
+
+//async function request(resource, params = {}) {
+//  const url = toQuery({ resource, ...params });
+//  const res = await fetch(url, {
+//    credentials: "include",
+//  });
+//  const data = await res.json().catch(() => ({}));
+//  if (!res.ok) {
+//    const message = data?.error || `Request failed (${res.status})`;
+//    throw new Error(message);
+//  }
+//  return data;
+//}
+
+async function sendJson(resource, method, body = {}, params = {}) {
+  const url = toQuery({ resource, ...params });
   const res = await fetch(url, {
+    method,
+    headers: { "Content-Type": "application/json" },
+    credentials: "include",
+    body: JSON.stringify(body),
+  });
+  const data = await res.json().catch(() => ({}));
+  if (!res.ok) {
+    const message = data?.error || `Request failed (${res.status})`;
+    throw new Error(message);
+  }
+  return data;
+}
+
+async function sendNoBody(resource, method, params = {}) {
+  const url = toQuery({ resource, ...params });
+  const res = await fetch(url, {
+    method,
     credentials: "include",
   });
   const data = await res.json().catch(() => ({}));
@@ -24,9 +81,49 @@ async function request(resource, params = {}) {
   return data;
 }
 
+// PRODUCTS
 export async function fetchProducts(params = {}) {
   return request("products", params);
 }
+
+export async function createProduct(payload) {
+  return sendJson("products", "POST", payload);
+}
+
+export async function updateProduct(id, payload) {
+  return sendJson("products", "PUT", payload, { id });
+}
+
+export async function deleteProduct(id) {
+  return sendNoBody("products", "DELETE", { id });
+}
+
+// USERS / CUSTOMERS
+export async function fetchUsers(params = {}) {
+  return request("users", params);
+}
+
+export async function updateUser(id, payload) {
+  return sendJson("users", "PUT", payload, { id });
+}
+
+export async function deleteUser(id) {
+  return sendNoBody("users", "DELETE", { id });
+}
+
+// ORDERS
+export async function fetchOrders(params = {}) {
+  return request("orders", params);
+}
+
+export async function updateOrder(id, payload) {
+  return sendJson("orders", "PUT", payload, { id });
+}
+
+export async function deleteOrder(id) {
+  return sendNoBody("orders", "DELETE", { id });
+}
+
 // Auth helpers
 const jsonRequest = async (action, body = {}) => {
   const res = await fetch(`${API_ROOT}?resource=users&action=${action}`, {
@@ -50,7 +147,7 @@ export async function registerUser(payload) {
 export async function loginUser(payload) {
   return jsonRequest("login", payload);
 }
-// backend expects POST logout
+
 export async function logoutUser() {
   return jsonRequest("logout", {});
 }
