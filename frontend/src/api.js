@@ -1,4 +1,5 @@
-const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
+//const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
+const API_BASE = "http://localhost:8000";
 const API_ROOT = `${API_BASE}/index.php`;
 
 const toQuery = (params = {}) => {
