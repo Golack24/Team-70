@@ -8,8 +8,12 @@ import AdminOrders from './modules/AdminOrders';
 import AdminCustomers from './modules/AdminCustomers';
 import AdminAnalytics from './modules/AdminAnalytics';
 
-export default function AdminHome({ onLogout, onPageChange }) {
+const BASE_URL =
+  "http://cs2team70.cs2410-web01pvm.aston.ac.uk/index.php";
+
+export default function AdminHome({ onLogout }) {
   const [activePage, setActivePage] = useState('dashboard');
+
   const [stats, setStats] = useState({
     totalProducts: 0,
     lowStockItems: 0,
@@ -18,21 +22,50 @@ export default function AdminHome({ onLogout, onPageChange }) {
     totalRevenue: 0,
   });
 
+  const [loading, setLoading] = useState(true);
+
   useEffect(() => {
     fetchStats();
   }, []);
 
   const fetchStats = async () => {
     try {
+      setLoading(true);
+
+      const [productsRes, ordersRes, usersRes] = await Promise.all([
+        fetch(`${BASE_URL}?resource=products`),
+        fetch(`${BASE_URL}?resource=orders`),
+        fetch(`${BASE_URL}?resource=users`)
+      ]);
+
+      const productsData = await productsRes.json();
+      const ordersData = await ordersRes.json();
+      const usersData = await usersRes.json();
+
+      const products = productsData?.data || [];
+      const orders = Array.isArray(ordersData) ? ordersData : [];
+      const users = Array.isArray(usersData) ? usersData : [];
+
+      // Calculate stats
+      const lowStock = products.filter(p => Number(p.stock) < 10).length;
+
+      const revenue = orders.reduce(
+        (sum, o) => sum + Number(o.total || 0),
+        0
+      );
+
       setStats({
-        totalProducts: 125,
-        lowStockItems: 8,
-        newOrders: 12,
-        totalCustomers: 342,
-        totalRevenue: 24850.75,
+        totalProducts: products.length,
+        lowStockItems: lowStock,
+        newOrders: orders.length,
+        totalCustomers: users.length,
+        totalRevenue: revenue,
       });
+
     } catch (error) {
       console.error('Failed to fetch stats:', error);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -58,22 +91,31 @@ export default function AdminHome({ onLogout, onPageChange }) {
 
   return (
     <div className="admin-app">
+      {/* Sidebar */}
       <AdminSidebar
         activePage={activePage}
         onPageChange={handlePageChange}
         onLogout={handleLogout}
       />
+
+      {/* Header */}
       <AdminHeader
         currentPage={activePage}
         pageTitle={currentPageConfig.title}
         onLogout={handleLogout}
       />
+
+      {/* Main content */}
       <main className="admin-main">
-        <CurrentComponent
-          stats={stats}
-          onStatsChange={setStats}
-          onPageChange={handlePageChange}
-        />
+        {loading && activePage === "dashboard" ? (
+          <p style={{ padding: "20px" }}>Loading dashboard...</p>
+        ) : (
+          <CurrentComponent
+            stats={stats}
+            onStatsChange={setStats}
+            onPageChange={handlePageChange}
+          />
+        )}
       </main>
     </div>
   );
