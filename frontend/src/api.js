@@ -1,142 +1,151 @@
-//const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
-const API_BASE = "http://localhost:8000";
+const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
 const API_ROOT = `${API_BASE}/index.php`;
+
+/* -------------------------------- */
+/* Utility to build query strings */
+/* -------------------------------- */
 
 const toQuery = (params = {}) => {
   const url = new URL(API_ROOT);
+
   Object.entries(params).forEach(([key, value]) => {
     if (value !== undefined && value !== null && value !== "") {
       url.searchParams.set(key, value);
     }
   });
+
   return url.toString();
 };
 
+/* -------------------------------- */
+/* Generic request helper */
+/* -------------------------------- */
 
 async function request(resource, params = {}) {
   const url = toQuery({ resource, ...params });
-  console.log("API REQUEST:", url);
 
-  try {
-    const res = await fetch(url, {
-      credentials: "include",
-    });
-
-    console.log("API RESPONSE STATUS:", res.status, url);
-
-    const data = await res.json().catch(() => ({}));
-
-    if (!res.ok) {
-      const message = data?.error || `Request failed (${res.status})`;
-      throw new Error(message);
-    }
-
-    return data;
-  } catch (err) {
-    console.error("API FETCH FAILED:", url, err);
-    throw err;
-  }
-}
-
-//async function request(resource, params = {}) {
-//  const url = toQuery({ resource, ...params });
-//  const res = await fetch(url, {
-//    credentials: "include",
-//  });
-//  const data = await res.json().catch(() => ({}));
-//  if (!res.ok) {
-//    const message = data?.error || `Request failed (${res.status})`;
-//    throw new Error(message);
-//  }
-//  return data;
-//}
-
-async function sendJson(resource, method, body = {}, params = {}) {
-  const url = toQuery({ resource, ...params });
   const res = await fetch(url, {
-    method,
-    headers: { "Content-Type": "application/json" },
     credentials: "include",
-    body: JSON.stringify(body),
   });
+
   const data = await res.json().catch(() => ({}));
+
   if (!res.ok) {
     const message = data?.error || `Request failed (${res.status})`;
     throw new Error(message);
   }
+
   return data;
 }
 
-async function sendNoBody(resource, method, params = {}) {
-  const url = toQuery({ resource, ...params });
-  const res = await fetch(url, {
-    method,
-    credentials: "include",
-  });
-  const data = await res.json().catch(() => ({}));
-  if (!res.ok) {
-    const message = data?.error || `Request failed (${res.status})`;
-    throw new Error(message);
-  }
-  return data;
-}
+/* -------------------------------- */
+/* Products */
+/* -------------------------------- */
 
-// PRODUCTS
 export async function fetchProducts(params = {}) {
   return request("products", params);
 }
 
-export async function createProduct(payload) {
-  return sendJson("products", "POST", payload);
-}
+/* -------------------------------- */
+/* Orders */
+/* -------------------------------- */
 
-export async function updateProduct(id, payload) {
-  return sendJson("products", "PUT", payload, { id });
-}
-
-export async function deleteProduct(id) {
-  return sendNoBody("products", "DELETE", { id });
-}
-
-// USERS / CUSTOMERS
-export async function fetchUsers(params = {}) {
-  return request("users", params);
-}
-
-export async function updateUser(id, payload) {
-  return sendJson("users", "PUT", payload, { id });
-}
-
-export async function deleteUser(id) {
-  return sendNoBody("users", "DELETE", { id });
-}
-
-// ORDERS
 export async function fetchOrders(params = {}) {
   return request("orders", params);
 }
 
-export async function updateOrder(id, payload) {
-  return sendJson("orders", "PUT", payload, { id });
+/* -------------------------------- */
+/* Users */
+/* -------------------------------- */
+
+export async function fetchUsers(params = {}) {
+  return request("users", params);
 }
 
-export async function deleteOrder(id) {
-  return sendNoBody("orders", "DELETE", { id });
+/* -------------------------------- */
+/* Coupons */
+/* -------------------------------- */
+
+export async function fetchCouponByCode(code) {
+  return request("coupons", { code });
 }
 
-// Auth helpers
+/* -------------------------------- */
+/* Discount Calculation */
+/* -------------------------------- */
+
+export function calculateDiscount(coupon, subtotal) {
+  if (!coupon) {
+    return {
+      valid: false,
+      discountAmount: 0,
+      finalTotal: subtotal,
+      message: "Invalid coupon",
+    };
+  }
+
+  if (Number(coupon.is_active) !== 1) {
+    return {
+      valid: false,
+      discountAmount: 0,
+      finalTotal: subtotal,
+      message: "This coupon is inactive",
+    };
+  }
+
+  const minOrderValue = Number(coupon.min_order_value || 0);
+
+  if (subtotal < minOrderValue) {
+    return {
+      valid: false,
+      discountAmount: 0,
+      finalTotal: subtotal,
+      message: `Minimum order is £${minOrderValue.toFixed(2)}`,
+    };
+  }
+
+  let discountAmount = 0;
+
+  if (coupon.discount_type === "percentage") {
+    discountAmount =
+      subtotal * (Number(coupon.discount_value || 0) / 100);
+  }
+
+  if (coupon.discount_type === "fixed") {
+    discountAmount = Number(coupon.discount_value || 0);
+  }
+
+  discountAmount = Math.min(discountAmount, subtotal);
+
+  return {
+    valid: true,
+    discountAmount,
+    finalTotal: subtotal - discountAmount,
+    message: `${coupon.code || coupon.CODE} applied`,
+  };
+}
+
+/* -------------------------------- */
+/* Authentication */
+/* -------------------------------- */
+
 const jsonRequest = async (action, body = {}) => {
   const res = await fetch(`${API_ROOT}?resource=users&action=${action}`, {
     method: "POST",
-    headers: { "Content-Type": "application/json" },
+    headers: {
+      "Content-Type": "application/json",
+    },
     credentials: "include",
     body: JSON.stringify(body),
   });
+
   const data = await res.json().catch(() => ({}));
+
   if (!res.ok) {
     const message = data?.error || `Request failed (${res.status})`;
     throw new Error(message);
   }
+
   return data;
 };
 
