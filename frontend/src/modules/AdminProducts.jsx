@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { FiPlus, FiEdit2, FiTrash2, FiSearch } from 'react-icons/fi';
-import { createProduct, updateProduct, deleteProduct } from '../../api';
+import { createProduct, updateProduct, deleteProduct } from '../api';
 
 export default function AdminProducts({ products = [], refreshData }) {
   const [showModal, setShowModal] = useState(false);

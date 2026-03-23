@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { FiSearch, FiEye } from 'react-icons/fi';
-import { updateOrder } from '../../api';
+import { updateOrder } from '../api';
 
 export default function AdminOrders({ orders = [], users = [], refreshData }) {
   const [searchTerm, setSearchTerm] = useState('');

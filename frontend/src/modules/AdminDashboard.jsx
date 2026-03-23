@@ -5,6 +5,7 @@ import {
   FiShoppingCart,
   FiUsers,
 } from 'react-icons/fi';
+import { fetchOrders } from "../api"; 
 
 export default function AdminDashboard({ stats, orders = [], users = [], onPageChange }) {
   const recentOrders = useMemo(() => {

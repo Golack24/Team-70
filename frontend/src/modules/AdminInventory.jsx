@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { FiAlertTriangle, FiSearch } from 'react-icons/fi';
-import { updateProduct } from '../../api';
+import { updateProduct } from '../api';
 
 export default function AdminInventory({ products = [], refreshData }) {
   const [searchTerm, setSearchTerm] = useState('');

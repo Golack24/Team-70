@@ -1,6 +1,6 @@
 import React, { useMemo, useState } from 'react';
 import { FiSearch, FiMail, FiPhone, FiEye, FiTrash2 } from 'react-icons/fi';
-import { deleteUser } from '../../api';
+import { deleteUser } from '../api';
 
 export default function AdminCustomers({ users = [], orders = [], refreshData }) {
   const [searchTerm, setSearchTerm] = useState('');
