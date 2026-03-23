@@ -54,7 +54,10 @@ try {
 
             respond(['success' => true, 'id' => $pdo->lastInsertId()], 201);
 
-            // RESET PASSWORD
+        }
+
+
+                    // RESET PASSWORD
             if ($action === 'reset_password') {
 
             if (empty($input['email']) || empty($input['password'])) {
@@ -87,7 +90,6 @@ try {
                 'success' => true,
                 'message' => 'Password updated successfully'
             ]);
-        }
         }
 
 
