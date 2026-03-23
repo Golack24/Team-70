@@ -47,39 +47,46 @@ export default function WomenPage({ onNavigate }) {
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    let cancelled = false;
+  let cancelled = false;
 
-    const load = async () => {
-      try {
-        setLoading(true);
-        const payload = await fetchProducts({ limit: 100 });
-        const data = payload?.data || [];
+  const load = async () => {
+    try {
+      setLoading(true);
+      const payload = await fetchProducts({ limit: 100 });
+      const data = payload?.data || [];
 
-        const womenProducts = data.filter((product) => {
-          const category = String(product.category_name || "").toLowerCase();
-          return category === "women" || Number(product.category_id) === 2;
-        });
+      console.log("WOMEN PAGE API DATA:", data);
 
-        if (!cancelled) {
-          setProducts(womenProducts);
-          setError(null);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err?.message || "Failed to load products");
-          setProducts([]);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+      const womenProducts = data.filter((product) => {
+        const categoryName = String(product.category_name || product.category || "").trim().toLowerCase();
+        const categoryId = Number(product.category_id);
+
+        return (
+          categoryName.includes("women") ||
+          categoryId === 2
+        );
+      });
+
+      if (!cancelled) {
+        setProducts(womenProducts);
+        setError(null);
       }
-    };
+    } catch (err) {
+      if (!cancelled) {
+        setError(err?.message || "Failed to load products");
+        setProducts([]);
+      }
+    } finally {
+      if (!cancelled) setLoading(false);
+    }
+  };
 
-    load();
+  load();
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  return () => {
+    cancelled = true;
+  };
+}, []);
 
   const visibleProducts = useMemo(() => products, [products]);
 

@@ -46,40 +46,47 @@ export default function MenPage({ onNavigate }) {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    let cancelled = false;
+   useEffect(() => {
+  let cancelled = false;
 
-    const load = async () => {
-      try {
-        setLoading(true);
-        const payload = await fetchProducts({ limit: 100 });
-        const data = payload?.data || [];
+  const load = async () => {
+    try {
+      setLoading(true);
+      const payload = await fetchProducts({ limit: 100 });
+      const data = payload?.data || [];
 
-        const menProducts = data.filter((product) => {
-          const category = String(product.category_name || "").toLowerCase();
-          return category === "men" || Number(product.category_id) === 1;
-        });
+      console.log("MEN PAGE API DATA:", data);
 
-        if (!cancelled) {
-          setProducts(menProducts);
-          setError(null);
-        }
-      } catch (err) {
-        if (!cancelled) {
-          setError(err?.message || "Failed to load products");
-          setProducts([]);
-        }
-      } finally {
-        if (!cancelled) setLoading(false);
+      const menProducts = data.filter((product) => {
+        const categoryName = String(product.category_name || product.category || "").trim().toLowerCase();
+        const categoryId = Number(product.category_id);
+
+        return (
+          categoryName.includes("men") ||
+          categoryId === 1
+        );
+      });
+
+      if (!cancelled) {
+        setProducts(menProducts);
+        setError(null);
       }
-    };
+    } catch (err) {
+      if (!cancelled) {
+        setError(err?.message || "Failed to load products");
+        setProducts([]);
+      }
+    } finally {
+      if (!cancelled) setLoading(false);
+    }
+  };
 
-    load();
+  load();
 
-    return () => {
-      cancelled = true;
-    };
-  }, []);
+  return () => {
+    cancelled = true;
+  };
+}, []);
 
   const visibleProducts = useMemo(() => products, [products]);
 
