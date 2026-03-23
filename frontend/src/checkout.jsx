@@ -159,15 +159,7 @@ export default function CheckoutPage({
                     onChange={(e) => setDiscountCode(e.target.value)}
                   />
                 </div>
-                <div className="discount-section">
-                  <label>Discount Code</label>
-                  <input
-                    type="text"
-                    value={discountCode}
-                    placeholder="Enter code"
-                    onChange={(e) => setDiscountCode(e.target.value)}
-                  />
-                </div>
+                
               </div>
 
               <button className="primary-btn" type="button">
