@@ -1,6 +1,7 @@
 const API_BASE = "https://cs2team70.cs2410-web01pvm.aston.ac.uk";
 const API_ROOT = `${API_BASE}/index.php`;
 
+
 const toQuery = (params = {}) => {
   const url = new URL(API_ROOT);
 
@@ -208,8 +209,7 @@ export function calculateDiscount(coupon, subtotal) {
   let discountAmount = 0;
 
   if (coupon.discount_type === "percentage") {
-    discountAmount =
-      subtotal * (Number(coupon.discount_value || 0) / 100);
+    discountAmount = subtotal * (Number(coupon.discount_value || 0) / 100);
   } else if (coupon.discount_type === "fixed") {
     discountAmount = Number(coupon.discount_value || 0);
   }
