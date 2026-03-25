@@ -10,6 +10,7 @@ import glovesImg from "./assets/gloves.jpg";
 import hoodieImg from "./assets/hoodie.jpg";
 import pantsImg from "./assets/pants.jpg";
 import shortsImg from "./assets/shorts.jpg";
+import forgeIMG from "./assets/forge.jpg";
 
 // WOMEN
 import tankImg from "./assets/tank.jpg";
@@ -69,6 +70,7 @@ const getProductImage = (product) => {
     return pantsImg;
   }
   if (name.includes("short")) return shortsImg;
+  if (name.includes("forge")) return forgeIMG;
 
   // WOMEN
   if (name.includes("tank")) return tankImg;

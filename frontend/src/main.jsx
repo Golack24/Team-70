@@ -17,6 +17,7 @@ import ProductPage from "./product";
 import AdminHome from "./adminHome";
 import { logoutUser } from "./api";
 import ResetPasswordPage from "./resetPassword";
+import PlaceOrderPage from "./placeOrder";
 
 const PromoBar = () => (
   <div className="top-promo-bar">
@@ -198,6 +199,33 @@ function App() {
       </StrictMode>
     );
   }
+
+  if (page.name === "place-order") {
+  return (
+    <StrictMode>
+      <PlaceOrderPage
+        onNavigate={handleNavigate}
+        cart={page.cart || cart}
+        subtotal={
+          page.subtotal ??
+          cart.reduce(
+            (sum, item) =>
+              sum + Number(item.price || 0) * Number(item.quantity || 1),
+            0
+          )
+        }
+        total={
+          page.total ??
+          cart.reduce(
+            (sum, item) =>
+              sum + Number(item.price || 0) * Number(item.quantity || 1),
+            0
+          )
+        }
+      />
+    </StrictMode>
+  );
+}
 
   if (page.name === "product") {
     return (

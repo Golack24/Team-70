@@ -1,12 +1,7 @@
 import { useState } from "react";
 import Navbar from "./navbar";
 import Footer from "./footer";
-import {
-  fetchCouponByCode,
-  calculateDiscount,
-  createAddress,
-  createOrder,
-} from "./api";
+import { createAddress, createOrder } from "./api";
 
 const formatPrice = (value) => {
   const num = Number(value || 0);
@@ -55,7 +50,7 @@ export default function PlaceOrderPage({
 
       setSuccess(true);
     } catch (err) {
-      setError(err.message || "Failed to place order");
+      setError(err?.message || "Failed to place order");
     } finally {
       setPlacing(false);
     }
@@ -206,91 +201,3 @@ export default function PlaceOrderPage({
     </>
   );
 }
-
-<div className="cart-panel">
-  <div className="place-order-form">
-    <div className="place-order-group">
-      <label>Address Line 1</label>
-      <input
-        type="text"
-        className="place-order-input"
-        value={form.line1}
-        onChange={(e) => handleChange("line1", e.target.value)}
-      />
-    </div>
-
-    <div className="place-order-group">
-      <label>Address Line 2</label>
-      <input
-        type="text"
-        className="place-order-input"
-        value={form.line2}
-        onChange={(e) => handleChange("line2", e.target.value)}
-      />
-    </div>
-
-    <div className="place-order-group">
-      <label>City</label>
-      <input
-        type="text"
-        className="place-order-input"
-        value={form.city}
-        onChange={(e) => handleChange("city", e.target.value)}
-      />
-    </div>
-
-    <div className="place-order-group">
-      <label>Postcode</label>
-      <input
-        type="text"
-        className="place-order-input"
-        value={form.postcode}
-        onChange={(e) => handleChange("postcode", e.target.value)}
-      />
-    </div>
-
-    <div className="place-order-group">
-      <label>Country</label>
-      <input
-        type="text"
-        className="place-order-input"
-        value={form.country}
-        onChange={(e) => handleChange("country", e.target.value)}
-      />
-    </div>
-
-    {error && <p className="place-order-error">{error}</p>}
-  </div>
-
-  <div className="place-order-success">
-    <h2>Order placed successfully</h2>
-    <p>Your order has been placed and is now visible in the admin system.</p>
-    <p>
-      <strong>Total:</strong> {formatPrice(total)}
-    </p>
-
-    <button
-      type="button"
-      className="primary-btn"
-      onClick={() => onNavigate?.("home")}
-    >
-      Continue shopping
-    </button>
-  </div>
-
-  <div className="place-order-success">
-    <h2>Order placed successfully</h2>
-    <p>Your order has been placed and is now visible in the admin system.</p>
-    <p>
-      <strong>Total:</strong> {formatPrice(total)}
-    </p>
-
-    <button
-      type="button"
-      className="primary-btn"
-      onClick={() => onNavigate?.("home")}
-    >
-      Continue shopping
-    </button>
-  </div>
-</div>;

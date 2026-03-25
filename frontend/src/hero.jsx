@@ -170,7 +170,7 @@ export default function Hero({ onNavigate }) {
       </section>
 
       <div className="hero-promo-bar">
-        <span className="hero-promo-text">shop oversized shirts</span>
+        <span className="hero-promo-text">training essentials</span>
       </div>
 
       <section className="product-gallery">

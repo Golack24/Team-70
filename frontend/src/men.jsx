@@ -9,6 +9,7 @@ import glovesImg from "./assets/gloves.jpg";
 import hoodieImg from "./assets/hoodie.jpg";
 import pantsImg from "./assets/pants.jpg";
 import shortsImg from "./assets/shorts.jpg";
+import forgeIMG from "./assets/forge.jpg";
 
 
 const filterGroups = [
@@ -46,6 +47,7 @@ const getProductImage = (product) => {
   if (name.includes("hoodie")) return hoodieImg;
   if (name.includes("pant")) return pantsImg;
   if (name.includes("short")) return shortsImg;
+  if (name.includes("forge")) return forgeIMG;
 
 };
 

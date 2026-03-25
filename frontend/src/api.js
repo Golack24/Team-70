@@ -14,6 +14,7 @@ const toQuery = (params = {}) => {
   return url.toString();
 };
 
+
 async function request(resource, params = {}) {
   const url = toQuery({ resource, ...params });
 
@@ -194,6 +195,7 @@ export function calculateDiscount(coupon, subtotal) {
       message: "This coupon is inactive",
     };
   }
+
 
   const minOrderValue = Number(coupon.min_order_value || 0);
 
