@@ -170,7 +170,7 @@ export default function PlaceOrderPage({
                     </span>
                     <span>
                       {formatPrice(
-                        Number(item.price || 0) * Number(item.quantity || 1),
+                        Number(item.price || 0) * Number(item.quantity || 1)
                       )}
                     </span>
                   </div>
