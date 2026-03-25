@@ -4,6 +4,12 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import womenImage from "./assets/women-gymshark.png";
 import { fetchProducts } from "./api";
+import tankImg from "./assets/tank.jpg";
+import bikerImg from "./assets/Wshorts.jpg";
+import hoodieImg from "./assets/crop.jpg";
+import teeImg from "./assets/tee.jpg";
+import leggingsImg from "./assets/leggings.jpg";
+import braImg from "./assets/bra.jpg";
 
 const filterGroups = [
   {
@@ -30,6 +36,19 @@ const formatPrice = (value) => {
   }
   const num = Number(value);
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
+};
+
+const getWomenImage = (product) => {
+  const name = (product?.name || "").toLowerCase();
+
+  if (name.includes("tank")) return tankImg;
+  if (name.includes("short")) return bikerImg;
+  if (name.includes("hoodie")) return hoodieImg;
+  if (name.includes("tee") || name.includes("shirt")) return teeImg;
+  if (name.includes("legging")) return leggingsImg;
+  if (name.includes("bra")) return braImg;
+
+  return leggingsImg;
 };
 
 const resolveImage = (image) => {
@@ -154,7 +173,7 @@ export default function WomenPage({ onNavigate }) {
                   >
                     <div
                       className="women-image"
-                      style={{ backgroundImage: `url(${resolveImage(product.image)})` }}
+                      style={{ backgroundImage: `url(${getWomenImage(product)})` }}
                       aria-hidden="true"
                     />
                     <div className="women-info">

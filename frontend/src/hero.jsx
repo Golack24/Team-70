@@ -9,6 +9,28 @@ import chatIcon from "./assets/chaticon.png";
 import returnIcon from "./assets/returnicon.png";
 import { fetchProducts } from "./api";
 
+// MEN
+import beltImg from "./assets/belt.jpg";
+import glovesImg from "./assets/gloves.jpg";
+import hoodieImg from "./assets/hoodie.jpg";
+import pantsImg from "./assets/pants.jpg";
+import shortsImg from "./assets/shorts.jpg";
+
+// WOMEN
+import tankImg from "./assets/tank.jpg";
+import bikerImg from "./assets/Wshorts.jpg";
+import cropHoodieImg from "./assets/crop.jpg";
+import teeImg from "./assets/tee.jpg";
+import leggingsImg from "./assets/leggings.jpg";
+import braImg from "./assets/bra.jpg";
+
+// ACCESSORIES
+import duffelImg from "./assets/duffel.jpg";
+import kneeImg from "./assets/knee.jpg";
+import chalkImg from "./assets/chalk.jpg";
+import rollerImg from "./assets/roller.jpg";
+import strapsImg from "./assets/straps.jpg";
+
 const categories = [
   { title: "Womens", image: womenImage, route: "women" },
   { title: "Mens", image: gymsharkImage, route: "men" },
@@ -44,16 +66,51 @@ const formatPrice = (value) => {
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
 };
 
+const getProductImage = (product) => {
+  const name = (product?.name || "").toLowerCase();
+
+  // MEN
+  if (name.includes("belt")) return beltImg;
+  if (name.includes("glove")) return glovesImg;
+  if (name.includes("hoodie")) return hoodieImg;
+  if (
+    name.includes("pant") ||
+    name.includes("jogger") ||
+    name.includes("track")
+  )
+    return pantsImg;
+  if (name.includes("short")) return shortsImg;
+
+  // WOMEN
+  if (name.includes("tank")) return tankImg;
+  if (name.includes("biker")) return bikerImg;
+  if (name.includes("crop hoodie")) return cropHoodieImg;
+  if (name.includes("tee") || name.includes("shirt")) return teeImg;
+  if (name.includes("legging")) return leggingsImg;
+  if (name.includes("bra")) return braImg;
+
+  // ACCESSORIES
+  if (name.includes("duffel") || name.includes("bag")) return duffelImg;
+  if (name.includes("knee")) return kneeImg;
+  if (name.includes("chalk")) return chalkImg;
+  if (name.includes("roller")) return rollerImg;
+  if (name.includes("strap")) return strapsImg;
+
+  return gymsharkImage;
+};
+
 export default function Hero({ onNavigate }) {
   const [items, setItems] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
     let cancelled = false;
+
     const load = async () => {
       try {
         const payload = await fetchProducts({ limit: 5 });
         const data = payload?.data || [];
+
         if (!cancelled) {
           setItems(data.slice(0, 5));
           setError(null);
@@ -65,15 +122,16 @@ export default function Hero({ onNavigate }) {
         }
       }
     };
+
     load();
+
     return () => {
       cancelled = true;
     };
   }, []);
 
   const handleClickProduct = (product) => {
-    if (onNavigate)
-      onNavigate({ name: "product", productId: product.id, product });
+    onNavigate?.({ name: "product", productId: product.id, product });
   };
 
   return (
@@ -91,7 +149,7 @@ export default function Hero({ onNavigate }) {
             <button className="hero-button" onClick={() => onNavigate("men")}>
               shop now
             </button>
-            {/* This can be removed or replaced with a proper admin link */}
+
             <button
               className="hero-button"
               style={{ marginTop: "0.5rem", background: "#222", color: "#fff" }}
@@ -135,11 +193,7 @@ export default function Hero({ onNavigate }) {
               >
                 <div
                   className="product-image"
-                  style={{
-                    backgroundImage: `url(${
-                      item.image ? item.image : gymsharkImage
-                    })`,
-                  }}
+                  style={{ backgroundImage: `url(${getProductImage(item)})` }}
                 />
                 <div className="product-info">
                   <h3 className="product-title">{item.name}</h3>

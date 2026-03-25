@@ -4,6 +4,12 @@ import Navbar from "./navbar";
 import Footer from "./footer";
 import gymsharkImage from "./assets/gymshark.png";
 import { fetchProducts } from "./api";
+import beltImg from "./assets/belt.jpg";
+import glovesImg from "./assets/gloves.jpg";
+import hoodieImg from "./assets/hoodie.jpg";
+import pantsImg from "./assets/pants.jpg";
+import shortsImg from "./assets/shorts.jpg";
+
 
 const filterGroups = [
   {
@@ -30,6 +36,17 @@ const formatPrice = (value) => {
   }
   const num = Number(value);
   return `£${num % 1 === 0 ? num.toFixed(0) : num.toFixed(2)}`;
+};
+
+const getProductImage = (product) => {
+  const name = (product?.name || "").toLowerCase();
+
+  if (name.includes("belt")) return beltImg;
+  if (name.includes("glove")) return glovesImg;
+  if (name.includes("hoodie")) return hoodieImg;
+  if (name.includes("pant")) return pantsImg;
+  if (name.includes("short")) return shortsImg;
+
 };
 
 const resolveImage = (image) => {
@@ -154,7 +171,7 @@ export default function MenPage({ onNavigate }) {
                   >
                     <div
                       className="men-image"
-                      style={{ backgroundImage: `url(${resolveImage(product.image)})` }}
+                      style={{ backgroundImage: `url(${getProductImage(product)})` }}
                       aria-hidden="true"
                     />
                     <div className="men-info">
